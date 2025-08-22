@@ -1061,6 +1061,7 @@ class CourierDepartController extends Controller
 
                 $courierDepartLiers = array_merge($courierDepartLiers, $courierDepartLiersItem);
                 $courierArriverLiers = array_merge($courierArriverLiers, $courierArriverLiersItem);
+                
             }
          
         }
@@ -1079,9 +1080,9 @@ class CourierDepartController extends Controller
       // dd($courierArrivers,$courierDeparts);
       $client = DB::select("select * from clients");
 
-        $courriersArriverCabinet = DB::select("SELECT * FROM courier_arrivers WHERE statut != 'Annulé' AND idAffaire is null ", );
-        
-        $courriersDepartCabinet = DB::select("SELECT * FROM courier_departs WHERE  statut != 'Annulé' AND idAffaire is null ");
+      $courriersArriverCabinet = DB::select("SELECT * FROM courier_arrivers WHERE statut != 'Annulé' AND idAffaire is null  AND (? IS NULL OR courier_arrivers.slug != ?) ",[$slug,$slug] );
+    
+      $courriersDepartCabinet = DB::select("SELECT * FROM courier_departs WHERE  statut != 'Annulé' AND idAffaire is null AND (? IS NULL OR courier_departs.slug != ?) ",[$slug,$slug]);
 
         $suggeCourierDepart = DB::select("
         SELECT ca.*, cd.slug as slugDepart, c.*, a.*
@@ -1093,8 +1094,18 @@ class CourierDepartController extends Controller
         AND cd.slug = ?
     ", [$slug]);
 
+        $infoCourierArrivers = DB::SELECT(" SELECT * FROM courier_arrivers,clients,affaires ,courier_liers where clients.idClient = courier_arrivers.idClient and affaires.idAffaire = courier_arrivers.idAffaire and courier_liers.slugCourierLier = courier_arrivers.slug");
+       
+        
+       // dd( $infoCourier);
+    
+        
+       $infoCourierDepart = DB::SELECT(" SELECT * FROM courier_departs,clients,affaires ,courier_liers where clients.idClient = courier_departs.idClient and affaires.idAffaire = courier_departs.idAffaire and courier_liers.slugCourierLier = courier_departs.slug");
+        
+        
+        //dd($infoCourierDepart);
 
-        return view('couriers.depart.infoCourierDepart', compact('courierFile', 'courierSent','accuser','clientAffaire','courierDepartLiers','courierArriverLiers','courierArrivers','courierDeparts','client','courriersArriverCabinet','courriersDepartCabinet','suggeCourierDepart'));
+        return view('couriers.depart.infoCourierDepart', compact('courierFile', 'courierSent','accuser','clientAffaire','courierDepartLiers','courierArriverLiers','courierArrivers','courierDeparts','client','courriersArriverCabinet','courriersDepartCabinet','suggeCourierDepart','infoCourierDepart'));
     }
 
     public function envoiCourier(Request $request)

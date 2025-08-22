@@ -1,3 +1,160 @@
+<style>
+    .pub-container {
+        width: 200px;
+        height: 30vh;
+        overflow: hidden;
+        position: relative;
+        margin: 20px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .slider {
+        display: flex;
+        flex-wrap: nowrap;
+        width: 300%;
+        height: 100%;
+        animation: slide 15s infinite ease-in-out;
+    }
+
+    .slide {
+        flex: 0 0 33.333%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        transition: transform 0.2s ease;
+    }
+
+    .slide:hover {
+        transform: scale(0.80);
+    }
+
+    .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.2s ease;
+    }
+
+    /* Animation professionnelle avec transitions douces */
+    @keyframes slide {
+        0% { 
+            transform: translateX(0);
+            animation-timing-function: ease-out;
+        }
+        26% { 
+            transform: translateX(0);
+            animation-timing-function: ease-in;
+        }
+        33% { 
+            transform: translateX(-33.333%);
+            animation-timing-function: ease-out;
+        }
+        59% { 
+            transform: translateX(-33.333%);
+            animation-timing-function: ease-in;
+        }
+        66% { 
+            transform: translateX(-66.666%);
+            animation-timing-function: ease-out;
+        }
+        92% { 
+            transform: translateX(-66.666%);
+            animation-timing-function: ease-in;
+        }
+        100% { 
+            transform: translateX(0);
+        }
+    }
+
+    /* Indicateurs de progression */
+    .pub-container::before {
+        content: '';
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+        z-index: 10;
+    }
+
+    /* Barre de progression animée */
+    .progress-bar {
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 2px;
+        z-index: 11;
+        animation: progress 25s infinite linear;
+        transform-origin: left center;
+    }
+
+    @keyframes progress {
+        0% { 
+            width: 0;
+            left: 50%;
+        }
+        33% { 
+            width: 80px;
+            left: 50%;
+        }
+        33.1% { 
+            width: 0;
+            left: 50%;
+        }
+        66% { 
+            width: 80px;
+            left: 50%;
+        }
+        66.1% { 
+            width: 0;
+            left: 50%;
+        }
+        99% { 
+            width: 80px;
+            left: 50%;
+        }
+        100% { 
+            width: 0;
+            left: 50%;
+        }
+    }
+
+    /* Overlay pour meilleure lisibilité */
+    .slide::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 30%;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+        pointer-events: none;
+    }
+
+    /* Effet de flou pendant la transition */
+    .slider {
+        backdrop-filter: blur(0px);
+        transition: backdrop-filter 0.3s ease;
+    }
+
+    .slider:active {
+        backdrop-filter: blur(2px);
+    }
+</style>
+
+
+
 <div class="navbar-side">
     <ul class="navbar-nav side-navbar" id="exampleAccordion" style="background: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url('/assets/dist/img/sidebar-bg.png');background-size:cover;background-position:20%">
 
@@ -122,7 +279,31 @@
 
         </li>
         
+
+        <div class="pub-container ">
+            <div class="slider">
+                <div class="slide"><img src="/assets/dist/img/29.png" alt="Pub 1"></div>
+                <div class="slide"><img src="/assets/dist/img/43.png" alt="Pub 2"></div>
+                <div class="slide"><img src="/assets/dist/img/123.png" alt="Pub 3"></div>
+            </div>
+        </div>
+        
       
 
     </ul>
 </div>
+
+
+<script>
+  const slider = document.querySelector(".slider");
+    let paused = false;
+
+    document.querySelector(".pub-container").addEventListener("mouseenter", () => {
+    slider.style.animationPlayState = "paused"; // pause au survol
+    });
+
+    document.querySelector(".pub-container").addEventListener("mouseleave", () => {
+    slider.style.animationPlayState = "running"; // reprend après
+    });
+
+</script>

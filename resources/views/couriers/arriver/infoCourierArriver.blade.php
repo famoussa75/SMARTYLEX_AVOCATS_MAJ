@@ -297,38 +297,90 @@ setlocale(LC_TIME, 'fr_FR');
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
-                                        @foreach ($courierArriverLiers as $c )
+                                        <div class="row text text-center ">
+                                           
+                                            @foreach ($courierArriverLiers as $c )
                                         
-                                            @if($c->slugArriver!=$courierArriver[0]->slug)
-                                            <tr>
+                                                @if($c->slugArriver!=$courierArriver[0]->slug)
+                                                <tr>
 
-                                                <td>
-                                                Courrier Arrivé - N° {{$c->numero}} <br> <a class="load"
-                                                        href="{{ route('detailCourierArriver', [$c->slugArriver]) }}"
-                                                        style="color:blue" class="toggle"
-                                                        title="Cliquer pour afficher le courrier"> {{$c->objet}}</a>
-                                                </td>
-                                                <td>
-                                                     <a href="{{route('deleteLiaisonCourier',[$c->slugTCourierLier])}}"  onclick="event.preventDefault(); confirmDelete(this.href)" class="toggle" title="Supprimer"><i class="fa fa-trash" style="color:red"></i></a>
-                                                </td>
-                                            </tr>
-                                            @endif
+                                                    <td>
+                                                    Courrier Arrivé - N° {{$c->numero}} <br> <a class="load"
+                                                            href="{{ route('detailCourierArriver', [$c->slugArriver]) }}"
+                                                            style="color:blue" class="toggle"
+                                                            title="Cliquer pour afficher le courrier"> 
+                                                            @if(empty($infoCourier))
+                                                                {{$c->objet}}  > Courrier cabinet
+                                                            @else
+                                                                @php
+                                                                    $found = false;
+                                                                @endphp
+                                                                @foreach($infoCourier as $info)
+                                                                    @if($info->slugCourierLier == $c->slugArriver)
+                                                                        {{$info->idClient}} > {{$info->prenom}} {{$info->nom}} > {{$info->idAffaire}} {{$info->nomAffaire}}
+                                                                        @php $found = true; @endphp
+                                                                        @break
+                                                                    @endif
+                                                                @endforeach
 
-                                        @endforeach
-                                        @foreach ($courierDepartLiers as $c )
+                                                                @if(!$found)
+                                                                    {{$c->objet}} > Courrier cabinet
+                                                                @endif
+                                                            @endif
+
+                                                            
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{route('deleteLiaisonCourier',[$c->slugTCourierLier])}}"  onclick="event.preventDefault(); confirmDelete(this.href)" class="toggle" title="Supprimer"><i class="fa fa-trash" style="color:red"></i></a>
+                                                    </td>
+                                                </tr>
+                                                @endif
+
+                                            @endforeach
+                                        </div>
+                                      
+                                        <div class="row text text-center ">
+                                           
+
+                                            @foreach ($courierDepartLiers as $c )
                                         <tr>
 
                                             <td>
-                                               Courrier Départ - N° {{$c->numCourier}}<br> <a class="load"
+                                                Courrier Départ - N° {{$c->numCourier}}<br> <a class="load"
                                                     href="{{ route('infoCourierDepart', [$c->slugDepart]) }}"
                                                     style="color:blue" class="toggle"
-                                                    title="Cliquer pour afficher le courrier"> Cabinet </a>
+                                                    title="Cliquer pour afficher le courrier"> 
+                                                    
+                                                    @if(empty($infoCourierDepart))
+                                                        {{$c->objet}} >  Courrier cabinet
+
+                                                    @else
+                                                        @php
+                                                            $found = false;
+                                                        @endphp
+                                                        @foreach($infoCourierDepart as $info)
+                                                       
+                                                            @if($info->slugCourierLier == $c->slugDepart)
+                                                                {{$info->idClient}} > {{$info->prenom}} {{$info->nom}} > {{$info->idAffaire}} {{$info->nomAffaire}}
+                                                                @php $found = true; @endphp
+                                                                @break
+                                                            @endif
+                                                        @endforeach
+
+                                                        @if(!$found)
+                                                            {{$c->objet}} > Courrier cabinet
+                                                        @endif
+                                                    @endif
+
+                                                     </a>
                                             </td>
                                             <td>
                                                 <a href="{{route('deleteLiaisonCourier',[$c->slugTCourierLier])}}" onclick="event.preventDefault(); confirmDelete(this.href)" class="toggle" title="Supprimer"><i class="fa fa-trash" style="color:red"></i></a>
                                             </td>
                                         </tr>
                                         @endforeach
+                                        </div>
+                                       
 
                                         @if(empty($courierArriverLiers) && empty($courierDepartLiers))
                                             Aucun courrier trouvé.

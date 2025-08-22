@@ -451,12 +451,20 @@ class CourierArriverController extends Controller
             AND ca.slug = ?
         ", [$slug]);
 
+
+        $infoCourier = DB::SELECT(" SELECT * FROM courier_arrivers,clients,affaires ,courier_liers where clients.idClient = courier_arrivers.idClient and affaires.idAffaire = courier_arrivers.idAffaire and courier_liers.slugCourierLier = courier_arrivers.slug");
+       
+        
+       // dd( $infoCourier);
+    
+        
+       $infoCourierDepart = DB::SELECT(" SELECT * FROM courier_departs,clients,affaires ,courier_liers where clients.idClient = courier_departs.idClient and affaires.idAffaire = courier_departs.idAffaire and courier_liers.slugCourierLier = courier_departs.slug");
         
         
-        //dd($suggeCourierDepart);
+        //dd($infoCourierDepart);
     
 
-        return view('couriers.arriver.infoCourierArriver', compact('courierArriver', 'courierFile', 'tacheCourier','clientAffaire','courierDepartLiers','courierArriverLiers','courierArrivers','courierDeparts','client','courriersArriverCabinet','courriersDepartCabinet','couriersHuissier','suggeCourierDepart'));
+        return view('couriers.arriver.infoCourierArriver', compact('courierArriver', 'courierFile', 'tacheCourier','clientAffaire','courierDepartLiers','courierArriverLiers','courierArrivers','courierDeparts','client','courriersArriverCabinet','courriersDepartCabinet','couriersHuissier','suggeCourierDepart','infoCourier','infoCourierDepart'));
     }
 
     // Dans TonControleur.php
