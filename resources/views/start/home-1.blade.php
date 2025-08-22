@@ -134,7 +134,7 @@
             <div class="card" style="background-color: #0d99b5;">
                 <div class="card-header">
                     <i class="fa font-20  fa-globe" style="color:white"></i>
-                    <h6 class=" text-right" style="color:white"><b>Actualités</b></h6>
+                    <h6 class=" text-right" style="color:white"><b>Nouveautés</b></h6>
                 </div>
                 <div class="card-body">
 
