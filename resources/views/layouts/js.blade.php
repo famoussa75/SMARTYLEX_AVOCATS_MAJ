@@ -2,106 +2,52 @@
 <a class="scroll-to-top rounded cl-white theme-bg" href="#page-top">
     <i class="ti-angle-double-up"></i>
 </a> -->
+<!-- jQuery (obligatoire en premier) -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 
+<!-- Core plugin JavaScript -->
+<script src="{{ asset('assets/plugins/jquery-easing/jquery.easing.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/slim-scroll/jquery.slimscroll.min.js') }}"></script>
 
-<!-- input mask -->
+<!-- Bootstrap JS -->
+<script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<!-- Input mask -->
 <script src="{{ asset('assets/plugins/input-mask/jquery.inputmask.js') }}"></script>
 <script src="{{ asset('assets/plugins/input-mask/jquery.inputmask.date.extensions.js') }}"></script>
 <script src="{{ asset('assets/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
 
-
-
-
-<!-- Core plugin JavaScript-->
-<script src="{{ asset('assets/plugins/jquery-easing/jquery.easing.min.js') }}"></script>
-
-<!-- Slim Scroll -->
-<script src="{{ asset('assets/plugins/slim-scroll/jquery.slimscroll.min.js') }}"></script>
-
-<script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
-
-<!-- Js file input -->
-<script src="{{ asset('assets/dist/jsFile/custom-file-input.js') }}"></script>
-
-
-
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"
-    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
+<!-- DataTables -->
+<script src="{{ asset('assets/DataTables/datatables.min.js') }}"></script>
 <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
 
-
-
-
-
-<!-- Bootstrap core JavaScript-->
-
-<script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-
-<!-- Slick Slider Js -->
+<!-- Plugins divers -->
 <script src="{{ asset('assets/plugins/slick-slider/slick.js') }}"></script>
+<script src="{{ asset('assets/plugins/validator/validator.js') }}"></script>
+<script src="{{ asset('assets/plugins/select2/select2.full.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+<script src="{{ asset('assets/plugins/colorpicker/bootstrap-colorpicker.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/iCheck/icheck.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/fastclick/fastclick.js') }}"></script>
+<script src="{{ asset('assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
 
-<!-- Angular Tooltip -->
+<!-- Angular Tooltip (Angular avant plugins Angular) -->
 <script src="{{ asset('assets/plugins/angular-tooltip/angular.js') }}"></script>
 <script src="{{ asset('assets/plugins/angular-tooltip/angular-tooltips.js') }}"></script>
-<script src="{{ asset('assets/plugins/angular-tooltip/index.js') }}"></script>
 
-<!-- Morris.js') }} charts -->
-<script src="{{ asset('assets/plugins/raphael/raphael.min.js') }}"></script>
-
-
-
-
-
-<!-- Custom scripts for all pages -->
-<script src="{{ asset('assets/dist/js/adminfier.js') }}"></script>
-
-
-<!-- Validator JavaScript -->
-<script src="{{ asset('assets/plugins/validator/validator.js') }}"></script>
-<script src="{{ asset('assets/DataTables/datatables.min.js') }}"></script>
-
-<!-- Select2 -->
-
-<script src="{{ asset('assets/plugins/select2/select2.full.min.js') }}"></script>
-
-
-
-<!-- bootstrap datepicker -->
-<script src="{{ asset('assets/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
-
-<!-- bootstrap color picker -->
-<script src="{{ asset('assets/plugins/colorpicker/bootstrap-colorpicker.min.js') }}"></script>
-
-<!-- bootstrap time picker -->
-<script src="{{ asset('assets/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
-
-
-
-<!-- iCheck 1.0.1 -->
-<script src="{{ asset('assets/plugins/iCheck/icheck.min.js') }}"></script>
-
-
-
-<!-- FastClick -->
-<script src="{{ asset('assets/plugins/fastclick/fastclick.js') }}"></script>
-
-
-<!-- Advance Form Element -->
-<script src="{{ asset('assets/dist/js/custom/form-element.js') }}"></script>
-
-
-<script src="{{ asset('assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
-<script src="{{ asset('assets/dist/js/custom/form-wizard.js') }}"></script>
-
-<!-- Begin API_Reader file -->
-<script src="{{ asset('assets/apiReader/pdfobject.js') }}"></script>
+<!-- PdfObject -->
 <script src="{{ asset('assets/apiReader/pdfobject.min.js') }}"></script>
 
-<!-- SweetAlert2 JS -->
+<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<!-- Scripts personnalisés -->
+<script src="{{ asset('assets/dist/js/adminfier.js') }}"></script>
+<script src="{{ asset('assets/dist/js/custom/form-element.js') }}"></script>
+<script src="{{ asset('assets/dist/js/custom/form-wizard.js') }}"></script>
+<script src="{{ asset('assets/dist/jsFile/custom-file-input.js') }}"></script>
 
 <!-- générer un PDF avec html2pdf   -->
 
@@ -1627,26 +1573,15 @@ function newNotificationListe() {
 
             var nbre = response.newNotif.length;
 
+            
             $.each(response.newNotif, function(key, value) {
                 var slug = value.urlParam;
                 var category = value.categorie;
-               if (category == 'Rappel Courrier') {
-                    $('#notification-box').append(
-                        ` <div class="ground ground-list-single">
-                <div class="btn-circle-40 btn-warning">
-                <i class="fa fa-bullhorn"></i>
-                </div>
-                <div class="ground-content">
-                <a href="/courier_arriver/view/${value.urlParam}" id="${value.urlParam}" class="${value.id}"  onclick=" var param=this.id ; var idNotif=this.className; voir(param,idNotif)"><h5><b>${value.categorie}</b></h5></a>
-                <small class="text-fade">${value.messages}</small>
-                </div></div>`
-                        )
-
-
-
-                }
+              
 
             });
+
+           
 
             $.each(response.newNotifsCourierArriversCabinet, function(key, value) {
                 $('#notification-box').append(`

@@ -153,6 +153,7 @@
     }
 </style>
 
+
 <div class="navbar-side" >
     <ul class="navbar-nav side-navbar" id="exampleAccordion" style="background: linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)), url('/assets/dist/img/sidebar-bg.png');background-size:cover;background-position:20%">
   
@@ -372,10 +373,8 @@
                 <div class="slide"><img src="/assets/dist/img/123.png" alt="Pub 3"></div>
             </div>
         </div>
+
     </ul>
-   
-
-
    
 
 </div>
