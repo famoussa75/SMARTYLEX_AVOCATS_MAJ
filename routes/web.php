@@ -29,10 +29,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Auth\NewPasswordController;
-
-
-
-
+use App\Http\Controllers\Publicite\PubliciteController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +63,21 @@ use App\Http\Controllers\Auth\NewPasswordController;
         Route::post('two-factor-authentication/store', 'store')->name('2fa.store');
         Route::get('two-factor-authentication/resend', 'resend')->name('2fa.resend');
     });
+
+    
+    /**
+     * Les routes de gestion des publicités
+     */
+    // La route permettante de retourner la fenêtre de gestion des publicités
+    
+    
+    Route::get('/publicites', [PubliciteController::class, 'index'])->name('publicites.index');
+    Route::post('/publicites', [PubliciteController::class, 'store'])->name('publicites.store');
+    Route::put('/publicites/{publicite}', [PubliciteController::class, 'update'])->name('publicites.update');
+    Route::delete('/publicites/{publicite}', [PubliciteController::class, 'destroy'])->name('publicites.destroy');
+    /**
+     * Fin des route de gestion de la publicités
+     */
 
     // Les routes permettant d'effectuer la gestion des utilisateurs
     Route::get('/administration', [AdministrationController::class, 'index'])->name('gestion');

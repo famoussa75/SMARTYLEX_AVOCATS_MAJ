@@ -36,6 +36,46 @@
 }
 
 input[type='file'] {}
+
+
+    /* Styles pour le modal de publicité */
+    .modal.right .modal-dialog {
+        position: fixed;
+        margin: auto;
+        width: 600px;
+        height: 100%;
+        transform: translate3d(0%, 0, 0);
+    }
+
+    .modal.right .modal-content {
+        height: 100%;
+        overflow-y: auto;
+        border-radius: 0;
+        border: none;
+    }
+
+    .modal.right .modal-body {
+        padding: 15px 15px 80px;
+    }
+
+    .modal.right.fade .modal-dialog {
+        right: -600px;
+        transition: opacity 0.3s linear, right 0.3s ease-out;
+    }
+
+    .modal.right.fade.show .modal-dialog {
+        right: 0;
+    }
+
+    .modal-content {
+        border-radius: 0;
+        border: none;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid #e9ecef;
+        background-color: #f8f9fa;
+    }
 </style>
 
 
@@ -46,6 +86,15 @@ input[type='file'] {}
     <div class="row page-breadcrumbs">
         <div class="col-md-5 align-self-center">
             <h4 class="theme-cl"><i class="fa fa-wrench"></i> Paramètre avancé</h4>
+        </div>
+        
+        <div class="col-md-7 text-right">
+            <div class="btn-group">
+                <a href="#" class="cl-white theme-bg btn btn-default btn-rounded" 
+                   data-toggle="modal" data-target="#publiciteModal" title="Gestion des publicités">
+                    <i class="fa fa-bullhorn"></i> Publicités
+                </a>
+            </div>
         </div>
     </div>
 
@@ -513,12 +562,126 @@ input[type='file'] {}
             </div>
         </div>
     </div>
+
+    <!-- Modal pour la gestion des publicités -->
+<div class="modal fade right" id="publiciteModal" tabindex="-1" role="dialog" aria-labelledby="publiciteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header cl-white theme-bg ">
+                <h5 class="modal-title" id="publiciteModalLabel">
+                    <i class="fa fa-bullhorn"></i> Publicités
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="publiciteForm">
+                    <!-- Ajout du token CSRF au début du formulaire -->
+                    <input type="hidden" name="_token" id="csrf-token" value="{{ csrf_token() }}">
+                    
+                    <div class="form-group">
+                        <label for="publiciteTitre">Titre de la publicité</label>
+                        <input type="text" class="form-control" id="publiciteTitre" name="titre" placeholder="Entrez le titre">
+                    </div>
+                    <div class="form-group">
+                        <label for="publiciteImage">Image</label>
+                        <input type="file" class="form-control-file" id="publiciteImage" name="image" accept="image/jpeg,image/png,image/gif">
+                    </div>
+                    <div class="form-group">
+                        <label for="publiciteLien">Lien (optionnel)</label>
+                        <input type="url" class="form-control" id="publiciteLien" name="lien" placeholder="https://exemple.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="publiciteStatut">Statut</label>
+                        <select class="form-control" id="publiciteStatut" name="statut">
+                            <option value="actif">Actif</option>
+                            <option value="inactif">Inactif</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="publiciteDebut">Date de début</label>
+                        <input type="date" class="form-control" id="publiciteDebut" name="debut">
+                    </div>
+                    <div class="form-group">
+                        <label for="publiciteFin">Date de fin</label>
+                        <input type="date" class="form-control" id="publiciteFin" name="fin">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a href="{{route('publicites.index')}}" class="btn btn-secondary" >Gérer les publicités</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                <button type="button" class="btn theme-bg cl-white" onclick="enregistrerPublicite()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 <script>
 
 
 document.getElementById('pa').classList.add('active');
 
+    // Fonction pour enregistrer la publicité
+
+function enregistrerPublicite() {
+    // Récupérer les valeurs du formulaire
+    const titre = document.getElementById('publiciteTitre').value;
+    const lien = document.getElementById('publiciteLien').value;
+    const statut = document.getElementById('publiciteStatut').value;
+    const debut = document.getElementById('publiciteDebut').value;
+    const fin = document.getElementById('publiciteFin').value;
+    const fileInput = document.getElementById('publiciteImage');
+    const csrfToken = document.getElementById('csrf-token').value;
+    
+    // Créer l'objet FormData
+    const formData = new FormData();
+    formData.append('_token', csrfToken); // Ajouter le token CSRF
+    formData.append('titre', titre);
+    formData.append('lien', lien);
+    formData.append('statut', statut);
+    formData.append('debut', debut);
+    formData.append('fin', fin);
+    
+    // Ajouter le fichier s'il y en a un
+    if (fileInput.files.length > 0) {
+        formData.append('image', fileInput.files[0]);
+    }
+    
+    // Afficher les données dans la console pour vérification
+    for (let [key, value] of formData.entries()) {
+        console.log(key + ': ' + value);
+    }
+    
+    // Envoyer les données au serveur
+    fetch('/publicites', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest', 
+            'X-CSRF-TOKEN': csrfToken 
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => {
+                throw new Error(text || 'Erreur serveur');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Succès:', data);
+        alert('Publicité enregistrée avec succès!');
+        $('#publiciteModal').modal('hide');
+        document.getElementById('publiciteForm').reset();
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        alert('Une erreur est survenue lors de l\'enregistrement: ' + error.message);
+    });
+}
 // Controle de la taille des fichiers
 document.addEventListener("DOMContentLoaded", function() {
     console.warn = () => {};
@@ -548,7 +711,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
-
 $('#summernote').summernote({
         placeholder: 'Inserer une signature',
         tabsize: 2,
