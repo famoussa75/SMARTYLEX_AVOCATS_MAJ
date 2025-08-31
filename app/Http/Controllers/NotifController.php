@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Publicite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -187,6 +188,18 @@ class NotifController extends Controller
             DB::update("update notifications set a_biper='oui' where id=?", [$n->id]);
         }
 
+                // Récupération des publicités actives dont la date de fin est supérieure ou égale à aujourd'hui
+        $publicite = Publicite::where('statut', 'actif')
+                        ->where('fin', '>=', now()->format('Y-m-d'))
+                        ->inRandomOrder()
+                        ->get();
+
+        if ($publicite->isNotEmpty()) {
+            Session::put('publicite', $publicite);
+        } else {
+            Session::forget('publicite');
+        }
+
         return response()->json([
             'newNotif' => $newNotifs,
             'bips' => $bips,
@@ -201,6 +214,7 @@ class NotifController extends Controller
             'newNotifsCourierArriversClient' => $newNotifsCourierArriversClient,
             'newNotifsCourierDepartsCabinet' => $newNotifsCourierDepartsCabinet,
             'newNotifsCourierDepartsClient' => $newNotifsCourierDepartsClient,
+            'publicite' => $publicite,
         ]);
     }
 

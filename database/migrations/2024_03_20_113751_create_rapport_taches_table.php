@@ -16,7 +16,7 @@ return new class extends Migration
             $table->collation = 'utf8_unicode_ci';
 
             $table->increments('idRapport');
-            $table->unsignedInteger('idUser');
+            $table->unsignedBigInteger('idUser');
             $table->foreign('idUser')->references('id')->on('users')->onDelete('cascade');
             $table->string('valider');
             $table->text('encour')->nullable();
