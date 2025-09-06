@@ -184,6 +184,9 @@
                     <a class="load" href="{{route('huissiers.list')}}"><span class="submenu">Huissiers</span></a>
                 </li>
                 <li>
+                    <a class="load" href="{{route('juridictions.index')}}"><span class="submenu">Juridiction</span></a>
+                </li>
+                <li>
                     <a class="load" href="{{route('notaires.list')}}"><span class="submenu">Notaires</span></a>
                 </li>
                 <li>

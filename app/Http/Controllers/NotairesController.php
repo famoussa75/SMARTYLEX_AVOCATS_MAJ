@@ -3,86 +3,77 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
+use App\Models\Notaires;
+use Illuminate\Support\Str;
 
 class NotairesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function list()
+    public function index()
     {
-        $notaires = DB::select("select * from notaires");
+        $notaires = Notaires::all();
 
         return view('notaires.list', compact('notaires'));
     }
 
-    /**
-     * Afficher the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'prenomNtr' => 'required|string|max:255',
+            'nomNtr' => 'required|string|max:255',
+            'telNtr_1' => 'nullable|string|max:20',
+            'telNtr_2' => 'nullable|string|max:20',
+            'emailNtr' => 'nullable|email|max:255',
+            'adresseNtr' => 'nullable|string|max:500'
+        ]);
+
+        $notaire = Notaires::create([
+            'prenomNtr' => $request->prenomNtr,
+            'nomNtr' => $request->nomNtr,
+            'telNtr_1' => $request->telNtr_1,
+            'telNtr_2' => $request->telNtr_2,
+            'emailNtr' => $request->emailNtr,
+            'adresseNtr' => $request->adresseNtr,
+            'slug' => Str::slug($request->prenomNtr . ' ' . $request->nomNtr)
+        ]);
+
+        return redirect()->back()->with('success', 'Notaire ajouté avec succès');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function update(Request $request)
     {
-        //
+        $request->validate([
+            'idNtr' => 'required|string',
+            'prenomNtr' => 'required|string|max:255',
+            'nomNtr' => 'required|string|max:255',
+            'telNtr_1' => 'nullable|string|max:20',
+            'telNtr_2' => 'nullable|string|max:20',
+            'emailNtr' => 'nullable|email|max:255',
+            'adresseNtr' => 'nullable|string|max:500'
+        ]);
+
+        $notaire = Notaires::findOrFail($request->idNtr);
+        $notaire->update([
+            'prenomNtr' => $request->prenomNtr,
+            'nomNtr' => $request->nomNtr,
+            'telNtr_1' => $request->telNtr_1,
+            'telNtr_2' => $request->telNtr_2,
+            'emailNtr' => $request->emailNtr,
+            'adresseNtr' => $request->adresseNtr,
+            'slug' => Str::slug($request->prenomNtr . ' ' . $request->nomNtr)
+        ]);
+
+        return redirect()->back()->with('success', 'Notaire modifié avec succès');
     }
 
-    /**
-     * Afficher the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function destroy(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'idNtr' => 'required|string'
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+        $notaire = Notaires::findOrFail($request->idNtr);
+        $notaire->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return redirect()->back()->with('success', 'Notaire supprimé avec succès');
     }
 }

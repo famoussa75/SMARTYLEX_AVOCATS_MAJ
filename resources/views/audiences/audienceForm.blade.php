@@ -60,12 +60,17 @@
                                         <div class="col-md-6 col-sm-12">
                                             <div class="form-group">
                                                 <label for="inputPName" class="control-label">Juridiction<span style="color:red">*</span> :</label>
-                                                <select name="juridiction" id="" class="form-select select2" style="width:100%" >
-                                                    <option value="" selected disabled>-- Choisissez --</option>
-                                                    @foreach($juriductions as $j)
-                                                    <option value="{{$j->id}}">{{$j->nom}}</option>
-                                                    @endforeach
-                                                </select>
+                                                <div class="input-group">
+                                                    <select name="juridiction" id="juridictionSelect" class="form-select select2" style="width:100%">
+                                                        <option value="" selected disabled>-- Choisissez --</option>
+                                                        @foreach($juriductions as $j)
+                                                        <option value="{{$j->id}}">{{$j->nom}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <a type="button" href="{{ route('juridictions.index') }}" class="btn btn-outline-primary" title="Ajouter une juridiction" style="margin-left:5px;">
+                                                        <i class="fa fa-plus"></i>
+                                                    </a>
+                                                </div>
                                                 @error('juridiction')
                                                      <div style="color:red">{{ $message }}</div>
                                                 @enderror
@@ -141,36 +146,7 @@
                                                         <option value="Autres">Autres</option>
                                                     </select>
                                                 
-                                                </div>
-                                            <!-- <div class="col-md-12" id="divRequerent" hidden>
-                                                <div class="row mrg-0">
-                                                    <table class="table " id="dynamicAddRemoveRequeteMention">
-                                                        <tr>
-
-                                                            <th>Nom et Prénom / Dénomination</th>
-                                                            <th>Domicile / Siège social</th>
-                                                            <th>Forme sociale (personne morale)</th>
-                                                            <th></th>
-                                                        </tr>
-                                                        
-                                                        <tr>
-                                                            <td><input type="text" name="formsetMentionRequete[0][nomRequerent]" placeholder="" class="form-control" id="" required/></td>
-                                                            <td><input type="text" name="formsetMentionRequete[0][adresseRequerent]" placeholder="" class="form-control" id="" required/></td>
-                                                            <td><input type="text" name="formsetMentionRequete[0][formeSocialeRequerent]" placeholder="" class="form-control" id="" required/></td>
-                                                            
-            
-                                                            <td>
-                                                                <button type="button" name="add" id="dynamic-requeteMention" onclick=""
-                                                                    class="btn btn-sm btn-outline-default bg-primary cl-white btn-circle">
-                                                                    <i class="fa fa-plus"></i>
-                                                                </button>
-                                                            </td>
-
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </div> -->
-                                                                              
+                                                </div>                       
                                         </div>
                                         <div class="col-md-4 col-sm-12">
                                             <div class="form-group">

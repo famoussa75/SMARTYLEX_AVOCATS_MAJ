@@ -14,6 +14,7 @@ use App\Http\Controllers\CourierArriverController;
 use App\Http\Controllers\CourierDepartController;
 use App\Http\Controllers\CourierFilesController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\Juridiction\JuridictionController;
 use App\Http\Controllers\HuissiersController;
 use App\Http\Controllers\NotairesController;
 use App\Http\Controllers\NotifController;
@@ -66,11 +67,8 @@ use Illuminate\Support\Facades\Auth;
 
     
     /**
-     * Les routes de gestion des publicités
+     * Debut des routes de gestion des publicités
      */
-    // La route permettante de retourner la fenêtre de gestion des publicités
-    
-    
     Route::get('/publicites', [PubliciteController::class, 'index'])->name('publicites.index');
     Route::post('/publicites', [PubliciteController::class, 'store'])->name('publicites.store');
     Route::put('/publicites/{publicite}', [PubliciteController::class, 'update'])->name('publicites.update');
@@ -78,6 +76,18 @@ use Illuminate\Support\Facades\Auth;
     /**
      * Fin des route de gestion de la publicités
      */
+
+     /**
+      * Debut des routes de gestion de la juridiction
+      */
+        Route::get('/juridictions', [JuridictionController::class, 'index'])->name('juridictions.index');
+        Route::post('/juridictions', [JuridictionController::class, 'store'])->name('juridictions.store');
+        Route::put('/juridictions', [JuridictionController::class, 'update'])->name('juridictions.update');
+        Route::delete('/juridictions', [JuridictionController::class, 'destroy'])->name('juridictions.destroy');
+     /**
+      * Fin des routes de gestion de la juridiction
+      */
+
 
     // Les routes permettant d'effectuer la gestion des utilisateurs
     Route::get('/administration', [AdministrationController::class, 'index'])->name('gestion');
@@ -790,7 +800,12 @@ use Illuminate\Support\Facades\Auth;
     Route::post('/huissier/delete', [HuissiersController::class, 'delete'])->name('huissier.delete');
 
     // Tous les notaires 
-    Route::get('/notaires/list', [NotairesController::class, 'list'])->name('notaires.list');
+    //Route::get('', [NotairesController::class, 'list'])->name('notaires.list');
+
+Route::get('/notaires/list', [NotairesController::class, 'index'])->name('notaires.list');
+Route::post('/notaires', [NotairesController::class, 'store'])->name('notaires.store');
+Route::put('/notaires', [NotairesController::class, 'update'])->name('notaires.update');
+Route::delete('/notaires', [NotairesController::class, 'destroy'])->name('notaires.destroy');
 
     // Route ajax pour recupperer l'avocat
     Route::get('/fetch-avocats/{idAvocat}', [AvocatsController::class, 'fetchAvocats'])->name('fetchAvocats');

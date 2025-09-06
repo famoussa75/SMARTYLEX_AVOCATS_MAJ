@@ -279,7 +279,7 @@
 
         </li>
         
-
+{{-- 
         <div class="pub-container ">
             <div class="slider">
                 <div class="slide"><img src="/assets/dist/img/29.png" alt="Pub 1"></div>
@@ -288,7 +288,61 @@
             </div>
         </div>
         
-      
+       --}}
+       
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" style="heigth: 500px">
+            <div id="publiciteCarousel" class="carousel slide" data-ride="carousel" data-interval="100000">
+                <!-- Indicateurs -->
+                <ol class="carousel-indicators">
+                    @if(Session::has('publicite') && count(Session::get('publicite')) > 0)
+                        @foreach(Session::get('publicite') as $index => $pub)
+                            <li data-target="#publiciteCarousel" data-slide-to="{{ $index }}" 
+                                class="{{ $index == 0 ? 'active' : '' }}"></li>
+                        @endforeach
+                    @endif
+                </ol>
+                
+                <!-- Contenu du carousel -->
+                <div class="carousel-inner">
+                    @if(Session::has('publicite') && count(Session::get('publicite')) > 0)
+                        @foreach(Session::get('publicite') as $index => $pub)
+                            <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                <img class="d-block w-100" src="{{ asset('storage/publicites/' . $pub->image) }}" 
+                                    alt="{{ $pub->titre }}" style="max-height: 300px; object-fit: cover;">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5 class="text-warning">{{ $pub->titre }}</h5>
+                                    @if($pub->lien)
+                                        <a href="{{ $pub->lien }}" target="_blank" class="btn btn-sm btn-primary">Voir plus</a>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <!-- Aucune publicité -->
+                        <div class="carousel-item active">
+                            <div class="d-block w-100 bg-light" style="height: 300px; display: flex; align-items: center; justify-content: center;">
+                                <div class="text-center">
+                                    <i class="fa fa-bullhorn fa-3x text-muted mb-2"></i>
+                                    <h5 class="text-muted">Aucune publicité active</h5>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+                
+                <!-- Contrôles (uniquement si plus d'une publicité) -->
+                @if(Session::has('publicite') && count(Session::get('publicite')) > 1)
+                    <a class="carousel-control-prev" href="#publiciteCarousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Précédent</span>
+                    </a>
+                    <a class="carousel-control-next" href="#publiciteCarousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Suivant</span>
+                    </a>
+                @endif
+            </div>
+        </li>
 
     </ul>
 </div>
