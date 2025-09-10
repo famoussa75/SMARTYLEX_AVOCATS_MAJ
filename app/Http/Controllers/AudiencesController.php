@@ -69,9 +69,9 @@ class AudiencesController extends Controller
     // ========== [ Compose Email ] ================
     public function sendMail(Request $request)
     {
-        $cabinet = DB::select("select * from cabinets"); 
+        $cabinet = DB::select("select * from cabinets");
         $serveurEmail = DB::select("select * from serveur_mails");
-       
+
         require base_path("vendor/autoload.php");
         $mail = new PHPMailer(true);     // Passing `true` enables exceptions
 
@@ -105,37 +105,37 @@ class AudiencesController extends Controller
 
             $apiKey = 'aACHmfSPkxd4TBsJvWXFj'; // Remplacez par votre clé API EmailListVerify
             $recipientEmail = $request->input('email');
-            
+
             // Encoder l'email pour éviter les problèmes avec des caractères spéciaux
             $encodedEmail = urlencode($recipientEmail);
-            
+
             $url = "https://apps.emaillistverify.com/api/verifyEmail?secret=$apiKey&email=$encodedEmail";
-            
+
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // À activer en production si vous avez un certificat SSL valide
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            
+
             $response = curl_exec($ch);
-            
+
             if (curl_errno($ch)) {
                 $error_msg = curl_error($ch);
                 curl_close($ch);
                 return back()->with("error", "Erreur cURL : $error_msg");
             }
-            
+
             curl_close($ch);
-            
+
             // Vérifiez si la réponse est 'ok' ou 'fail'
             if (trim($response) === 'ok' || trim($response) === 'risk' || trim($response) === 'ok_for_all') {
                 // L'email est valide ou risqué → poursuivre l'envoi
             } else {
                 return back()->with("error", "Adresse e-mail invalide : $recipientEmail");
             }
-            
-            
-            
+
+
+
             // Vérification des adresses CC avec EmailListVerify
             if ($request->has('emails') && is_array($request->input('emails'))) {
                 foreach ($request->input('emails') as $email) {
@@ -193,16 +193,16 @@ class AudiencesController extends Controller
             $affaire = $request->input('affaire');
             $commentaire = $request->input('commentaire');
 
-           
+
             if ($cabinet[0]->nomCabinet=='ASK AVOCATS') {
-               
+
                 $body = "
-           
+
                 <div class='container'>
                         <p>Madame/Monsieur</p><br>
                         <p>".$cabinet[0]->nomCabinet." vous informe :</p>
                         <ul>
-                        <li>&nbsp;<b>Juridiction :</b> $juridiction </li>                        
+                        <li>&nbsp;<b>Juridiction :</b> $juridiction </li>
                         <li>&nbsp;<b>Audience du :</b> $dateAudience </li>
                         <li>&nbsp;<b>Parties :</b> $parties </li>
                         <li>&nbsp;<b>Objet :</b> $objetAudience </li>
@@ -210,31 +210,31 @@ class AudiencesController extends Controller
                         <li>&nbsp;<b>Affaire :</b> $affaire </li>
                         </ul>
                         <p>$commentaire .</p>
-                      
+
                         <p>N'hesitez pas à nous contacter pour toute précision complémentaire.</p>
-                       
+
                         <ul>
-                        <li>&nbsp;<b>Maître Jonas KOUROUMA </b> Tel: +224 623 20 70 63 / Email: jkourouma@ask-avocats.com </li>                        
-                        <li>&nbsp;<b>Amara CISSE </b> Tel: +224 612 12 50 02 / Email: acisse@ask-avocats.com </li>                        
-                        <li>&nbsp;<b>Sayon OULARE </b> Tel: +224 612 12 50 01 / Email: sayonoulare@ask-avocats.com </li>                        
-                        <li>&nbsp;<b>Karamo Oulen TOURE </b> Tel: +224 612 12 50 07 / Email: ktoure@ask-avocats.com </li> 
+                        <li>&nbsp;<b>Maître Jonas KOUROUMA </b> Tel: +224 623 20 70 63 / Email: jkourouma@ask-avocats.com </li>
+                        <li>&nbsp;<b>Amara CISSE </b> Tel: +224 612 12 50 02 / Email: acisse@ask-avocats.com </li>
+                        <li>&nbsp;<b>Sayon OULARE </b> Tel: +224 612 12 50 01 / Email: sayonoulare@ask-avocats.com </li>
+                        <li>&nbsp;<b>Karamo Oulen TOURE </b> Tel: +224 612 12 50 07 / Email: ktoure@ask-avocats.com </li>
                         </ul>
                         <br><br>
                         <p>Cordialement</p><br/><br/><br/>
                         ".$cabinet[0]->signature."
-                    
-                      
+
+
                      </div>
-              
+
                 ";
             } else {
                 $body = "
-           
+
                 <div class='container'>
                     <p>Madame/Monsieur</p><br>
                     <p>".$cabinet[0]->nomCabinet." vous informe :</p>
                     <ul>
-                    <li>&nbsp;<b>Juridiction :</b> $juridiction </li>                        
+                    <li>&nbsp;<b>Juridiction :</b> $juridiction </li>
                     <li>&nbsp;<b>Audience du :</b> $dateAudience </li>
                     <li>&nbsp;<b>Parties :</b> $parties </li>
                     <li>&nbsp;<b>Objet :</b> $objetAudience </li>
@@ -242,17 +242,17 @@ class AudiencesController extends Controller
                     <li>&nbsp;<b>Affaire :</b> $affaire </li>
                     </ul>
                     <p>$commentaire .</p>
-                
+
                     <p>N'hesitez pas à nous contacter pour toute précision complémentaire.</p>
                     <br><br>
                     <p>Cordialement</p><br/><br/><br/>
-                
+
                     ".$cabinet[0]->signature."
                 </div>
-        
+
                 ";
             }
-            
+
 
             $mail->isHTML(true);                // Set email content format to HTML
             $mail->Subject = 'Compte rendu d\'audience - ' . $parties;
@@ -264,15 +264,15 @@ class AudiencesController extends Controller
 
             if (!$mail->send()) {
                 return back()->with("error", "Message non envoyé ! Réessayez à nouveau.")->withErrors($mail->ErrorInfo);
-                
+
             } else {
-                
+
                 $idSuivit = $request->idSuivit;
                 $idSuivitAppel = $request->idSuivitAppel;
 
                 if (!empty($idSuivit)) {
                     DB::update("update suivit_audiences set email='envoyer' where idSuivit=?", [$idSuivit]);
-                } 
+                }
 
                 if (!empty($idSuivitAppel)) {
                     DB::update("update suivit_audience_appels set email='envoyer' where idSuivitAppel=?", [$idSuivitAppel]);
@@ -282,7 +282,7 @@ class AudiencesController extends Controller
                 return back()->with("success", "Email envoyé avec succès...");
             }
         } catch (Exception $e) {
-           
+
             dd($e);
             return back()->with('error', 'Erreur d\'envoie de mail. Veuillez vous assurer que vous êtes connecté à internet et que les emails sont bien configurés dans les paramètres avancés.');
         }
@@ -300,7 +300,7 @@ class AudiencesController extends Controller
             ->join('personnels', 'affectation_personnels.idPersonnel', '=', 'personnels.idPersonnel')
             ->where('personnels.email', Auth::user()->email)
             ->select('clients.*')
-            ->get();        
+            ->get();
         }else {
             $clients = DB::select('select * from clients');
         }
@@ -320,7 +320,7 @@ class AudiencesController extends Controller
             ->join('personnels', 'affectation_personnels.idPersonnel', '=', 'personnels.idPersonnel')
             ->where('personnels.email', Auth::user()->email)
             ->select('clients.*')
-            ->get();        
+            ->get();
         }else {
             $clients = DB::select('select * from clients');
         }
@@ -351,7 +351,7 @@ class AudiencesController extends Controller
             ->join('personnels', 'affectation_personnels.idPersonnel', '=', 'personnels.idPersonnel')
             ->where('personnels.email', Auth::user()->email)
             ->select('clients.*')
-            ->get();        
+            ->get();
         }else {
             $clients = DB::select('select * from clients');
         }
@@ -363,7 +363,7 @@ class AudiencesController extends Controller
 
     private function getAudienceData($audiences, $cabinet, $personne_adverses, $entreprise_adverses, $autreRoles) {
         $formattedAudiences = [];
-    
+
         foreach ($audiences as $row) {
             $ministerePublic = '';
             $autreRole = '';
@@ -371,7 +371,7 @@ class AudiencesController extends Controller
             $defendeurs = [];
             $partieCivile = [];
             $intervenant = [];
-    
+
             foreach ($autreRoles as $r) {
                 if ($r->idAudience === $row->idAudience) {
                     if ($r->autreRole === 'mp') {
@@ -381,7 +381,7 @@ class AudiencesController extends Controller
                     }
                 }
             }
-    
+
             foreach ($cabinet as $c) {
                 if ($c->idAudience === $row->idAudience) {
                     $partieCabinet = $c->prenom . ' ' . $c->nom . ' ' . $c->denomination;
@@ -393,7 +393,7 @@ class AudiencesController extends Controller
                     }
                 }
             }
-    
+
             foreach ($entreprise_adverses as $e) {
                 if ($e->idAudience === $row->idAudience) {
                     if (in_array($e->role, ['Demandeur', 'Appelant(e)', 'Demandeur au pourvoi', 'Partie civile'])) {
@@ -406,7 +406,7 @@ class AudiencesController extends Controller
                     if ($e->autreRole === 'in') $intervenant[] = $e->denomination;
                 }
             }
-    
+
             foreach ($personne_adverses as $p) {
                 if ($p->idAudience === $row->idAudience) {
                     $personneNom = $p->prenom . ' ' . $p->nom;
@@ -420,18 +420,18 @@ class AudiencesController extends Controller
                     if ($p->autreRole === 'in') $intervenant[] = $personneNom;
                 }
             }
-    
+
             // Limiter à 3 parties et ajouter "et X autres" si nécessaire
             $demandeursDisplay = array_slice($demandeurs, 0, 3);
             if (count($demandeurs) > 3) {
                 $demandeursDisplay[] = 'et ' . (count($demandeurs) - 3) . ' autres';
             }
-    
+
             $defendeursDisplay = array_slice($defendeurs, 0, 3);
             if (count($defendeurs) > 3) {
                 $defendeursDisplay[] = 'et ' . (count($defendeurs) - 3) . ' autres';
             }
-    
+
             $formattedAudiences[] = [
                 'idAudience' => $row->idAudience,
                 'slugAud' => $row->slugAud,
@@ -447,9 +447,9 @@ class AudiencesController extends Controller
                 'autreRole' => $autreRole,
             ];
         }
-    
+
         return $formattedAudiences;
-    } 
+    }
 
     public function filtreAudience(Request $request)
     {
@@ -479,15 +479,15 @@ class AudiencesController extends Controller
                     audiences.prochaineAudience,
                     audiences.heure,
                     audiences.statut AS statutAud
-                FROM 
+                FROM
                     audiences
-                INNER JOIN 
+                INNER JOIN
                     suivit_audiences ON audiences.idAudience = suivit_audiences.idAudience
-                WHERE 
+                WHERE
                     dateProchaineAudience  BETWEEN ? AND ?
-                
+
                 UNION
-                
+
                 SELECT DISTINCT
                     objet,
                     niveauProcedural,
@@ -499,15 +499,15 @@ class AudiencesController extends Controller
                     audiences.prochaineAudience,
                     audiences.heure,
                     audiences.statut AS statutAud
-                FROM 
+                FROM
                     audiences
-                INNER JOIN 
+                INNER JOIN
                     suivit_audience_appels ON audiences.idAudience = suivit_audience_appels.idAudience
-                WHERE 
+                WHERE
                     dateLimite BETWEEN ? AND ?
-                
+
                 UNION
-                
+
                 SELECT DISTINCT
                     objet,
                     niveauProcedural,
@@ -519,16 +519,16 @@ class AudiencesController extends Controller
                     audiences.prochaineAudience,
                     audiences.heure,
                     audiences.statut AS statutAud
-                FROM 
+                FROM
                     audiences
-                INNER JOIN 
+                INNER JOIN
                     acte_introductifs ON audiences.idAudience = acte_introductifs.idAudience
-                INNER JOIN 
+                INNER JOIN
                     assignations ON acte_introductifs.idActe = assignations.idActe
-                WHERE 
+                WHERE
                     datePremiereComp BETWEEN ? AND ?
-                
-                ORDER BY 
+
+                ORDER BY
                     dateAudience
             ", [
                 $dateDebut, $dateFin,  // Pour dateProchaineAudience
@@ -538,17 +538,17 @@ class AudiencesController extends Controller
 
 
         $formattedAudiences = $this->getAudienceData($audiences, $cabinet, $personne_adverses, $entreprise_adverses, $autreRoles);
-        
-        
+
+
 
         // dump($data);
         return view('audiences.allAudiences', compact('formattedAudiences', 'cabinet', 'entreprise_adverses', 'personne_adverses','autreRoles','typeListe','dateDebut','dateFin'));
     }
 
 
-    
-    
-    
+
+
+
     /**
      * Display a listing of the resource.
      *
@@ -559,7 +559,7 @@ class AudiencesController extends Controller
         // recuperation des informations audiences
 
         $today = date("Y-m-d");
-       
+
 
         if ($typeListe=='a_venir') {
 
@@ -586,11 +586,11 @@ class AudiencesController extends Controller
                 audiences.prochaineAudience,
                 audiences.heure,
                 audiences.statut AS statutAud
-            FROM 
+            FROM
                 audiences
-            INNER JOIN 
+            INNER JOIN
                 suivit_audiences ON audiences.idAudience = suivit_audiences.idAudience
-            WHERE 
+            WHERE
                 CONCAT(dateProchaineAudience, ' ', COALESCE(audiences.heure, '00:00:00')) BETWEEN ? AND ?
 
             UNION
@@ -606,11 +606,11 @@ class AudiencesController extends Controller
                 audiences.prochaineAudience,
                 audiences.heure,
                 audiences.statut AS statutAud
-            FROM 
+            FROM
                 audiences
-            INNER JOIN 
+            INNER JOIN
                 suivit_audience_appels ON audiences.idAudience = suivit_audience_appels.idAudience
-            WHERE 
+            WHERE
                 CONCAT(dateLimite, ' ', COALESCE(audiences.heure, '00:00:00')) BETWEEN ? AND ?
 
             UNION
@@ -626,16 +626,16 @@ class AudiencesController extends Controller
                 audiences.prochaineAudience,
                 audiences.heure,
                 audiences.statut AS statutAud
-            FROM 
+            FROM
                 audiences
-            INNER JOIN 
+            INNER JOIN
                 acte_introductifs ON audiences.idAudience = acte_introductifs.idAudience
-            INNER JOIN 
+            INNER JOIN
                 assignations ON acte_introductifs.idActe = assignations.idActe
-            WHERE 
+            WHERE
                 CONCAT(datePremiereComp, ' ', COALESCE(audiences.heure, '00:00:00')) BETWEEN ? AND ?
 
-            ORDER BY 
+            ORDER BY
             dateAudience
         ", [
             $dernierVendredi, $prochainVendredi,  // Pour dateProchaineAudience
@@ -643,10 +643,10 @@ class AudiencesController extends Controller
             $dernierVendredi, $prochainVendredi   // Pour datePremiereComp
         ]);
 
-            
+
         $dernierVendredi = new DateTime('last friday');
         $dateDernierVendredi = $dernierVendredi->format('Y-m-d');
-        
+
         // Date du vendredi suivant sans heure
         $prochainVendredi = new DateTime('next friday');
         $dateProchainVendredi = $prochainVendredi->format('Y-m-d');
@@ -656,7 +656,7 @@ class AudiencesController extends Controller
 
 
         }else {
-            $audiences = DB::select("SELECT idAudience,subquery.numRg, subquery.objet, subquery.niveauProcedural, subquery.slugAud, subquery.statutAud, isChild, prochaineAudience 
+            $audiences = DB::select("SELECT idAudience,subquery.numRg, subquery.objet, subquery.niveauProcedural, subquery.slugAud, subquery.statutAud, isChild, prochaineAudience
             FROM (
                 SELECT MAX(idAudience) as idAudience, MAX(numRg) as numRg, MAX(objet) as objet, MAX(niveauProcedural) as niveauProcedural, slugAud, statutAud, MAX(isChild) as isChild, MAX(prochaineAudience) as prochaineAudience
                 FROM (
@@ -664,16 +664,16 @@ class AudiencesController extends Controller
                     FROM audiences
                     JOIN parties ON audiences.idAudience = parties.idAudience
                     LEFT JOIN clients ON parties.idClient = clients.idClient
-            
+
                     UNION
-            
+
                     SELECT audiences.idAudience, audiences.slug AS slugAud, numRg, objet, niveauProcedural, prenom, nom, NULL as denomination, NULL as numRccm, NULL as formeLegal, audiences.statut as statutAud, audiences.isChild, audiences.prochaineAudience
                     FROM audiences
                     JOIN parties ON audiences.idAudience = parties.idAudience
                     JOIN personne_adverses ON parties.idPartie = personne_adverses.idPartie
-            
+
                     UNION
-            
+
                     SELECT audiences.idAudience, audiences.slug AS slugAud, numRg, objet, niveauProcedural, NULL as prenom, NULL as nom, denomination, numRccm, formeLegal, audiences.statut as statutAud, audiences.isChild, audiences.prochaineAudience
                     FROM audiences
                     JOIN parties ON audiences.idAudience = parties.idAudience
@@ -687,7 +687,7 @@ class AudiencesController extends Controller
             $dateDernierVendredi = '';
             $dateProchainVendredi = '';
         }
-       
+
 
         $cabinet =  DB::select("select parties.idPartie,nom,prenom,email,emailEntreprise,affaires.slug as affaireslug,nomAffaire,affaires.idAffaire,denomination,clients.slug as clientslug,clients.idClient,role,autreRole,idAudience from parties,clients,affaires where parties.idClient=clients.idClient and parties.idAffaire=affaires.idAffaire");
 
@@ -787,101 +787,101 @@ class AudiencesController extends Controller
         $requete_requete = DB::select("SELECT * FROM procedure_liers,procedure_requetes WHERE typeProcedure ='requete' and procedure_liers.slugProcedure=procedure_requetes.slug and  COALESCE(procedure_liers.slugSource, procedure_liers.slugProcedure) = ?",[$slug]);
 
        // $requete_contraditoire = DB::select("SELECT procedure_liers.*,procedure_liers.typeProcedure as Procedure ,audiences.* FROM procedure_liers,audiences WHERE procedure_liers.typeProcedure ='audience' and procedure_liers.slugProcedure=audiences.slug and  COALESCE(procedure_liers.slugSource, procedure_liers.slugProcedure) = ?",[$slug]);
-     
+
 
         $slug = $requete[0]->slug;
 
-        $requete_contraditoire_partie = DB::select("SELECT * FROM clients ,parties, procedure_requetes, audiences, procedure_liers where  procedure_liers.slugSource = procedure_requetes.slug and  clients.idClient = parties.idClient 
+        $requete_contraditoire_partie = DB::select("SELECT * FROM clients ,parties, procedure_requetes, audiences, procedure_liers where  procedure_liers.slugSource = procedure_requetes.slug and  clients.idClient = parties.idClient
         and parties.idAudience = audiences.idAudience and procedure_liers.typeProcedure ='audience' and procedure_liers.slugProcedure = audiences.slug and procedure_liers.slugSource =? ",[$slug]) ;
 
-       
+
        // dd($requete_contraditoire_partie);
 
-        $requete_contraditoire_entreprise_adverses = DB::select("SELECT * FROM entreprise_adverses,parties, procedure_requetes, audiences, procedure_liers where  procedure_liers.slugSource = procedure_requetes.slug 
+        $requete_contraditoire_entreprise_adverses = DB::select("SELECT * FROM entreprise_adverses,parties, procedure_requetes, audiences, procedure_liers where  procedure_liers.slugSource = procedure_requetes.slug
         and entreprise_adverses.idPartie = parties.idPartie and procedure_liers.typeProcedure ='audience' and  parties.idAudience = audiences.idAudience and procedure_liers.slugProcedure = audiences.slug and procedure_liers.slugSource =? ",[$slug]) ;
 
-        $requete_contraditoire_presonne_adverses = DB::select("SELECT * FROM personne_adverses,parties, procedure_requetes, audiences, procedure_liers where  procedure_liers.slugSource = procedure_requetes.slug 
+        $requete_contraditoire_presonne_adverses = DB::select("SELECT * FROM personne_adverses,parties, procedure_requetes, audiences, procedure_liers where  procedure_liers.slugSource = procedure_requetes.slug
         and personne_adverses.idPartie = parties.idPartie and procedure_liers.typeProcedure ='audience' and  parties.idAudience = audiences.idAudience and procedure_liers.slugProcedure = audiences.slug and procedure_liers.slugSource =? ",[$slug]) ;
 
         //dd("contraditoire",$requete_contraditoire_partie,"requete",$requete_contraditoire_entreprise_adverses);
 
         //dd($requete_contraditoire_presonne_adverses);
 
-       
 
-       
+
+
 
 
         // audience
 
         $audience_contraditoire = DB::select("SELECT * FROM audiences,procedure_liers where procedure_liers.typeProcedure='requete' and procedure_liers.slugSource = audiences.slug and  procedure_liers.slugProcedure =? ",[$slug] );
 
-        $audience_contraditoire_client = DB::select("SELECT * FROM audiences, parties, procedure_liers,clients where procedure_liers.typeProcedure = 'requete' and procedure_liers.slugSource = audiences.slug and parties.idAudience = audiences.idAudience 
+        $audience_contraditoire_client = DB::select("SELECT * FROM audiences, parties, procedure_liers,clients where procedure_liers.typeProcedure = 'requete' and procedure_liers.slugSource = audiences.slug and parties.idAudience = audiences.idAudience
         and clients.idClient = parties.idClient and procedure_liers.slugProcedure =?",[$slug]);
 
         //dd($audience_contraditoire,$audience_contraditoire_client);
 
-      
-        $audience_contraditoire_personne_adverses = DB::select("SELECT * FROM audiences, parties,personne_adverses, procedure_liers where procedure_liers.typeProcedure = 'requete' and personne_adverses.idPartie = parties.idPartie and 
+
+        $audience_contraditoire_personne_adverses = DB::select("SELECT * FROM audiences, parties,personne_adverses, procedure_liers where procedure_liers.typeProcedure = 'requete' and personne_adverses.idPartie = parties.idPartie and
         procedure_liers.slugSource = audiences.slug and parties.idAudience = audiences.idAudience  and  procedure_liers.slugProcedure =?",[$slug]);
         //dd($audience_contraditoire_personne_adverses);
 
 
 
-        $audience_contraditoire_entreprise_adverses = DB::select("SELECT * FROM audiences, parties,entreprise_adverses, procedure_liers where procedure_liers.typeProcedure = 'requete' and entreprise_adverses.idPartie = parties.idPartie and 
+        $audience_contraditoire_entreprise_adverses = DB::select("SELECT * FROM audiences, parties,entreprise_adverses, procedure_liers where procedure_liers.typeProcedure = 'requete' and entreprise_adverses.idPartie = parties.idPartie and
         procedure_liers.slugSource = audiences.slug and parties.idAudience = audiences.idAudience  and  procedure_liers.slugProcedure =?",[$slug]);
        // dd($audience_contraditoire_entreprise_adverses);
 
 
 
-        $audience_contraditoire_entreprise_adverses2 = DB::select("SELECT * FROM audiences, parties,entreprise_adverses, procedure_liers where procedure_liers.typeProcedure = 'audience' and entreprise_adverses.idPartie = parties.idPartie and 
+        $audience_contraditoire_entreprise_adverses2 = DB::select("SELECT * FROM audiences, parties,entreprise_adverses, procedure_liers where procedure_liers.typeProcedure = 'audience' and entreprise_adverses.idPartie = parties.idPartie and
         procedure_liers.slugProcedure = audiences.slug and parties.idAudience = audiences.idAudience  and  procedure_liers.slugSource =?",[$slug]);
        // dd($audience_contraditoire_entreprise_adverses2);
 
         $audience_contraditoire2 = DB::select("SELECT * FROM audiences,procedure_liers where procedure_liers.typeProcedure='audience' and procedure_liers.slugProcedure = audiences.slug and  procedure_liers.slugSource =? ",[$slug] );
         //dd($audience_contraditoire2);
 
-        $audience_contraditoire_client2 = DB::select("SELECT * FROM audiences, parties, procedure_liers,clients where procedure_liers.typeProcedure = 'audience' and procedure_liers.slugProcedure = audiences.slug and parties.idAudience = audiences.idAudience 
+        $audience_contraditoire_client2 = DB::select("SELECT * FROM audiences, parties, procedure_liers,clients where procedure_liers.typeProcedure = 'audience' and procedure_liers.slugProcedure = audiences.slug and parties.idAudience = audiences.idAudience
         and clients.idClient = parties.idClient and procedure_liers.slugSource =?",[$slug]);
         //dd($audience_contraditoire_client2);
 
-        $audience_contraditoire_personne_adverses2 = DB::select("SELECT * FROM audiences, parties,personne_adverses, procedure_liers where procedure_liers.typeProcedure = 'audience' and personne_adverses.idPartie = parties.idPartie and 
+        $audience_contraditoire_personne_adverses2 = DB::select("SELECT * FROM audiences, parties,personne_adverses, procedure_liers where procedure_liers.typeProcedure = 'audience' and personne_adverses.idPartie = parties.idPartie and
         procedure_liers.slugProcedure = audiences.slug and parties.idAudience = audiences.idAudience  and  procedure_liers.slugSource =?",[$slug]);
         //dd($audience_contraditoire_personne_adverses2);
 
 
 
-        // requete 
+        // requete
 
         $procedure_requete = DB::select("SELECT * FROM procedure_liers,procedure_requetes where procedure_liers.typeProcedure = 'requete' and procedure_liers.slugProcedure = procedure_requetes.slug and  procedure_liers.slugSource = ? ",[$slug]);
         //dd($procedure_requete);
 
-       $procedure_requete_client = DB::select("SELECT * FROM procedure_requetes, parties_requetes, procedure_liers,clients where procedure_liers.typeProcedure = 'requete' and procedure_liers.slugProcedure = procedure_requetes.slug and parties_requetes.idRequete = procedure_requetes.idProcedure 
+       $procedure_requete_client = DB::select("SELECT * FROM procedure_requetes, parties_requetes, procedure_liers,clients where procedure_liers.typeProcedure = 'requete' and procedure_liers.slugProcedure = procedure_requetes.slug and parties_requetes.idRequete = procedure_requetes.idProcedure
         and clients.idClient = parties_requetes.idClient and procedure_liers.slugSource =?",[$slug]);
-        
+
         // dd($audience_contraditoire_client);
 
-        $procedure_requete_personne_adverses = DB::select("SELECT * FROM procedure_requetes, parties_requetes,personne_adverses_requetes, procedure_liers where procedure_liers.typeProcedure = 'requete' and personne_adverses_requetes.idPartie = parties_requetes.idPartie and 
+        $procedure_requete_personne_adverses = DB::select("SELECT * FROM procedure_requetes, parties_requetes,personne_adverses_requetes, procedure_liers where procedure_liers.typeProcedure = 'requete' and personne_adverses_requetes.idPartie = parties_requetes.idPartie and
         procedure_liers.slugProcedure = procedure_requetes.slug and parties_requetes.idRequete = procedure_requetes.idProcedure  and  procedure_liers.slugSource =?",[$slug]);
         //dd($procedure_requete_personne_adverses);
 
-        $procedure_requete_entreprise_adverses_requete = DB::select("SELECT * FROM procedure_liers, parties_requetes,entreprise_adverses_requetes, procedure_requetes where procedure_liers.typeProcedure = 'requete' and entreprise_adverses_requetes.idPartie = parties_requetes.idPartie and 
+        $procedure_requete_entreprise_adverses_requete = DB::select("SELECT * FROM procedure_liers, parties_requetes,entreprise_adverses_requetes, procedure_requetes where procedure_liers.typeProcedure = 'requete' and entreprise_adverses_requetes.idPartie = parties_requetes.idPartie and
         procedure_liers.slugProcedure = procedure_requetes.slug and parties_requetes.idRequete = procedure_requetes.idProcedure  and  procedure_liers.slugSource =?",[$slug]);
         //dd($procedure_requete_entreprise_adverses_requete);
 
 
         $procedure_requete2 = DB::select("SELECT * FROM procedure_liers,procedure_requetes where procedure_liers.typeProcedure = 'requete' and procedure_liers.slugSource = procedure_requetes.slug and  procedure_liers.slugProcedure = ? ",[$slug]);
         //dd($procedure_requete2);
-        
-        $procedure_requete_entreprise_adverses_requete2 = DB::select("SELECT * FROM procedure_liers, parties_requetes,entreprise_adverses_requetes, procedure_requetes where procedure_liers.typeProcedure = 'requete' and entreprise_adverses_requetes.idPartie = parties_requetes.idPartie and 
+
+        $procedure_requete_entreprise_adverses_requete2 = DB::select("SELECT * FROM procedure_liers, parties_requetes,entreprise_adverses_requetes, procedure_requetes where procedure_liers.typeProcedure = 'requete' and entreprise_adverses_requetes.idPartie = parties_requetes.idPartie and
         procedure_liers.slugSource = procedure_requetes.slug and parties_requetes.idRequete = procedure_requetes.idProcedure  and  procedure_liers.slugProcedure =?",[$slug]);
         //dd($procedure_requete_entreprise_adverses_requete);
 
-        $procedure_requete_client2 = DB::select("SELECT * FROM procedure_requetes, parties_requetes, procedure_liers,clients where procedure_liers.typeProcedure = 'requete' and procedure_liers.slugSource = procedure_requetes.slug and parties_requetes.idRequete = procedure_requetes.idProcedure 
+        $procedure_requete_client2 = DB::select("SELECT * FROM procedure_requetes, parties_requetes, procedure_liers,clients where procedure_liers.typeProcedure = 'requete' and procedure_liers.slugSource = procedure_requetes.slug and parties_requetes.idRequete = procedure_requetes.idProcedure
         and clients.idClient = parties_requetes.idClient and procedure_liers.slugProcedure =?",[$slug]);
        // dd($procedure_requete_client2);
 
-       $procedure_requete_personne_adverses_requete2 = DB::select("SELECT * FROM procedure_liers, parties_requetes,personne_adverses_requetes, procedure_requetes where procedure_liers.typeProcedure = 'requete' and personne_adverses_requetes.idPartie = parties_requetes.idPartie and 
+       $procedure_requete_personne_adverses_requete2 = DB::select("SELECT * FROM procedure_liers, parties_requetes,personne_adverses_requetes, procedure_requetes where procedure_liers.typeProcedure = 'requete' and personne_adverses_requetes.idPartie = parties_requetes.idPartie and
        procedure_liers.slugSource = procedure_requetes.slug and parties_requetes.idRequete = procedure_requetes.idProcedure  and  procedure_liers.slugProcedure =?",[$slug]);
        //dd($procedure_requete_personne_adverses_requete2);
 
@@ -921,28 +921,28 @@ class AudiencesController extends Controller
     {
 
         return DB::transaction(function () use ($request) {
-  
+
             $TYPE_ADVERSE = ['Entreprise', 'Personne physique'];
 
             $today = date('Y-m-d');
-    
+
             // L'instance du model FileAudience'
             $fichiers = new Fichiers();
-    
-    
-    
+
+
+
             if ($request) {
 
-    
+
                 $messages = [
                     'juridiction.required' => 'Le champ juridiction est obligatoire.',
                     'objet.required' => 'Le champ objet est obligatoire.',
                     'niveauProcedural.required' => 'Le champ niveau procedural est obligatoire.',
                     'nature.required' => 'Le champ nature est obligatoire.',
-                   
+
                     // ...
                 ];
-    
+
 
                 //Enregistrement de la procedure sur requete
                 if ($request->typeProcedure == 'requete') {
@@ -950,7 +950,7 @@ class AudiencesController extends Controller
                     $request->validate([
                         'juridiction' => 'required',
                         'objet' => 'required',
-                        
+
                     ], $messages);
 
                     $procedure = new ProcedureRequete();
@@ -977,7 +977,7 @@ class AudiencesController extends Controller
 
                     $arr = is_array($request->requeteLier) ? $request->requeteLier : [$request->requeteLier];
                     //dd($arr);
-                   
+
                     /*
 
                     foreach ($arr as $requete) {
@@ -996,18 +996,18 @@ class AudiencesController extends Controller
 
                     if(!empty($arr)){
                         foreach ($arr as $slugToLier) {
-    
+
                             // On vérifie dans les deux tables
                             $existsInAudience = DB::table('audiences')->where('slug', $slugToLier)->exists();
                             $existsInRequete = DB::table('procedure_requetes')->where('slug', $slugToLier)->exists();
-    
-                    
+
+
                             if ($existsInAudience) {
                                 $type = 'audience';
                             } elseif ($existsInRequete) {
                                 $type = 'requete';
-                            } 
-                    
+                            }
+
                             // Enregistrement de la liaison
                             ProcedureLiers::create([
                                 'typeProcedure' => $type,
@@ -1015,14 +1015,14 @@ class AudiencesController extends Controller
                                 'slugProcedure' => $slugToLier,
                                 'slug' => $request->_token . rand(1234, 3458),
                             ]);
-                           
+
                         }
                     }
-                   
 
-                   
 
-        
+
+
+
                     if (isset($request->formset)) {
                             foreach ($request->formset as $key => $value) {
                                 // Vérifier si typeAvocat est égal à '1'
@@ -1036,38 +1036,38 @@ class AudiencesController extends Controller
                             if( $partieCabinet === false){
                                 return redirect()->back()->with('error', 'L\'une des parties doit être cliente de votre cabinet.');
                             }
-            
+
                             $procedure->save();
-                            
+
                             foreach ($request->formset as $key => $value) {
-                
+
                                 if (isset($value['autreRole'])) {
                                     $autreRole = $value['autreRole'];
                                 } else {
                                     $autreRole = '';
                                 }
-                
+
                                 if (isset($value['idClient'])) {
                                     $idClient = $value['idClient'];
                                 } else {
                                     $idClient = null;
                                 }
-                
+
                                 if (isset($value['idAffaire'])) {
                                     $idAffaire = $value['idAffaire'];
                                 } else {
                                     $idAffaire = null;
                                 }
                                 if (isset($value['typeAvocat'])) {
-                
+
                                     $typeAvocat = $value['typeAvocat'];
-                                
+
                                 } else {
                                     $typeAvocat = null;
                                 }
 
                                 $idRequeteSelect = DB::select("select idProcedure from procedure_requetes order by idProcedure desc limit 1");
-                
+
                                 PartiesRequetes::create([
                                     'idRequete' => $idRequeteSelect[0]->idProcedure,
                                     'role' => $value['role'],
@@ -1077,15 +1077,15 @@ class AudiencesController extends Controller
                                     'typeAvocat' => $typeAvocat,
                                     'slug' => $request->_token . "" . rand(1234, 3458),
                                 ]);
-                
+
                                 // Enregistrement des avocats
                                 $idPartieSelect = DB::select("select idPartie from parties_requetes order by idPartie desc limit 1");
-                
+
                                 if (isset($value['idAvocat'])) {
                                     $arr = $value['idAvocat'];
-                
+
                                     for ($i = 0; $i < count($arr); $i++) {
-                
+
                                         AvocatPartiesRequetes::create([
                                             'idPartie' => $idPartieSelect[0]->idPartie,
                                             'idAvocat' =>  $arr[$i],
@@ -1093,9 +1093,9 @@ class AudiencesController extends Controller
                                         ]);
                                     }
                                 }
-                
+
                                 if (isset($value['typeAdverse']) && $value['typeAdverse'] == "Personne physique") {
-                
+
                                     PersonneAdversesRequetes::create([
                                         'idPartie' => $idPartieSelect[0]->idPartie,
                                         'prenom' => $value['prenom'],
@@ -1111,8 +1111,8 @@ class AudiencesController extends Controller
                                     ]);
                                 }
                                 if (isset($value['typeAdverse']) && $value['typeAdverse'] == "Entreprise") {
-                
-                                
+
+
                                     EntrepriseAdversesRequetes::create([
                                         'idPartie' => $idPartieSelect[0]->idPartie,
                                         'denomination' => $value['denomination'],
@@ -1123,7 +1123,7 @@ class AudiencesController extends Controller
                                         'slug' => $request->_token . "" . rand(1234, 3458),
                                     ]);
                                 }
-                            } 
+                            }
 
                             $suivi = new SuivitRequete();
                             $suivi->idRequete = $procedure->idProcedure;
@@ -1134,60 +1134,52 @@ class AudiencesController extends Controller
                             $suivi->suiviPar = Auth::user()->name;
                             $suivi->slug = rand(124, 875) . $request->_token . rand(1234, 8765);
                             //dd($suivi);
-                
+
                             // Enregistrement en base
                             $suivi->save();
-        
-                            
-                            
+
+
+
                             if ($request->file('pieceREQ') != null) {
-                
-                                $slugRequete = DB::select("select slug from procedure_requetes order by idProcedure desc limit 1");
-                                $slugSuivitRequete = DB::select("select slug from suivit_requetes order by idSuivit desc limit 1");
-            
+
+                                //$slugRequete = DB::select("select slug from procedure_requetes order by idProcedure desc limit 1");
+                                $slugRequete = ProcedureRequete::select('slug')->orderBy('idProcedure', 'desc')->first();
+                                //$slugSuivitRequete = DB::select("select slug from suivit_requetes order by idSuivit desc limit 1");
+
+                                $slugSuivitRequete = SuivitRequete::select('slug')->orderBy('idSuivit', 'desc')->first();
+
                                 $fichier = request()->file('pieceREQ');
 
                                 $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
-
-                                // enregistrment de la piece de la requete en temps que procedure requete 
-                                $pieceREQ = new Fichiers();
-            
-                                
-                               // $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
-                                $pieceREQ->nomOriginal = $fichier->getClientOriginalName();
-                                $pieceREQ->slugSource =  $slugRequete[0]->slug;
-                                $pieceREQ->filename = $filename;
-                                $pieceREQ->slug = $request->_token . "" . rand(1234, 3458);
-                                $pieceREQ->path = 'assets/upload/fichiers/audiences/requetes/' . $filename;
+                                // enregistrment de la piece de la requete en temps que procedure requete
+                                //  creation du fichier
+                                Fichiers::create([
+                                    'nomOriginal' => $fichier->getClientOriginalName(),
+                                    'slugSource' =>  $slugRequete->slug,
+                                    'filename' => $filename,
+                                    'slug' => $request->_token . "" . rand(1234, 3458),
+                                    'path' => 'assets/upload/fichiers/audiences/requetes/' . $filename,
+                                ]);
+                                // Creation du fichier du suvit
+                                Fichiers::create([
+                                    'nomOriginal' => $fichier->getClientOriginalName(),
+                                    'slugSource' =>  $slugSuivitRequete->slug,
+                                    'filename' => $filename,
+                                    'slug' => $request->_token . "" . rand(1234, 3458),
+                                    'path' => 'assets/upload/fichiers/ordonnances/' . $filename,
+                                ]);
+                                $pathRequest = 'assets/upload/fichiers/audiences/requetes/' . $filename;
+                                $pathSuitvit = 'assets/upload/fichiers/ordonnances/' . $filename;
+                                // Copie des fichiers $pathRequest et $pathSuivit dans les dossiers requestes et ordonnance
                                 $fichier->move(public_path('assets/upload/fichiers/audiences/requetes/'), $filename);
-                                $pieceREQ->save();
+                                copy(public_path($pathRequest), public_path($pathSuitvit));
 
 
-                                // enregistrement de la piece de requete en que temps que suivitreque 
-                                $pieceREQSuivit = new Fichiers();
-            
-                                //$filenameSuivit = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
-                                //dd($filenameSuivit);
-                                $pieceREQSuivit->nomOriginal = $fichier->getClientOriginalName();
-                                //$pieceREQSuivit->slugSource =  $slugSuivitRequete[0]->slug;
-                                $pieceREQSuivit->slugSource = $suivi->slug; // identique
-                                $pieceREQSuivit->filename = $filename;
-                                $pieceREQSuivit->slug = $request->_token . "" . rand(1234, 3458);
-                                $pieceREQSuivit->path = 'assets/upload/fichiers/ordonnances/' . $filename;
-                                //$fichier->move(public_path('assets/upload/fichiers/ordonnances/'), $filename);
-                                copy(
-                                    public_path('assets/upload/fichiers/audiences/requetes/' . $filename),
-                                    public_path('assets/upload/fichiers/ordonnances/' . $filename)
-                                );
-
-                                $pieceREQSuivit->save();
-            
-                                
                                     if (isset($request->formsetPiece)) {
                                         foreach ($request->formsetPiece as $key => $value) {
                                         $fichier =$value['autrePieces'];
                                         $pieceREQ = new Fichiers();
-            
+
                                         $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
                                         $pieceREQ->nomOriginal = $fichier->getClientOriginalName();
                                         $pieceREQ->slugSource =  $slugRequete[0]->slug;
@@ -1198,17 +1190,17 @@ class AudiencesController extends Controller
                                         $pieceREQ->save();
                                         }
                                     }
-                            
+
                             }
-                         
+
                         }
-                    
+
 
                     // Notifications
                     //$personnels = DB::select("select * from personnels,users where personnels.email=users.email and users.role='Collaborateur'");
                     $personnels = DB::select("select * from personnels,users where personnels.email=users.email ");
                     foreach ($personnels as $p) {
-        
+
                         DB::select(
                             'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
                             [
@@ -1223,9 +1215,9 @@ class AudiencesController extends Controller
                             ]
                         );
                     }
-        
+
                     $admins = DB::select("select * from users where role='Administrateur'");
-        
+
                     foreach ($admins as $a) {
                                 DB::select(
                                     'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
@@ -1243,7 +1235,7 @@ class AudiencesController extends Controller
                                 );
                     }
 
-                    
+
                     return redirect()->route('listRequete')->with('success', 'Requete créée avec succès');
 
 
@@ -1254,7 +1246,7 @@ class AudiencesController extends Controller
                         'objet' => 'required',
                         'niveauProcedural' => 'required',
                         'nature' => 'required',
-                        
+
                     ], $messages);
 
                         // L'instance du model Audience
@@ -1281,9 +1273,9 @@ class AudiencesController extends Controller
                         $audiences->createur = Auth::user()->name;
                         $audiences->statut = 'En cours';
                         $audiences->slug = rand(124, 875) . $request->_token . rand(1234, 8765);
-                          
+
                         $audiences->save();
-                    
+
 
                         $arr = is_array($request->requeteLier) ? $request->requeteLier : [$request->requeteLier];
 
@@ -1304,18 +1296,18 @@ class AudiencesController extends Controller
 
                         if(!empty($arr)){
                             foreach ($arr as $slugToLier) {
-        
+
                                 // On vérifie dans les deux tables
                                 $existsInAudience = DB::table('audiences')->where('slug', $slugToLier)->exists();
                                 $existsInRequete = DB::table('procedure_requetes')->where('slug', $slugToLier)->exists();
-        
-                        
+
+
                                 if ($existsInAudience) {
                                     $type = 'audience';
                                 } elseif ($existsInRequete) {
                                     $type = 'requete';
-                                } 
-                        
+                                }
+
                                 // Enregistrement de la liaison
                                 ProcedureLiers::create([
                                     'typeProcedure' => $type,
@@ -1323,21 +1315,21 @@ class AudiencesController extends Controller
                                     'slugProcedure' => $slugToLier,
                                     'slug' => $request->_token . rand(1234, 3458),
                                 ]);
-                               
+
                             }
                         }
 
-                       
-            
+
+
                         $idAudienceSelect = DB::select("select idAudience from audiences order by idAudience desc limit 1");
 
                     if ($request->file('pieceInstruction') != null) {
-    
+
                         $audiences->pieceInstruction = rand(124, 875) . $request->_token . rand(1234, 8765);
-        
+
                         $fichier = request()->file('pieceInstruction');
                         $pieceInstruction = new Fichiers();
-        
+
                         $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
                         $pieceInstruction->nomOriginal = $fichier->getClientOriginalName();
                         $pieceInstruction->slugSource =  $audiences->pieceInstruction;
@@ -1347,9 +1339,9 @@ class AudiencesController extends Controller
                         $fichier->move(public_path('assets/upload/fichiers/audiences/instructions/'), $filename);
                         $pieceInstruction->save();
                     }
-        
+
                     $partieCabinet = false;
-        
+
                     if (isset($request->formset)) {
                         foreach ($request->formset as $key => $value) {
                             // Vérifier si typeAvocat est égal à '1'
@@ -1365,35 +1357,35 @@ class AudiencesController extends Controller
                         }
 
 
-                          
+
 
                             foreach ($request->formset as $key => $value) {
-                
+
                                 if (isset($value['autreRole'])) {
                                     $autreRole = $value['autreRole'];
                                 } else {
                                     $autreRole = '';
                                 }
-                
+
                                 if (isset($value['idClient'])) {
                                     $idClient = $value['idClient'];
                                 } else {
                                     $idClient = null;
                                 }
-                
+
                                 if (isset($value['idAffaire'])) {
                                     $idAffaire = $value['idAffaire'];
                                 } else {
                                     $idAffaire = null;
                                 }
                                 if (isset($value['typeAvocat'])) {
-                
+
                                     $typeAvocat = $value['typeAvocat'];
-                                
+
                                 } else {
                                     $typeAvocat = null;
                                 }
-                
+
                                 Parties::create([
                                     'idAudience' => $idAudienceSelect[0]->idAudience,
                                     'role' => $value['role'],
@@ -1403,15 +1395,15 @@ class AudiencesController extends Controller
                                     'typeAvocat' => $typeAvocat,
                                     'slug' => $request->_token . "" . rand(1234, 3458),
                                 ]);
-                
+
                                 // Enregistrement des avocats
                                 $idPartieSelect = DB::select("select idPartie from parties order by idPartie desc limit 1");
-                
+
                                 if (isset($value['idAvocat'])) {
                                     $arr = $value['idAvocat'];
-                
+
                                     for ($i = 0; $i < count($arr); $i++) {
-                
+
                                         AvocatParties::create([
                                             'idPartie' => $idPartieSelect[0]->idPartie,
                                             'idAvocat' =>  $arr[$i],
@@ -1419,9 +1411,9 @@ class AudiencesController extends Controller
                                         ]);
                                     }
                                 }
-                
+
                                 if (isset($value['typeAdverse']) && $value['typeAdverse'] == "Personne physique") {
-                
+
                                     PersonneAdverse::create([
                                         'idPartie' => $idPartieSelect[0]->idPartie,
                                         'prenom' => $value['prenom'],
@@ -1437,8 +1429,8 @@ class AudiencesController extends Controller
                                     ]);
                                 }
                                 if (isset($value['typeAdverse']) && $value['typeAdverse'] == "Entreprise") {
-                
-                                
+
+
                                     EntrepriseAdverse::create([
                                         'idPartie' => $idPartieSelect[0]->idPartie,
                                         'denomination' => $value['denomination'],
@@ -1450,9 +1442,9 @@ class AudiencesController extends Controller
                                     ]);
                                 }
                             }
-    
-                            
-                
+
+
+
                             // Enregistrement de l'acte introductifs
                             ActeIntroductifs::create([
                                 'idAudience' => $idAudienceSelect[0]->idAudience,
@@ -1460,9 +1452,9 @@ class AudiencesController extends Controller
                                 'idNatureAction' => $request->idNatureAction,
                                 'slug' => $request->_token . "" . rand(1234, 3458),
                             ]);
-                
+
                             $idActeSelect = DB::select("select idActe from acte_introductifs order by idActe desc limit 1");
-                
+
                             // Enregistrement de l'Assignation
                             if ($request->typeActe == 'Assignation') {
                                 Assignations::create([
@@ -1476,16 +1468,16 @@ class AudiencesController extends Controller
                                     'mentionParticuliere' =>  $request->mentionParticuliere,
                                     'slug' => $request->_token . "" . rand(1234, 3458),
                                 ]);
-                
+
                                 DB::update('update audiences set prochaineAudience=? where idAudience=?',[$request->datePremiereComp,$idAudienceSelect[0]->idAudience]);
-                
+
                                 if ($request->file('pieceAS') != null) {
-                
+
                                     $slugAssignation = DB::select("select slug from assignations order by idAssignation desc limit 1");
-                
+
                                     $fichier = request()->file('pieceAS');
                                     $pieceAS = new Fichiers();
-                
+
                                     $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
                                     $pieceAS->nomOriginal = $fichier->getClientOriginalName();
                                     $pieceAS->slugSource =  $slugAssignation[0]->slug;
@@ -1494,13 +1486,13 @@ class AudiencesController extends Controller
                                     $pieceAS->path = 'assets/upload/fichiers/audiences/assignations/' . $filename;
                                     $fichier->move(public_path('assets/upload/fichiers/audiences/assignations/'), $filename);
                                     $pieceAS->save();
-                
-                
+
+
                                     if (isset($request->formsetPiece)) {
                                         foreach ($request->formsetPiece as $key => $value) {
                                             $fichier =$value['autrePieces'];
                                             $pieceAS = new Fichiers();
-                        
+
                                             $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
                                             $pieceAS->nomOriginal = $fichier->getClientOriginalName();
                                             $pieceAS->slugSource =  $slugAssignation[0]->slug;
@@ -1512,10 +1504,10 @@ class AudiencesController extends Controller
                                         }
                                     }
                                 }
-                
-                                
+
+
                             }
-                
+
                             // Enregistrement de la requete
                             if ($request->typeActe == 'Requete') {
                                 Requetes::create([
@@ -1526,14 +1518,14 @@ class AudiencesController extends Controller
                                     'juriductionPresidentielle' => $request->juriductionPresidentielle,
                                     'slug' => $request->_token . "" . rand(1234, 3458),
                                 ]);
-                
+
                                 if ($request->file('pieceREQ') != null) {
-                
+
                                     $slugRequete = DB::select("select slug from requetes order by idRequete desc limit 1");
-                
+
                                     $fichier = request()->file('pieceREQ');
                                     $pieceREQ = new Fichiers();
-                
+
                                     $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
                                     $pieceREQ->nomOriginal = $fichier->getClientOriginalName();
                                     $pieceREQ->slugSource =  $slugRequete[0]->slug;
@@ -1542,13 +1534,13 @@ class AudiencesController extends Controller
                                     $pieceREQ->path = 'assets/upload/fichiers/audiences/requetes/' . $filename;
                                     $fichier->move(public_path('assets/upload/fichiers/audiences/requetes/'), $filename);
                                     $pieceREQ->save();
-                
-                                    
+
+
                                         if (isset($request->formsetPiece)) {
                                             foreach ($request->formsetPiece as $key => $value) {
                                             $fichier =$value['autrePieces'];
                                             $pieceREQ = new Fichiers();
-                
+
                                             $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
                                             $pieceREQ->nomOriginal = $fichier->getClientOriginalName();
                                             $pieceREQ->slugSource =  $slugRequete[0]->slug;
@@ -1559,7 +1551,7 @@ class AudiencesController extends Controller
                                             $pieceREQ->save();
                                             }
                                         }
-                                
+
                                 }
                             }
 
@@ -1576,16 +1568,17 @@ class AudiencesController extends Controller
                                     'idHuissier' => $request->idHuissierCit,
                                     'slug' => $request->_token . "" . rand(1234, 3458),
                                 ]);
-                
+
                                 if ($request->file('pieceCitation') != null) {
-                
+
                                     $slugCitations = DB::select("select slug from citations order by idCitation desc limit 1");
-                
+
                                     $fichier = request()->file('pieceCitation');
 
                                     $pieceCitation = new Fichiers();
-                
+
                                     $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
+
                                     $pieceCitation->nomOriginal = $fichier->getClientOriginalName();
                                     $pieceCitation->slugSource =  $slugCitations[0]->slug;
                                     $pieceCitation->filename = $filename;
@@ -1593,13 +1586,13 @@ class AudiencesController extends Controller
                                     $pieceCitation->path = 'assets/upload/fichiers/audiences/signification_citations/' . $filename;
                                     $fichier->move(public_path('assets/upload/fichiers/audiences/signification_citations/'), $filename);
                                     $pieceCitation->save();
-                
-                                    
+
+
                                         if (isset($request->formsetPiece)) {
                                             foreach ($request->formsetPiece as $key => $value) {
                                             $fichier =$value['autrePieces'];
                                             $pieceCitation = new Fichiers();
-                
+
                                             $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
                                             $pieceCitation->nomOriginal = $fichier->getClientOriginalName();
                                             $pieceCitation->slugSource =  $slugCitations[0]->slug;
@@ -1610,7 +1603,7 @@ class AudiencesController extends Controller
                                             $pieceCitation->save();
                                             }
                                         }
-                                
+
                                 }
                             }
 
@@ -1631,9 +1624,9 @@ class AudiencesController extends Controller
                                     }
 
                                 }
-                                
+
                             }
-                
+
                             // Enregistrement de la requete
                             if ($request->typeActe == 'Opposition') {
                                 Oppositions::create([
@@ -1649,17 +1642,17 @@ class AudiencesController extends Controller
                                     'mentionParticuliere' => $request->mentionParticuliereOpp,
                                     'slug' => $request->_token . "" . rand(1234, 3458),
                                 ]);
-                
+
                                 DB::update('update audiences set prochaineAudience=? where idAudience=?',[$request->datePremiereCompOpp,$idAudienceSelect[0]->idAudience]);
-                
-                
+
+
                                 if ($request->file('pieceASOpp') != null) {
-                
+
                                     $slugOpposition = DB::select("select slug from oppositions order by idOpposition desc limit 1");
-                
+
                                     $fichier = request()->file('pieceASOpp');
                                     $pieceAS = new Fichiers();
-                
+
                                     $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
                                     $pieceAS->nomOriginal = $fichier->getClientOriginalName();
                                     $pieceAS->slugSource =  $slugOpposition[0]->slug;
@@ -1668,12 +1661,12 @@ class AudiencesController extends Controller
                                     $pieceAS->path = 'assets/upload/fichiers/audiences/oppositions/' . $filename;
                                     $fichier->move(public_path('assets/upload/fichiers/audiences/oppositions/'), $filename);
                                     $pieceAS->save();
-                
+
                                     if (isset($request->formsetPiece)) {
                                         foreach ($request->formsetPiece as $key => $value) {
                                             $fichier =$value['autrePieces'];
                                             $pieceAS = new Fichiers();
-                
+
                                             $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
                                             $pieceAS->nomOriginal = $fichier->getClientOriginalName();
                                             $pieceAS->slugSource =  $slugOpposition[0]->slug;
@@ -1686,7 +1679,7 @@ class AudiencesController extends Controller
                                     }
                                 }
                             }
-                
+
                             // Enregistrement du PV introgatoire
                             if ($request->typeActe == 'PV introgatoire') {
                                 PvInterrogatoires::create([
@@ -1697,11 +1690,11 @@ class AudiencesController extends Controller
                                     'dateAudience' => $request->dateAudience,
                                     'slug' => $request->_token . "" . rand(1234, 3458),
                                 ]);
-                
+
                                 DB::update('update audiences set prochaineAudience=? where idAudience=?',[$request->dateAudience,$idAudienceSelect[0]->idAudience]);
-                
+
                             }
-                
+
                             // Enregistrement du Requisitoire
                             if ($request->typeActe == 'Requisitoire') {
                                 Requisitoires::create([
@@ -1713,7 +1706,7 @@ class AudiencesController extends Controller
                                     'slug' => $request->_token . "" . rand(1234, 3458),
                                 ]);
                             }
-                
+
                             // Enregistrement de Ordonnance Renvoi
                             if ($request->typeActe == 'Ordonnance Renvoi') {
                                 OrdonnanceRenvois::create([
@@ -1725,7 +1718,7 @@ class AudiencesController extends Controller
                                     'slug' => $request->_token . "" . rand(1234, 3458),
                                 ]);
                             }
-                
+
                             // Enregistrement de Citation directe
                             if ($request->typeActe == 'Citation directe') {
                                 CitationDirectes::create([
@@ -1740,7 +1733,7 @@ class AudiencesController extends Controller
                                     'slug' => $request->_token . "" . rand(1234, 3458),
                                 ]);
                             }
-                
+
                             // Enregistrement du PCPC
                             if ($request->typeActe == 'PCPC') {
                                 Pcpcs::create([
@@ -1750,11 +1743,11 @@ class AudiencesController extends Controller
                                     'dateProchaineAud' => $request->dateProchaineAud,
                                     'slug' => $request->_token . "" . rand(1234, 3458),
                                 ]);
-                
+
                                 DB::update('update audiences set prochaineAudience=? where idAudience=?',[$request->dateProchaineAud,$idAudienceSelect[0]->idAudience]);
-                
+
                             }
-                
+
                             // Enregistrement de Declaration d'appel
                             if ($request->typeActe == "Declaration d'appel") {
                                 DeclarationAppels::create([
@@ -1765,7 +1758,7 @@ class AudiencesController extends Controller
                                     'slug' => $request->_token . "" . rand(1234, 3458),
                                 ]);
                             }
-                
+
                             // Enregistrement de Contredit
                             if ($request->typeActe == "Contredit") {
                                 Contredits::create([
@@ -1777,7 +1770,7 @@ class AudiencesController extends Controller
                                     'slug' => $request->_token . "" . rand(1234, 3458),
                                 ]);
                             }
-                
+
                             // Enregistrement de Contredit
                             if ($request->typeActe == "Pourvoi") {
                                 Pourvois::create([
@@ -1790,16 +1783,16 @@ class AudiencesController extends Controller
                                 ]);
                             }
                     }
-                    
-        
 
-            
-            
+
+
+
+
                         // Notifications
                        // $personnels = DB::select("select * from personnels,users where personnels.email=users.email and users.role='Collaborateur'");
                         $personnels = DB::select("select * from personnels,users where personnels.email=users.email ");
                         foreach ($personnels as $p) {
-            
+
                             DB::select(
                                 'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
                                 [
@@ -1814,9 +1807,9 @@ class AudiencesController extends Controller
                                 ]
                             );
                         }
-            
+
                         $admins = DB::select("select * from users where role='Administrateur'");
-            
+
                         foreach ($admins as $a) {
                                     DB::select(
                                         'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
@@ -1833,7 +1826,7 @@ class AudiencesController extends Controller
                                         ]
                                     );
                         }
-                
+
                         return redirect()->route('listAudience', 'generale')->with('success', 'Audience créée avec succès');
                 }
             }
@@ -1907,16 +1900,16 @@ class AudiencesController extends Controller
 
             // Enregistrement des parties
             $idAudienceSelect = DB::select("select idAudience from audiences order by idAudience desc limit 1");
-            
+
             $partiePrecedente = DB::select("select * from parties where idAudience=?",[$idAudience]);
             foreach ($partiePrecedente as $p) {
-           
+
                     // Formset 1
                 if (isset($request->formset1)) {
                     foreach ($request->formset1 as $key => $value) {
-                        
+
                         if ($value['idPartie1']==$p->idPartie) {
-                               
+
                             Parties::create([
                                 'idAudience' => $idAudienceSelect[0]->idAudience,
                                 'role' => $value['role1'],
@@ -1926,10 +1919,10 @@ class AudiencesController extends Controller
                                 'typeAvocat' => $p->typeAvocat,
                                 'slug' => $request->_token . "" . rand(1234, 3458),
                             ]);
-    
+
                             // Enregistrement des avocats
                             $idPartieSelect = DB::select("select idPartie from parties order by idPartie desc limit 1");
-    
+
                             $avocatsParties = DB::select("select * from avocat_parties where idPartie=?",[$p->idPartie]);
                             if (!empty($avocatsParties)) {
                                 foreach ($avocatsParties as $a) {
@@ -1939,8 +1932,8 @@ class AudiencesController extends Controller
                                         'slug' => $request->_token . "" . rand(1234, 3458),
                                     ]);
                                 }
-                            } 
-                            
+                            }
+
                             $personnesAdverses = DB::select("select * from personne_adverses where idPartie=?",[$p->idPartie]);
                             if (!empty($personnesAdverses)) {
                                 foreach ($personnesAdverses as $prs) {
@@ -1959,7 +1952,7 @@ class AudiencesController extends Controller
                                 ]);
                               }
                             }
-    
+
                             $entreprisesAdverses = DB::select("select * from entreprise_adverses where idPartie=?",[$p->idPartie]);
                             if (!empty($entreprisesAdverses)) {
                                 foreach ($personnesAdverses as $entrep) {
@@ -1977,11 +1970,11 @@ class AudiencesController extends Controller
 
                         }
                     }
-                }                
+                }
 
                 // Formset 2
                 if (isset($request->formset2)) {
-                   
+
                     foreach ($request->formset2 as $key => $value) {
 
                         if ($value['idPartie2']==$p->idPartie) {
@@ -2007,8 +2000,8 @@ class AudiencesController extends Controller
                                         'slug' => $request->_token . "" . rand(1234, 3458),
                                     ]);
                                 }
-                            } 
-                            
+                            }
+
                             $personnesAdverses = DB::select("select * from personne_adverses where idPartie=?",[$p->idPartie]);
                             if (!empty($personnesAdverses)) {
                                 foreach ($personnesAdverses as $prs) {
@@ -2043,8 +2036,8 @@ class AudiencesController extends Controller
                                }
                             }
                         }
-                    }  
-                
+                    }
+
                 }
 
                      // Formset 3
@@ -2052,7 +2045,7 @@ class AudiencesController extends Controller
                     foreach ($request->formset3 as $key => $value) {
 
                         if ($value['idPartie3']==$p->idPartie) {
-                        
+
                             Parties::create([
                                 'idAudience' => $idAudienceSelect[0]->idAudience,
                                 'role' => $value['role3'],
@@ -2075,8 +2068,8 @@ class AudiencesController extends Controller
                                         'slug' => $request->_token . "" . rand(1234, 3458),
                                     ]);
                                 }
-                            } 
-                            
+                            }
+
                             $personnesAdverses = DB::select("select * from personne_adverses where idPartie=?",[$p->idPartie]);
                             if (!empty($personnesAdverses)) {
                                 foreach ($personnesAdverses as $prs) {
@@ -2162,7 +2155,7 @@ class AudiencesController extends Controller
                         foreach ($request->formsetPiece as $key => $value) {
                             $fichier =$value['autrePieces'];
                             $pieceAS = new Fichiers();
-        
+
                             $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
                             $pieceAS->nomOriginal = $fichier->getClientOriginalName();
                             $pieceAS->slugSource =  $slugAssignation[0]->slug;
@@ -2268,7 +2261,7 @@ class AudiencesController extends Controller
                             $pieceAS->save();
                         }
                      }
-                    
+
                 }
             }
 
@@ -2408,7 +2401,7 @@ class AudiencesController extends Controller
                 );
             }
         }
-        
+
 
         return redirect()->route('listAudience', 'generale')->with('success', ' Passage de l\'audience au niveau suivant effectué avec succès');
 
@@ -2443,7 +2436,7 @@ class AudiencesController extends Controller
                 'objet.required' => 'Le champ objet est obligatoire.',
                 'niveauProcedural.required' => 'Le champ niveau procedural est obligatoire.',
                 'nature.required' => 'Le champ nature est obligatoire.',
-               
+
                 // ...
             ];
 
@@ -2453,7 +2446,7 @@ class AudiencesController extends Controller
                 'objet' => 'required',
                 'niveauProcedural' => 'required',
                 'nature' => 'required',
-                
+
             ], $messages);
             // L'instance du model Audience
             $audiences = Audiences::find($id);
@@ -2543,9 +2536,9 @@ class AudiencesController extends Controller
 
                     if (isset($value['idAvocat'])) {
                         $arr = $value['idAvocat'];
-    
+
                         for ($i = 0; $i < count($arr); $i++) {
-    
+
                             AvocatParties::create([
                                 'idPartie' => $dernierePartie[0]->idPartie,
                                 'idAvocat' =>  $arr[$i],
@@ -2585,7 +2578,7 @@ class AudiencesController extends Controller
                     }
 
                 }
-            
+
             }
 
 
@@ -2631,13 +2624,13 @@ class AudiencesController extends Controller
 
             // Enregistrement de la requete
             if ($request->typeActe == 'Requete') {
-                
+
                 $requetes = Requetes::where('idActe', $idActeSelect[0]->idActe)->firstOrFail();
                 $requetes->idActe = $idActeSelect[0]->idActe;
                 $requetes->dateRequete =  $request->dateRequete;
                 $requetes->dateArriver =  $request->dateArriver;
                 $requetes->numRg =  $request->numRgRequete;
-                $requetes->juriductionPresidentielle=  $request->juriductionPresidentielle;                
+                $requetes->juriductionPresidentielle=  $request->juriductionPresidentielle;
                 $requetes->save();
 
                 if ($request->file('pieceREQ') != null) {
@@ -2660,7 +2653,7 @@ class AudiencesController extends Controller
 
             // Enregistrement de la requete
             if ($request->typeActe == 'Opposition') {
-               
+
 
                 $oppositions = Oppositions::where('idActe', $idActeSelect[0]->idActe)->firstOrFail();
                 $oppositions->idActe = $idActeSelect[0]->idActe;
@@ -2672,7 +2665,7 @@ class AudiencesController extends Controller
                 $oppositions->recepteurAss =  $request->recepteurAssOpp;
                 $oppositions->datePremiereComp =  $request->datePremiereCompOpp;
                 $oppositions->dateEnrollement =  $request->dateEnrollementOpp;
-                $oppositions->mentionParticuliere=  $request->mentionParticuliereOpp;                
+                $oppositions->mentionParticuliere=  $request->mentionParticuliereOpp;
                 $oppositions->save();
 
                 if ($request->file('pieceASOpp') != null) {
@@ -2695,13 +2688,13 @@ class AudiencesController extends Controller
 
             // Enregistrement du PV introgatoire
             if ($request->typeActe == 'PV introgatoire') {
-               
+
                 $pvInterrogatoires = PvInterrogatoires::where('idActe', $idActeSelect[0]->idActe)->firstOrFail();
                 $pvInterrogatoires->idActe = $idActeSelect[0]->idActe;
                 $pvInterrogatoires->dateAudition =  $request->dateAudition;
                 $pvInterrogatoires->identiteOPJ =  $request->identiteOPJ;
                 $pvInterrogatoires->infractions =  $request->infractions;
-                $pvInterrogatoires->dateAudience =  $request->dateAudience;               
+                $pvInterrogatoires->dateAudience =  $request->dateAudience;
                 $pvInterrogatoires->save();
             }
 
@@ -2713,7 +2706,7 @@ class AudiencesController extends Controller
                 $requisitoires->numInstruction =  $request->numInstruction;
                 $requisitoires->identiteOPJ =  $request->identiteOPJ;
                 $requisitoires->procureur =  $request->procureur;
-                $requisitoires->chefAccusation =  $request->chefAccusationReq;               
+                $requisitoires->chefAccusation =  $request->chefAccusationReq;
                 $requisitoires->save();
             }
 
@@ -2725,7 +2718,7 @@ class AudiencesController extends Controller
                 $ordonnanceRenvois->numOrd =  $request->numOrd;
                 $ordonnanceRenvois->cabinetIns =  $request->cabinetIns;
                 $ordonnanceRenvois->typeProcedure =  $request->typeProcedure;
-                $ordonnanceRenvois->chefAccusation =  $request->chefAccusationOrd;               
+                $ordonnanceRenvois->chefAccusation =  $request->chefAccusationOrd;
                 $ordonnanceRenvois->save();
             }
 
@@ -2737,10 +2730,10 @@ class AudiencesController extends Controller
                 $citationDirectes->saisi =  $request->saisi;
                 $citationDirectes->dateHeureAud =  $request->dateHeureAud;
                 $citationDirectes->idHuissier =  $request->idHuissier;
-                $citationDirectes->recepteurCitation =  $request->recepteurCitation;               
-                $citationDirectes->dateSignification =  $request->dateSignification;               
-                $citationDirectes->mentionParticuliere =  $request->mentionParticuliere;               
-                $citationDirectes->chefAccusation =  $request->chefAccusation;               
+                $citationDirectes->recepteurCitation =  $request->recepteurCitation;
+                $citationDirectes->dateSignification =  $request->dateSignification;
+                $citationDirectes->mentionParticuliere =  $request->mentionParticuliere;
+                $citationDirectes->chefAccusation =  $request->chefAccusation;
                 $citationDirectes->save();
             }
 
@@ -2751,18 +2744,18 @@ class AudiencesController extends Controller
                 $pcpcs->idActe = $idActeSelect[0]->idActe;
                 $pcpcs->reference =  $request->reference;
                 $pcpcs->datePcpc =  $request->datePcpc;
-                $pcpcs->dateProchaineAud =  $request->dateProchaineAud;             
+                $pcpcs->dateProchaineAud =  $request->dateProchaineAud;
                 $pcpcs->save();
             }
 
             // Enregistrement de Declaration d'appel
             if ($request->typeActe == "Declaration d'appel") {
-                
+
                 $declarationAppels = DeclarationAppels::where('idActe', $idActeSelect[0]->idActe)->firstOrFail();
                 $declarationAppels->idActe = $idActeSelect[0]->idActe;
                 $declarationAppels->numRg =  $request->numRgDeclaration;
                 $declarationAppels->numJugement =  $request->numJugement;
-                $declarationAppels->dateAppel =  $request->dateAppel;             
+                $declarationAppels->dateAppel =  $request->dateAppel;
                 $declarationAppels->save();
             }
 
@@ -2773,28 +2766,28 @@ class AudiencesController extends Controller
                 $contredits->idActe = $idActeSelect[0]->idActe;
                 $contredits->numConcerner =  $request->numConcerner;
                 $contredits->numDecisConcerner =  $request->numDecisConcerner;
-                $contredits->dateContredit =  $request->dateContredit;             
-                $contredits->dateDecision =  $request->dateDecision;             
+                $contredits->dateContredit =  $request->dateContredit;
+                $contredits->dateDecision =  $request->dateDecision;
                 $contredits->save();
             }
 
             // Enregistrement de Contredit
             if ($request->typeActe == "Pourvoi") {
-               
+
 
                 $pourvois = Pourvois::where('idActe', $idActeSelect[0]->idActe)->firstOrFail();
                 $pourvois->idActe = $idActeSelect[0]->idActe;
                 $pourvois->numPourvoi =  $request->numPourvoi;
                 $pourvois->numDecision =  $request->numDecisConcerner;
-                $pourvois->datePourvoi =  $request->datePourvoi;             
-                $pourvois->dateDecision =  $request->dateDecision;             
+                $pourvois->datePourvoi =  $request->datePourvoi;
+                $pourvois->dateDecision =  $request->dateDecision;
                 $pourvois->save();
             }
 
 
-           
+
         }
-        
+
 
         return redirect()->back()->with('success', 'Audience modifiée avec succès');
 
@@ -2817,7 +2810,7 @@ class AudiencesController extends Controller
             ->where('parties.idAudience', $id)
             ->select('parties.*')
             ->get();
-   
+
             $verif_client = !$monClient->isEmpty();
 
             // Utilisation de la variable $is_client
@@ -2826,7 +2819,7 @@ class AudiencesController extends Controller
             } else {
                 $is_client=false;
             }
-       
+
         // Récupérer le nom de la route précédente
         $nomRoutePrecedente = URL::previous();
 
@@ -2838,23 +2831,23 @@ class AudiencesController extends Controller
                     FROM audiences
                     JOIN parties ON audiences.idAudience = parties.idAudience
                     LEFT JOIN clients ON parties.idClient = clients.idClient
-        
+
                     UNION
-        
+
                     SELECT audiences.idAudience, audiences.slug AS slugAud, numRg, objet, niveauProcedural, prenom, nom, NULL as denomination, NULL as numRccm, NULL as formeLegal, audiences.statut as statutAud
                     FROM audiences
                     JOIN parties ON audiences.idAudience = parties.idAudience
                     JOIN personne_adverses ON parties.idPartie = personne_adverses.idPartie
-        
+
                     UNION
-        
+
                     SELECT audiences.idAudience, audiences.slug AS slugAud, numRg, objet, niveauProcedural, NULL as prenom, NULL as nom, denomination, numRccm, formeLegal, audiences.statut as statutAud
                     FROM audiences
                     JOIN parties ON audiences.idAudience = parties.idAudience
                     JOIN entreprise_adverses ON parties.idPartie = entreprise_adverses.idPartie
                 ) AS subquery_internal
                 GROUP BY subquery_internal.slugAud, subquery_internal.statutAud
-            ) AS subquery 
+            ) AS subquery
             WHERE niveauProcedural = '$niveau'
             ORDER BY idAudience ASC
         ");
@@ -2872,7 +2865,7 @@ class AudiencesController extends Controller
         $idAudience = $id;
 
         $audience = DB::select("select * from audiences,juriductions where audiences.juridiction=juriductions.id and audiences.slug=? and niveauProcedural=?", [$slug, $niveau]);
-        
+
         $SqltacheSuivit = DB::select("select idSuivit,slug from taches where audTache=?",[$id]);
 
         $tacheSuivit = collect($SqltacheSuivit)->pluck('idSuivit')->toArray();
@@ -2926,9 +2919,9 @@ class AudiencesController extends Controller
             $avocats = DB::select("select * from avocat_parties,avocats where avocat_parties.idAvocat=avocats.idAvc");
 
             $cabinet =  DB::select("select parties.idPartie,parties.idAudience,nom,prenom,email,emailEntreprise,affaires.slug as affaireslug,nomAffaire,affaires.idAffaire,denomination,clients.slug as clientslug,clients.idClient,role,autreRole from parties,clients,affaires where parties.idClient=clients.idClient and parties.idAffaire=affaires.idAffaire and idAudience=? ", [$audience[0]->idAudience]);
-            
+
             $paramCabinet = DB::select("select * from cabinets");
-            
+
 
             $personne_adverses = DB::select("select * from personne_adverses,parties where parties.idPartie=personne_adverses.idPartie and parties.idAudience=?", [$audience[0]->idAudience]);
 
@@ -2944,7 +2937,7 @@ class AudiencesController extends Controller
             } else {
                $pieceSign = [];
             }
-            
+
 
             $assignation = [];
             $citationDirect = [];
@@ -2953,7 +2946,7 @@ class AudiencesController extends Controller
             $contredit = [];
             $declarationAppel = [];
             $opposition = [];
-            $ordonnanceRenvois = []; 
+            $ordonnanceRenvois = [];
             $pcpcs = [];
             $pourvoi = [];
             $pvIntrogatoire = [];
@@ -2977,7 +2970,7 @@ class AudiencesController extends Controller
                 $autreActesItem = DB::select("select * from autre_actes where idActe=?", [$value->idActe]);
                 $citationsItem = DB::select("select * from huissiers,citations where citations.idHuissier=huissiers.idHss and idActe=?", [$value->idActe]);
                 $requisitoireItem = DB::select("select * from requisitoires where idActe=?", [$value->idActe]);
-            
+
                 if (empty($assignationItem)) {
                     $pieceAS = [];
                 } else {
@@ -3019,8 +3012,8 @@ class AudiencesController extends Controller
                 $requisitoire = array_merge($requisitoire, $requisitoireItem);
             }
 
-           
-           
+
+
             $pieceSupplement = DB::select("select * from fichiers where slugSource=?", [$audience[0]->slug]);
 
             //dd($assignation);
@@ -3058,7 +3051,7 @@ class AudiencesController extends Controller
                     $requete2 = DB::select("select * from requetes where idActe=?", [$acteIntroductif2[0]->idActe]);
                     $requisitoire2 = DB::select("select * from requisitoires where idActe=?", [$acteIntroductif2[0]->idActe]);
                     $citations2 = DB::select("select * from citations where idActe=?", [$acteIntroductif2[0]->idActe]);
-                
+
                     if (empty($assignation2)) {
                         $pieceAS = [];
                     } else {
@@ -3189,21 +3182,21 @@ class AudiencesController extends Controller
 
 
         $procedure_autreRole = DB::select("SELECT * From audiences, parties ,procedure_liers where  audiences.idAudience = parties.idAudience and procedure_liers.slugProcedure = audiences.slug  and parties.role = 'Autre'");
-   
+
         //dd($procedure_autreRole);
 
         $procedure_autreRole1 = DB::select("SELECT * From audiences, parties ,procedure_liers where  audiences.idAudience = parties.idAudience and procedure_liers.slugSource = audiences.slug  and parties.role = 'Autre'");
-   
+
         //dd($procedure_autreRole);
 
         $procedure_autreRole_requete = DB::select("SELECT * From procedure_requetes, parties_requetes ,procedure_liers where  procedure_requetes.idProcedure = parties_requetes.idRequete and procedure_liers.slugProcedure = procedure_requetes.slug  and parties_requetes.role = 'Autre'");
-   
+
         //dd($procedure_autreRole);
 
         $procedure_autreRole_requete1 = DB::select("SELECT * From procedure_requetes, parties_requetes ,procedure_liers where  procedure_requetes.idProcedure = parties_requetes.idRequete and procedure_liers.slugSource = procedure_requetes.slug  and parties_requetes.role = 'Autre'");
       //dd($procedure_autreRole_requete1);
-        
-        
+
+
 
         $audience_contraditoire_entreprise_adverses = DB::select("SELECT * FROM entreprise_adverses,parties, audiences, procedure_liers where  entreprise_adverses.idPartie = parties.idPartie and procedure_liers.typeProcedure ='audience' and  parties.idAudience = audiences.idAudience and procedure_liers.slugSource = audiences.slug and procedure_liers.slugProcedure =? ",[$slug]) ;
 
@@ -3215,7 +3208,7 @@ class AudiencesController extends Controller
 
         $audience_contraditoire_personne_adverses2 = DB::select("SELECT * FROM personne_adverses,parties, audiences, procedure_liers where  personne_adverses.idPartie = parties.idPartie and procedure_liers.typeProcedure ='audience' and  parties.idAudience = audiences.idAudience and procedure_liers.slugProcedure = audiences.slug and procedure_liers.slugSource =? ",[$slug]) ;
         //dd($audience_contraditoire_personne_adverses2);
-       
+
 
         //dd($audiences_contraditoire_lier,$audience_contraditoire_partie,$audience_contraditoire_entreprise_adverses,$audience_contraditoire_personne_adverses);
 
@@ -3234,18 +3227,18 @@ class AudiencesController extends Controller
             WHERE procedure_liers.typeProcedure = 'audience'
             AND procedure_liers.slugProcedure = ?
         ", [$slug]);
-    
-        
-       
 
-        $requete_contraditoire_entreprise_adverses = DB::select("SELECT * FROM entreprise_adverses_requetes,parties_requetes, procedure_requetes, audiences, procedure_liers where  procedure_liers.slugProcedure = audiences.slug 
+
+
+
+        $requete_contraditoire_entreprise_adverses = DB::select("SELECT * FROM entreprise_adverses_requetes,parties_requetes, procedure_requetes, audiences, procedure_liers where  procedure_liers.slugProcedure = audiences.slug
         and entreprise_adverses_requetes.idPartie = parties_requetes.idPartie and procedure_liers.typeProcedure ='audience' and  parties_requetes.idRequete = procedure_requetes.idProcedure  and procedure_liers.slugSource =? ",[$slug]) ;
 
         //dd($requete_contraditoire_entreprise_adverses);
-        
 
-        $requete_contraditoire_presonne_adverses = DB::select("SELECT * FROM personne_adverses_requetes,parties_requetes, procedure_requetes, audiences, procedure_liers where  procedure_liers.slugSource = procedure_requetes.slug 
-        and personne_adverses_requetes.idPartie = parties_requetes.idPartie and procedure_liers.typeProcedure ='audience' and  parties_requetes.idRequete = procedure_requetes.idProcedure and procedure_liers.slugProcedure = audiences.slug 
+
+        $requete_contraditoire_presonne_adverses = DB::select("SELECT * FROM personne_adverses_requetes,parties_requetes, procedure_requetes, audiences, procedure_liers where  procedure_liers.slugSource = procedure_requetes.slug
+        and personne_adverses_requetes.idPartie = parties_requetes.idPartie and procedure_liers.typeProcedure ='audience' and  parties_requetes.idRequete = procedure_requetes.idProcedure and procedure_liers.slugProcedure = audiences.slug
         and procedure_liers.slugProcedure =? ",[$slug]) ;
 
 
@@ -3267,20 +3260,20 @@ class AudiencesController extends Controller
         $procedure_requete = DB::select("SELECT * FROM procedure_liers ,procedure_requetes where procedure_liers.typeProcedure ='requete' and procedure_liers.slugProcedure = procedure_requetes.slug  and procedure_liers.slugSource =?",[$slug]);
         // dd($procedure_requete);
 
-        $procedure_requete_personne_adverses_requetes = DB::select("SELECT * FROM personne_adverses_requetes,procedure_liers ,procedure_requetes,parties_requetes where procedure_liers.typeProcedure ='requete' and 
+        $procedure_requete_personne_adverses_requetes = DB::select("SELECT * FROM personne_adverses_requetes,procedure_liers ,procedure_requetes,parties_requetes where procedure_liers.typeProcedure ='requete' and
         parties_requetes.idPartie = personne_adverses_requetes.idPartie and parties_requetes.idRequete = procedure_requetes.idProcedure and procedure_liers.slugProcedure = procedure_requetes.slug  and procedure_liers.slugSource =?",[$slug]);
         //dd($procedure_requete_personne_adverses_requetes);
 
-        $procedure_requete_entreprise_adverses_requetes = DB::select("SELECT * FROM entreprise_adverses_requetes,procedure_liers ,procedure_requetes,parties_requetes where procedure_liers.typeProcedure ='requete' and 
+        $procedure_requete_entreprise_adverses_requetes = DB::select("SELECT * FROM entreprise_adverses_requetes,procedure_liers ,procedure_requetes,parties_requetes where procedure_liers.typeProcedure ='requete' and
         parties_requetes.idPartie = entreprise_adverses_requetes.idPartie and parties_requetes.idRequete = procedure_requetes.idProcedure and procedure_liers.slugProcedure = procedure_requetes.slug  and procedure_liers.slugSource =?",[$slug]);
        // dd($procedure_requete_entreprise_adverses_requetes);
 
-       $procedure_requete_clients = DB::select("SELECT * FROM clients,procedure_liers ,procedure_requetes,parties_requetes where procedure_liers.typeProcedure ='requete' and 
+       $procedure_requete_clients = DB::select("SELECT * FROM clients,procedure_liers ,procedure_requetes,parties_requetes where procedure_liers.typeProcedure ='requete' and
        parties_requetes.idClient = clients.idClient and parties_requetes.idRequete = procedure_requetes.idProcedure and procedure_liers.slugProcedure = procedure_requetes.slug  and procedure_liers.slugSource =?",[$slug]);
       //dd($procedure_requete_clients);
-        
 
-       
+
+
 
        $requeteClientFetch = DB::select("select * from procedure_requetes, parties_requetes where procedure_requetes.idProcedure=parties_requetes.idRequete and parties_requetes.idClient=?",[$cabinet[0]->idClient]);
 
@@ -3336,7 +3329,7 @@ class AudiencesController extends Controller
             'is_client',
             'requete_contraditoire',
             'audiences_contraditoire',
-           
+
             'citations',
             'autreActes',
             'clients',
@@ -3364,8 +3357,8 @@ class AudiencesController extends Controller
             'procedure_autreRole1',
             'procedure_autreRole_requete1',
             'procedure_autreRole_requete'
-            
-            
+
+
 
         ));
     }
@@ -3383,27 +3376,27 @@ class AudiencesController extends Controller
                         FROM audiences
                         JOIN parties ON audiences.idAudience = parties.idAudience
                         LEFT JOIN clients ON parties.idClient = clients.idClient
-            
+
                         UNION
-            
+
                         SELECT audiences.idAudience, audiences.slug AS slugAud,, numRg, objet, niveauProcedural, prenom, nom, NULL as denomination, NULL as numRccm, NULL as formeLegal, audiences.statut as statutAud
                         FROM audiences
                         JOIN parties ON audiences.idAudience = parties.idAudience
                         JOIN personne_adverses ON parties.idPartie = personne_adverses.idPartie
-            
+
                         UNION
-            
+
                         SELECT audiences.idAudience, audiences.slug AS slugAud,, numRg, objet, niveauProcedural, NULL as prenom, NULL as nom, denomination, numRccm, formeLegal, audiences.statut as statutAud
                         FROM audiences
                         JOIN parties ON audiences.idAudience = parties.idAudience
                         JOIN entreprise_adverses ON parties.idPartie = entreprise_adverses.idPartie
                     ) AS subquery_internal
                     GROUP BY subquery_internal.slugAud, subquery_internal.statutAud
-                ) AS subquery 
+                ) AS subquery
                 WHERE niveauProcedural = '$niveau'
                 ORDER BY idAudience ASC
             ");
-        
+
         $personne_adverses2 = DB::select("select * from personne_adverses,parties where parties.idPartie=personne_adverses.idPartie");
 
         $entreprise_adverses2 = DB::select("select * from entreprise_adverses,parties where parties.idPartie=entreprise_adverses.idPartie");
@@ -3421,14 +3414,14 @@ class AudiencesController extends Controller
         if (empty($audience )) {
 
            return redirect()->back()->with('Informations incomplètes');
-        } 
-        
+        }
+
         $SqltacheSuivit = DB::select("select idSuivit,slug from taches where audTache=?",[$id]);
 
         $tacheSuivit = collect($SqltacheSuivit)->pluck('idSuivit')->toArray();
 
         $audience2 = DB::select("select * from audiences,juriductions where audiences.juridiction=juriductions.id and audiences.slug=? order by audiences.idAudience desc limit 1", [$slug]);
-       
+
 
         if (empty($audience)) {
             $parties = [];
@@ -3470,9 +3463,9 @@ class AudiencesController extends Controller
             $avocats = DB::select("select * from avocat_parties,avocats where avocat_parties.idAvocat=avocats.idAvc");
 
             $cabinet =  DB::select("select parties.idPartie,nom,prenom,email,emailEntreprise,affaires.slug as affaireslug,nomAffaire,affaires.idAffaire,denomination,clients.slug as clientslug,clients.idClient,role from parties,clients,affaires where parties.idClient=clients.idClient and parties.idAffaire=affaires.idAffaire and idAudience=? ", [$audience[0]->idAudience]);
-            
+
             $paramCabinet = DB::select("select * from cabinets");
-            
+
 
             $personne_adverses = DB::select("select * from personne_adverses,parties where parties.idPartie=personne_adverses.idPartie and parties.idAudience=?", [$audience[0]->idAudience]);
 
@@ -3494,7 +3487,7 @@ class AudiencesController extends Controller
             $pvIntrogatoire = DB::select("select * from pv_interrogatoires where idActe=?", [$acteIntroductif[0]->idActe]);
             $requete = DB::select("select * from requetes where idActe=?", [$acteIntroductif[0]->idActe]);
             $requisitoire = DB::select("select * from requisitoires where idActe=?", [$acteIntroductif[0]->idActe]);
-           
+
             if (empty($assignation)) {
                 $pieceAS = [];
             } else {
@@ -3585,7 +3578,7 @@ class AudiencesController extends Controller
         $fichiers = DB::select('select * from fichiers');
 
         $cabinetForPlan = DB::select("select * from cabinets");
-        
+
         $plan = $cabinetForPlan[0]->plan;
 
 
@@ -3654,7 +3647,7 @@ class AudiencesController extends Controller
             ->join('personnels', 'affectation_personnels.idPersonnel', '=', 'personnels.idPersonnel')
             ->where('personnels.email', Auth::user()->email)
             ->select('clients.*')
-            ->get();        
+            ->get();
         }else {
             $clients = DB::select('select * from clients');
         }
@@ -3666,39 +3659,39 @@ class AudiencesController extends Controller
          // Requetes de la page de modification
          $juriductionsAud = DB::select('select * from juriductions,audiences where audiences.juridiction=juriductions.id and audiences.idAudience=?',[$id]);
          $partiesCabinet = DB::select("select * from parties,audiences,clients,affaires where parties.idAudience=audiences.idAudience and parties.idClient=clients.idClient and parties.idAffaire=affaires.idAffaire and parties.idAudience=?",[$id]);
-       
+
          $partiesAdverse = DB::select("
          SELECT idAudience, numRg, objet, niveauProcedural, slugAud, denomination,
-                role, idPartie, prenom, nom, numRccm, siegeSocial, formeLegal, representantLegal, 
-                telephone, profession, nationalite, dateNaissance, lieuNaissance, pays, domicile, 
+                role, idPartie, prenom, nom, numRccm, siegeSocial, formeLegal, representantLegal,
+                telephone, profession, nationalite, dateNaissance, lieuNaissance, pays, domicile,
                 autreRole, typeAvocat
          FROM (
-             SELECT audiences.idAudience, audiences.slug AS slugAud, numRg, objet, 
+             SELECT audiences.idAudience, audiences.slug AS slugAud, numRg, objet,
                     niveauProcedural, NULL as prenom, NULL as nom, NULL as denomination, NULL as numRccm, NULL as formeLegal,
-                    role, parties.idPartie, NULL as siegeSocial, NULL as representantLegal, NULL as telephone, 
-                    NULL as profession, NULL as nationalite, NULL as dateNaissance, NULL as lieuNaissance, 
+                    role, parties.idPartie, NULL as siegeSocial, NULL as representantLegal, NULL as telephone,
+                    NULL as profession, NULL as nationalite, NULL as dateNaissance, NULL as lieuNaissance,
                     NULL as pays, NULL as domicile, autreRole, typeAvocat
              FROM audiences
              JOIN parties ON audiences.idAudience = parties.idAudience
              WHERE parties.idAudience = ? AND role = 'Autre' AND parties.typeAvocat = 2
-     
+
              UNION
-     
-             SELECT audiences.idAudience, audiences.slug AS slugAud, numRg, objet, 
+
+             SELECT audiences.idAudience, audiences.slug AS slugAud, numRg, objet,
                     niveauProcedural, prenom, nom, NULL as denomination, NULL as numRccm, NULL as formeLegal,
-                    role, parties.idPartie, NULL as siegeSocial, NULL as representantLegal, telephone, 
+                    role, parties.idPartie, NULL as siegeSocial, NULL as representantLegal, telephone,
                     profession, nationalite, dateNaissance, lieuNaissance, pays, domicile, autreRole, typeAvocat
              FROM audiences
              JOIN parties ON audiences.idAudience = parties.idAudience
              JOIN personne_adverses ON parties.idPartie = personne_adverses.idPartie
              WHERE parties.idAudience = ? AND parties.typeAvocat = 2
-     
+
              UNION
-     
-             SELECT audiences.idAudience, audiences.slug AS slugAud, numRg, objet, 
+
+             SELECT audiences.idAudience, audiences.slug AS slugAud, numRg, objet,
                     niveauProcedural, NULL as prenom, NULL as nom, denomination, numRccm, formeLegal,
-                    role, parties.idPartie, siegeSocial, representantLegal, NULL as telephone, 
-                    NULL as profession, NULL as nationalite, NULL as dateNaissance, NULL as lieuNaissance, 
+                    role, parties.idPartie, siegeSocial, representantLegal, NULL as telephone,
+                    NULL as profession, NULL as nationalite, NULL as dateNaissance, NULL as lieuNaissance,
                     NULL as pays, NULL as domicile, autreRole, typeAvocat
              FROM audiences
              JOIN parties ON audiences.idAudience = parties.idAudience
@@ -3706,7 +3699,7 @@ class AudiencesController extends Controller
              WHERE parties.idAudience = ? AND parties.typeAvocat = 2
          ) AS subquery_internal
      ", [$id, $id, $id]); // Sécurisation avec les paramètres liés
-     
+
 
          $avocatsParties = DB::select('select * from avocats,avocat_parties,parties where avocats.idAvc=avocat_parties.idAvocat and parties.idPartie=avocat_parties.idPartie and parties.idAudience=?',[$id]);
          $actes = DB::select("select * from acte_introductifs,audiences where acte_introductifs.idAudience=audiences.idAudience and audiences.idAudience=?",[$id]);
@@ -3742,7 +3735,7 @@ class AudiencesController extends Controller
             $acteDetail = DB::select("select * from pcpcs where idActe=?",[$actes[0]->idActe]);
          }
 
-         //Appel 
+         //Appel
          // ------ Utilisation de assignations et requetes depuis premiere instance civile---- //
          if (!empty($actes) && $actes[0]->typeActe=='Contredit') {
             $acteDetail = DB::select("select * from contredits where idActe=?",[$actes[0]->idActe]);
@@ -3810,7 +3803,7 @@ class AudiencesController extends Controller
         // enregistrement des informations du fichier
 
         try {
-         
+
             if ($request->file('fichiers') != null) {
 
                 $fichiers = request()->file('fichiers');
@@ -3860,28 +3853,28 @@ class AudiencesController extends Controller
             if ($request->decision == 'renvoi') {
                 $decision = 'Renvoyée au ' . date('d-m-Y', strtotime($request->dateRenvoi)) . ' pour ' . $request->RenvoiPour;
                 $rappelLettre = 'ne_pas_rappeler';
-                $rappelSignification = 'ne_pas_rappeler'; 
+                $rappelSignification = 'ne_pas_rappeler';
 
 
             }
             if ($request->decision == 'miseDeliberer') {
                 $decision = 'Mise en délibéré pour décision être rendue le ' . date('d-m-Y', strtotime($request->dateMiseDeliberer));
                 $rappelLettre = 'ne_pas_rappeler';
-                $rappelSignification = 'ne_pas_rappeler'; 
+                $rappelSignification = 'ne_pas_rappeler';
 
 
             }
             if ($request->decision == 'viderDeliberer') {
                 $decision = 'Vidé du delibéré en faveur de ' . $request->viderDeliberer;
                 $extrait = $request->extrait;
-                $rappelLettre = 'A_rappeler';         
-                $rappelSignification = 'A_rappeler';         
+                $rappelLettre = 'A_rappeler';
+                $rappelSignification = 'A_rappeler';
             }
-          
+
             if ($request->decision == 'autre') {
                 $decision = $request->autreDecision;
                 $rappelLettre = 'ne_pas_rappeler';
-                $rappelSignification = 'ne_pas_rappeler'; 
+                $rappelSignification = 'ne_pas_rappeler';
 
             }
 
@@ -3927,11 +3920,11 @@ class AudiencesController extends Controller
             // Notifications
 
             if ($request->decision == 'viderDeliberer') {
-               
+
                // $personnels = DB::select("select * from personnels,users where personnels.email=users.email and users.role='Collaborateur'");
                 $personnels = DB::select("select * from personnels,users where personnels.email=users.email ");
                 foreach ($personnels as $p) {
-    
+
                     DB::select(
                         'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
                         [
@@ -3946,9 +3939,9 @@ class AudiencesController extends Controller
                         ]
                     );
                 }
-    
+
                 $admins = DB::select("select * from users where role='Administrateur'");
-    
+
                 foreach ($admins as $a) {
                     DB::select(
                         'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
@@ -3965,9 +3958,9 @@ class AudiencesController extends Controller
                         ]
                     );
                 }
-    
+
             }
-           
+
             //Enregistrement du suivi
             $suivi->save();
 
@@ -4032,8 +4025,8 @@ class AudiencesController extends Controller
 
                 $timestamp = date($request->dateReceptionConclusion);
                 $dateLimite=date('Y-m-d', strtotime($timestamp . ' + 15 days'));
-               
-                
+
+
 
                 $suivi->idAudience = $request->idAudience;
                 $suivi->acte = ''.$request->acte.' de l\''.$request->appelantIntimeConclusion;
@@ -4042,9 +4035,9 @@ class AudiencesController extends Controller
                 $suivi->dateLimite = $dateLimite;
                 $suivi->suiviPar = Auth::user()->name;
                 $suivi->slug = $request->_token . rand(34827, 86214);
-    
+
                 $suivi->save();
-                
+
                 DB::update('update audiences set prochaineAudience=? where idAudience=?',[$dateLimite,$request->idAudience]);
 
             }
@@ -4057,7 +4050,7 @@ class AudiencesController extends Controller
                 $suivi->dateLimite = $request->dateLimiteInvitation;
                 $suivi->suiviPar = Auth::user()->name;
                 $suivi->slug = $request->_token . rand(34827, 86214);
-    
+
                 $suivi->save();
 
                 DB::update('update audiences set prochaineAudience=? where idAudience=?',[$request->dateLimiteInvitation,$request->idAudience]);
@@ -4073,7 +4066,7 @@ class AudiencesController extends Controller
                 $suivi->dateLimite = $request->dateLimiteInjonction;
                 $suivi->suiviPar = Auth::user()->name;
                 $suivi->slug = $request->_token . rand(34827, 86214);
-    
+
                 $suivi->save();
 
                 DB::update('update audiences set prochaineAudience=? where idAudience=?',[$request->dateLimiteInvitation,$request->idAudience]);
@@ -4093,7 +4086,7 @@ class AudiencesController extends Controller
                 $suivi->dateLimite = $dateLimite;
                 $suivi->suiviPar = Auth::user()->name;
                 $suivi->slug = $request->_token . rand(34827, 86214);
-    
+
                 $suivi->save();
 
                 DB::update('update audiences set prochaineAudience=? where idAudience=?',[$dateLimite,$request->idAudience]);
@@ -4113,7 +4106,7 @@ class AudiencesController extends Controller
                 $suivi->dateLimite = $request->dateProchaineAudienceAvenir;
                 $suivi->suiviPar = Auth::user()->name;
                 $suivi->slug = $request->_token . rand(34827, 86214);
-    
+
                 $suivi->save();
 
                 DB::update('update audiences set prochaineAudience=? where idAudience=?',[$request->dateProchaineAudienceAvenir,$request->idAudience]);
@@ -4131,7 +4124,7 @@ class AudiencesController extends Controller
                 $suivi->dateLimite =  $request->dateExpConference;
                 $suivi->suiviPar = Auth::user()->name;
                 $suivi->slug = $request->_token . rand(34827, 86214);
-    
+
                 $suivi->save();
 
                 DB::update('update audiences set prochaineAudience=? where idAudience=?',[$request->dateExpConference,$request->idAudience]);
@@ -4148,7 +4141,7 @@ class AudiencesController extends Controller
                 $suivi->dateLimite = $request->dateDeliberer;
                 $suivi->suiviPar = Auth::user()->name;
                 $suivi->slug = $request->_token . rand(34827, 86214);
-    
+
                 $suivi->save();
 
                 DB::update('update audiences set prochaineAudience=? where idAudience=?',[$request->dateDeliberer,$request->idAudience]);
@@ -4165,7 +4158,7 @@ class AudiencesController extends Controller
                 $suivi->dateLimite = $request->dateProrogé;
                 $suivi->suiviPar = Auth::user()->name;
                 $suivi->slug = $request->_token . rand(34827, 86214);
-    
+
                 $suivi->save();
 
                 DB::update('update audiences set prochaineAudience=? where idAudience=?',[$request->dateProrogé,$request->idAudience]);
@@ -4182,7 +4175,7 @@ class AudiencesController extends Controller
                 $suivi->dateLimite = $request->dateRenvoiAppel;
                 $suivi->suiviPar = Auth::user()->name;
                 $suivi->slug = $request->_token . rand(34827, 86214);
-    
+
                 $suivi->save();
 
                 DB::update('update audiences set prochaineAudience=? where idAudience=?',[$request->dateRenvoiAppel,$request->idAudience]);
@@ -4220,7 +4213,7 @@ class AudiencesController extends Controller
                         $suiviFile->save();
                     }
                 }
-    
+
                 $suivi->save();
 
             }
@@ -4289,7 +4282,7 @@ class AudiencesController extends Controller
             $suivi->slug = $request->_token . rand(34827, 86214);
 
             $suivi->save();
-            
+
             if ($request->file('ordonnance') != null) {
 
                 $fichier = request()->file('ordonnance');
@@ -4375,7 +4368,7 @@ class AudiencesController extends Controller
                 if (file_exists($value->path)) {
                     unlink(public_path($value->path));
                 } else {
-                   
+
                 }
             }
             DB::delete("delete from fichiers where slugSource=? ", [$slug]);
@@ -4397,7 +4390,7 @@ class AudiencesController extends Controller
                 if (file_exists($value->path)) {
                     unlink(public_path($value->path));
                 } else {
-                   
+
                 }
             }
             DB::delete("delete from fichiers where slugSource=? ", [$slug]);
@@ -4419,7 +4412,7 @@ class AudiencesController extends Controller
                 if (file_exists($value->path)) {
                     unlink(public_path($value->path));
                 } else {
-                   
+
                 }
             }
             DB::delete("delete from fichiers where slugSource=? ", [$slug]);
@@ -4440,9 +4433,9 @@ class AudiencesController extends Controller
                 if (file_exists($value->path)) {
                     unlink(public_path($value->path));
                 } else {
-                   
+
                 }
-                
+
             }
             DB::delete("delete from fichiers where slug=? ", [$slug]);
         } else {
@@ -4550,26 +4543,26 @@ class AudiencesController extends Controller
                 FROM audiences
                 JOIN parties ON audiences.idAudience = parties.idAudience
                 LEFT JOIN clients ON parties.idClient = clients.idClient
-        
+
                 UNION
-        
+
                 SELECT audiences.idAudience, audiences.slug AS slugAud,, numRg, objet, niveauProcedural, prenom, nom, NULL as denomination, NULL as numRccm, NULL as formeLegal, audiences.statut as statutAud, audiences.isChild
                 FROM audiences
                 JOIN parties ON audiences.idAudience = parties.idAudience
                 JOIN personne_adverses ON parties.idPartie = personne_adverses.idPartie
-        
+
                 UNION
-        
+
                 SELECT audiences.idAudience, audiences.slug AS slugAud,, numRg, objet, niveauProcedural, NULL as prenom, NULL as nom, denomination, numRccm, formeLegal, audiences.statut as statutAud, audiences.isChild
                 FROM audiences
                 JOIN parties ON audiences.idAudience = parties.idAudience
                 JOIN entreprise_adverses ON parties.idPartie = entreprise_adverses.idPartie
             ) AS subquery_internal
             GROUP BY subquery_internal.slugAud, subquery_internal.statutAud
-        ) AS subquery 
+        ) AS subquery
         WHERE isChild is null
         ORDER BY idAudience ASC;
-        
+
             ");
 
 
@@ -4580,7 +4573,7 @@ class AudiencesController extends Controller
             $autreRoles2 = DB::select("select * from parties,audiences where audiences.idAudience=parties.idAudience");
 
             $cabinet2 =  DB::select("select parties.idPartie,nom,prenom,email,emailEntreprise,affaires.slug as affaireslug,nomAffaire,affaires.idAffaire,denomination,clients.slug as clientslug,clients.idClient,role,idAudience from parties,clients,affaires where parties.idClient=clients.idClient and parties.idAffaire=affaires.idAffaire");
-        
+
             $juriductions = DB::select("select * from juriductions");
 
             return view('audiences.jonctions.etape1', compact('allAudience','personne_adverses2','entreprise_adverses2','autreRoles2','cabinet2','juriductions'));
@@ -4599,7 +4592,7 @@ class AudiencesController extends Controller
             ->join('personnels', 'affectation_personnels.idPersonnel', '=', 'personnels.idPersonnel')
             ->where('personnels.email', Auth::user()->email)
             ->select('clients.*')
-            ->get();        
+            ->get();
         }else {
             $clients = DB::select('select * from clients');
         }
@@ -4618,16 +4611,16 @@ class AudiencesController extends Controller
          $actes = [];
 
          foreach ($arr as $key => $aud) {
-         
+
          $partiesCabinetItem = DB::select("select * from parties,audiences,clients,affaires where parties.idAudience=audiences.idAudience and parties.idClient=clients.idClient and parties.idAffaire=affaires.idAffaire and parties.idAudience=?",[$aud]);
-                
-         $partiesAdverseItem = DB::select("SELECT idAudience,subquery_internal.numRg, subquery_internal.objet, 
+
+         $partiesAdverseItem = DB::select("SELECT idAudience,subquery_internal.numRg, subquery_internal.objet,
          subquery_internal.niveauProcedural, subquery_internal.slugAud, subquery_internal.denomination,
          role,idPartie,prenom,nom,numRccm,siegeSocial,formeLegal,representantLegal,telephone,profession,nationalite,
          dateNaissance,lieuNaissance,pays,domicile,autreRole
          FROM (
 
-                SELECT audiences.idAudience, audiences.slug AS slugAud,, numRg, objet, 
+                SELECT audiences.idAudience, audiences.slug AS slugAud,, numRg, objet,
                  niveauProcedural, NULL as prenom, NULL as nom, NULL as denomination, NULL as numRccm, NULL as formeLegal,
                  role,parties.idPartie,NULL as siegeSocial,NULL as representantLegal,NULL as telephone,NULL as profession,NULL as nationalite,
                  NULL as dateNaissance,NULL as lieuNaissance,NULL as pays,NULL as domicile, autreRole
@@ -4637,7 +4630,7 @@ class AudiencesController extends Controller
 
                  UNION
 
-                 SELECT audiences.idAudience, audiences.slug AS slugAud,, numRg, objet, 
+                 SELECT audiences.idAudience, audiences.slug AS slugAud,, numRg, objet,
                  niveauProcedural, prenom, nom, NULL as denomination, NULL as numRccm, NULL as formeLegal,
                  role,parties.idPartie,NULL as siegeSocial,NULL as representantLegal,telephone,profession,nationalite,
                  dateNaissance,lieuNaissance,pays,domicile,autreRole
@@ -4645,10 +4638,10 @@ class AudiencesController extends Controller
                  JOIN parties ON audiences.idAudience = parties.idAudience
                  JOIN personne_adverses ON parties.idPartie = personne_adverses.idPartie
                  WHERE parties.idAudience =$aud
-         
+
                  UNION
-         
-                 SELECT audiences.idAudience, audiences.slug AS slugAud,, numRg, objet, 
+
+                 SELECT audiences.idAudience, audiences.slug AS slugAud,, numRg, objet,
                  niveauProcedural, NULL as prenom, NULL as nom, denomination, numRccm, formeLegal,
                  role,parties.idPartie,siegeSocial,representantLegal,NULL as telephone,NULL as profession,NULL as nationalite,
                  NULL as dateNaissance,NULL as lieuNaissance,NULL as pays,NULL as domicile,autreRole
@@ -4669,9 +4662,9 @@ class AudiencesController extends Controller
                 $actes = array_merge($actes, $actesItem);
 
             }
-         
-         
-         
+
+
+
          //premiere instance - civile
          $acteDetail = [];
          foreach ($actes as $key => $item) {
@@ -4685,11 +4678,11 @@ class AudiencesController extends Controller
              if (!empty($actes) && $actes[0]->typeActe=='Opposition') {
                 $acteDetailItem = DB::select("select * from oppositions,huissiers where oppositions.idHuissier=huissiers.idHss and idActe=?",[$item->idActe]);
              }
-             
+
              $acteDetail = array_merge($acteDetail, $acteDetailItem);
          }
 
-        
+
          //premiere instance - penal
          if (!empty($actes) && $actes[0]->typeActe=='PV introgatoire') {
             $acteDetail = DB::select("select * from pv_interrogatoires where idActe=?",[$actes[0]->idActe]);
@@ -4707,7 +4700,7 @@ class AudiencesController extends Controller
             $acteDetail = DB::select("select * from pcpcs where idActe=?",[$actes[0]->idActe]);
          }
 
-         //Appel 
+         //Appel
          // ------ Utilisation de assignations et requetes depuis premiere instance civile---- //
          if (!empty($actes) && $actes[0]->typeActe=='Contredit') {
             $acteDetail = DB::select("select * from contredits where idActe=?",[$actes[0]->idActe]);
@@ -4735,7 +4728,7 @@ class AudiencesController extends Controller
         $arr = $request->idAudienceSource;
         $slugJonction = $request->_token . rand(34827, 86214);
 
-        for ($i = 0; $i < count($arr); $i++)  {     
+        for ($i = 0; $i < count($arr); $i++)  {
 
             DB::update("update audiences set slugJonction=?, isChild='non', statut='Jonction' where idAudience=?",[$slugJonction, $arr[$i]]);
         }
@@ -4757,7 +4750,7 @@ class AudiencesController extends Controller
                 'objet.required' => 'Le champ objet est obligatoire.',
                 'niveauProcedural.required' => 'Le champ niveau procedural est obligatoire.',
                 'nature.required' => 'Le champ nature est obligatoire.',
-               
+
                 // ...
             ];
 
@@ -4767,7 +4760,7 @@ class AudiencesController extends Controller
                 'objet' => 'required',
                 'niveauProcedural' => 'required',
                 'nature' => 'required',
-                
+
             ], $messages);
             // L'instance du model Audience
             $audiences = new Audiences();
@@ -4902,7 +4895,7 @@ class AudiencesController extends Controller
                 }
                 if (isset($value['typeAdverse']) && $value['typeAdverse'] == "Entreprise") {
 
-                 
+
                     EntrepriseAdverse::create([
                         'idPartie' => $idPartieSelect[0]->idPartie,
                         'denomination' => $value['denomination'],
@@ -4986,7 +4979,7 @@ class AudiencesController extends Controller
                 }
                 if (isset($value['typeAdverse']) && $value['typeAdverse'] == "Entreprise") {
 
-                 
+
                     EntrepriseAdverse::create([
                         'idPartie' => $idPartieSelect[0]->idPartie,
                         'denomination' => $value['denomination'],
@@ -5007,13 +5000,13 @@ class AudiencesController extends Controller
                     'typeActe' => $value['typeActe'],
                     'slug' => $request->_token . "" . rand(1234, 3458),
                 ]);
-           
+
 
             $idActeSelect = DB::select("select idActe from acte_introductifs order by idActe desc limit 1");
 
             // Enregistrement de l'Assignation
             if ($value['typeActe'] == 'Assignation') {
-                
+
                 Assignations::create([
                     'idActe' => $idActeSelect[0]->idActe,
                     'numRg' =>  $value['numRg'],
@@ -5244,7 +5237,7 @@ class AudiencesController extends Controller
                 );
              }
         }
-        
+
 
         return redirect()->route('listAudience', 'generale')->with('success', 'Audience de jonction créée avec succès');
 
@@ -5256,7 +5249,7 @@ class AudiencesController extends Controller
 
         // Verication du typeContent pour retourner une bonne reponse
         $audJonctions = DB::select("select * from audiences where  isChild is null and juridiction=?",[$idJuridiction]);
-      
+
         return response()->json([
             'audJonctions' => $audJonctions,
         ]);
@@ -5401,7 +5394,7 @@ class AudiencesController extends Controller
             // Notifications
             $personnels = DB::select("select * from personnels,users where personnels.email=users.email and users.role='Collaborateur'");
             foreach ($personnels as $p) {
-    
+
                 DB::select(
                     'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
                     [
@@ -5416,9 +5409,9 @@ class AudiencesController extends Controller
                     ]
                 );
             }
-    
+
             $admins = DB::select("select * from users where role='Administrateur'");
-    
+
             foreach ($admins as $a) {
                 DB::select(
                     'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
@@ -5438,15 +5431,15 @@ class AudiencesController extends Controller
 
         return redirect()->back()->with('success', 'Signification enregistrée avec succès !');
 
-        
+
     }
 
     public function fetchRequete( Request $request, $id)
     {
         // Verication du typeContent pour retourner une bonne reponse
-        
+
        // $requeteClientFetch = DB::select("select * from procedure_requetes, parties_requetes where procedure_requetes.idProcedure=parties_requetes.idRequete and parties_requetes.idClient=?",[$id]);
-       
+
 
 /*
         $requeteClientFetch = DB::select("
@@ -5465,12 +5458,12 @@ class AudiencesController extends Controller
             and audiences.slug!='$slugProcedure'
         ", [$id, $id]);
 */
-            $slugProcedure = $request->input('slugProcedure'); // peut être null
+            $slugProcedure = $request->input('slugProcedure');
 
             $requeteClientFetch = DB::select("
                 SELECT procedure_requetes.objet AS objet, procedure_requetes.slug AS slug
                 FROM procedure_requetes
-                INNER JOIN parties_requetes 
+                INNER JOIN parties_requetes
                     ON procedure_requetes.idProcedure = parties_requetes.idRequete
                 WHERE parties_requetes.idClient = ?
                 AND (? IS NULL OR procedure_requetes.slug != ?)
@@ -5479,7 +5472,7 @@ class AudiencesController extends Controller
 
                 SELECT audiences.objet AS objet, audiences.slug AS slug
                 FROM audiences
-                INNER JOIN parties 
+                INNER JOIN parties
                     ON audiences.idAudience = parties.idAudience
                 WHERE parties.idClient = ?
                 AND (? IS NULL OR audiences.slug != ?)
@@ -5507,24 +5500,24 @@ class AudiencesController extends Controller
                 'slug' => $request->_token . rand(1234, 3458),
             ]);
         }
-        return redirect()->back()->with('success', 'Requete enregistrée avec succès !'); 
+        return redirect()->back()->with('success', 'Requete enregistrée avec succès !');
 
     }
 
     public function lierRequeteManuelContraditoire(Request $request)
     {
-       
+
         $arr = is_array($request->contraditoireLier) ? $request->contraditoireLier : [$request->contraditoireLier];
-    
+
         foreach ($arr as $slugToLier) {
-    
+
             // On vérifie dans les deux tables
             $existsInAudience = DB::table('audiences')->where('slug', $slugToLier)->exists();
             $existsInRequete = DB::table('procedure_requetes')->where('slug', $slugToLier)->exists();
             // Récupération de la valeur du champ 'slugAudience'
             $slugAudience = $request->input('slugProcedure');
             //dd($slugAudience, $existsInRequete, $existsInAudience);
-    
+
             if ($existsInAudience) {
                 $type = 'audience';
             } elseif ($existsInRequete) {
@@ -5560,20 +5553,16 @@ class AudiencesController extends Controller
                 }
 
             }
-           
-           
         }
-    
+
         return redirect()->back()->with('success', 'Requêtes liées avec succès !');
     }
-    
+
 
     public function deleteRequeteLier(Request $request, $id)
     {
         DB::delete("delete from procedure_liers where idProcedureLier=?",[$id]);
-        return redirect()->back()->with('success', 'Requete lier supprimé avec succès !'); 
+        return redirect()->back()->with('success', 'Requete lier supprimé avec succès !');
 
     }
-
-
 }

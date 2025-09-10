@@ -24,7 +24,7 @@ class CabinetSeeder extends Seeder
             'numTva' => 'TVA987654321',
             'termesFacture' => 'Paiement sous 30 jours',
             'monnaieParDefaut' => 'XOF',
-            'logo' => 'logo.png',
+            'logo' => 'assets/upload/photos/logo-texte-bleu.png',
             'slogan' => 'Votre partenaire juridique',
             'numToge' => 'TOGE-001',
             'totalComptes' => '5',

@@ -5,8 +5,9 @@
     <!-- Title & Breadcrumbs-->
     <div class="row page-breadcrumbs">
         <div class="col-md-5 align-self-center">
-           
-            <h4 class="theme-cl"><i class="fa fa-balance-scale"></i> Procédures > <span class="label bg-info"><b>Non contradictoires</b></span> </label></h4>
+
+            <h4 class="theme-cl"><i class="fa fa-balance-scale"></i> Procédures > <span class="label bg-info"><b>Non
+                        contradictoires</b></span> </label></h4>
         </div>
 
         <div class="col-md-7 text-right">
@@ -17,7 +18,7 @@
                     <i class="fa fa-plus"></i> Créer une nouvelle procédure
                 </a>
             </div>
-           
+
             <!-- <div class="btn-group">
                 <a href="{{ route('createJonctionEtape1') }}" title="Créer une audience"
                     class="cl-white theme-bg btn  btn-rounded">
@@ -33,8 +34,7 @@
         @if (empty($requetes))
         <div class="alert alert-warning alert-dismissable" style="height: 100px;">
             <div class="card-body">
-                <button type="button" class="close" data-dismiss="alert"
-                    aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                 <div class="text-center">
                     <span>Aucune requête trouvée,
                     </span>
@@ -47,39 +47,6 @@
         @else
 
         <div class="table-responsive">
-
-            <!-- <div class="col-md-12 align-self-center mb-4">
-                <form method="post" action="{{route('filtreAudience')}}" accept-charset="utf-8" enctype="multipart/form-data">
-                    @csrf
-                    <div class="btn-group mr-lg-2">
-                        <h4 class="theme-cl"><i class="fa fa-filter"></i> Filtre</h4>
-                    </div>
-
-                    <div class="btn-group mr-lg-2">
-                        <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon3">Du</span>
-                            <input type="date" name="dateDebut" class="form-control" id="basic-url" value="{{ $dateDebut ?? $requetes[0]->prochaineAudience ?? '' }}"
-                                aria-describedby="basic-addon3" required>
-                        </div>
-                    </div>
-
-                    <div class="btn-group mr-lg-2">
-                        <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon3">Au</span>
-                            <input type="date" name="dateFin" class="form-control" id="basic-url" value="{{ $dateFin ?? end($requetes)->prochaineAudience ?? '' }}"
-                                aria-describedby="basic-addon3" required>
-                        </div>
-                    </div>
-                    <div class="btn-group mr-lg-2">
-                        <button type="submit" title="Filtrer" class="btn btn-default">
-                            <i class="fa fa-filter"></i>
-                        </button>
-                    </div>
-
-                </form>
-
-            </div> -->
-           
             <div class="category-filter">
                 <select id="" class="categoryFilter form-control">
                     <option value="">Filtre par statut</option>
@@ -88,8 +55,7 @@
 
                 </select>
             </div>
-            <table id="filterTable"
-                class="filterTable dataTableExport table table-bordered table-hover"
+            <table id="filterTable" class="filterTable dataTableExport table table-bordered table-hover"
                 style="width:100%">
                 <thead>
                     <tr>
@@ -97,67 +63,71 @@
                         <th>Objet</th>
                         <th>Type de requête</th>
                         <!--<th>Juridiction présidentielle</th>-->
-                        <th>demande</th>
+                        <th>Demande</th>
                         <th>Parties</th>
                         <th>Date requête</th>
                         <th>Statut</th>
-                    </tr> 
+                    </tr>
                 </thead>
                 <tbody>
                     @foreach ($requetes as $row)
                     <tr>
-                        
+
                         <td>{{ $loop->iteration }}</td>
                         <td><a href="{{ route('detailRequete', $row->slug) }}">{{ $row->objet }}</a></td>
                         <td>{{ $row->typeRequete }}</td>
-                       <!-- <td>{{ $row->juridictionPresidentielle }}</td> -->
-                        <td>{{ $row->demandeRequete }}</td> 
+                        <!-- <td>{{ $row->juridictionPresidentielle }}</td> -->
+                        <td>{{ $row->demandeRequete }}</td>
 
                         <td>
-                              <!-- Affichage du cabinet -->
-                              @foreach($cabinet as $c)
-                                    @if($row->idProcedure === $c->idRequete)
-                                        <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                        @break <!-- Sortir de la boucle une fois que le match est trouvé -->
-                                    @endif
-                                @endforeach
+                            <!-- Affichage du cabinet -->
+                            @foreach($cabinet as $c)
+                            @if($row->idProcedure === $c->idRequete)
+                            <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
+                            @break
+                            <!-- Sortir de la boucle une fois que le match est trouvé -->
+                            @endif
+                            @endforeach
 
-                                <!-- Affichage de l'entreprise adverse -->
-                                @foreach($entreprise_adverses as $e)
-                                    @if($row->idProcedure === $e->idRequete)
-                                        <span>c/ {{ $e->denomination }}</span>
-                                        @break <!-- Sortir de la boucle une fois que le match est trouvé -->
-                                    @endif
-                                @endforeach
+                            <!-- Affichage de l'entreprise adverse -->
+                            @foreach($entreprise_adverses as $e)
+                            @if($row->idProcedure === $e->idRequete)
+                            <span>c/ {{ $e->denomination }}</span>
+                            @break
+                            <!-- Sortir de la boucle une fois que le match est trouvé -->
+                            @endif
+                            @endforeach
 
-                                 <!-- Affichage de personne adverse -->
-                                 @foreach($personne_adverses as $p)
-                                    @if($row->idProcedure === $p->idRequete)
-                                        <span>c/ {{ $p->prenom }} {{ $p->nom }}</span>
-                                        @break <!-- Sortir de la boucle une fois que le match est trouvé -->
-                                    @endif
-                                @endforeach
+                            <!-- Affichage de personne adverse -->
+                            @foreach($personne_adverses as $p)
+                            @if($row->idProcedure === $p->idRequete)
+                            <span>c/ {{ $p->prenom }} {{ $p->nom }}</span>
+                            @break
+                            <!-- Sortir de la boucle une fois que le match est trouvé -->
+                            @endif
+                            @endforeach
 
-                                <!-- Affichage d'autres rôles -->
-                                @foreach($autreRoles as $r)
-                                    @if($row->idProcedure === $r->idRequete)
-                                        @if($r->autreRole === 'mp')
-                                            <span>c/ Ministère public</span>
-                                        @endif
-                                        @break <!-- Sortir de la boucle une fois que le match est trouvé -->
-                                    @endif
-                                @endforeach
+                            <!-- Affichage d'autres rôles -->
+                            @foreach($autreRoles as $r)
+                            @if($row->idProcedure === $r->idRequete)
+                            @if($r->autreRole === 'mp')
+                            <span>c/ Ministère public</span>
+                            @endif
+                            @break
+                            <!-- Sortir de la boucle une fois que le match est trouvé -->
+                            @endif
+                            @endforeach
 
                         </td>
-                       
-                            @if(empty($row->dateRequete))
-                            <td>
-                                <span>N/A</span>
-                            </td>
-                            @else
-                            <td>{{ date('d/m/Y', strtotime($row->dateRequete)) }} </td>
-                             
-                            @endif
+
+                        @if(empty($row->dateRequete))
+                        <td>
+                            <span>N/A</span>
+                        </td>
+                        @else
+                        <td>{{ date('d/m/Y', strtotime($row->dateRequete)) }} </td>
+
+                        @endif
                         <td>
                             <!--
                                 <span>
@@ -169,20 +139,20 @@
                                         <small class="label bg-warning-light">{{ $row->statut }}</small>
                                         @endif
                                     </span> -->
-                             <span>
+                            <span>
                                 @if($row->statut=='Terminée')
-                                    <small class="label bg-success">Terminée</small>
+                                <small class="label bg-success">Terminée</small>
                                 @elseif($row->statut=='Déposée')
-                                    <small class="label bg-primary">Déposée</small>
+                                <small class="label bg-primary">Déposée</small>
                                 @elseif($row->statut=='Acceptée')
-                                    <small class="label bg-success">Acceptée</small>
+                                <small class="label bg-success">Acceptée</small>
                                 @elseif($row->statut=='Rejetée')
-                                    <small class="label bg-danger">Rejetée</small>
+                                <small class="label bg-danger">Rejetée</small>
 
                                 @endif
                             </span>
                         </td>
-                        
+
                     </tr>
                     @endforeach
                 </tbody>
@@ -198,7 +168,7 @@
 <!-- /.row -->
 
 <script>
-document.getElementById('aud').classList.add('active');
+    document.getElementById('aud').classList.add('active');
 
 function changeTab1() {
 

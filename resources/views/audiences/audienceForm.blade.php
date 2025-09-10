@@ -67,9 +67,11 @@
                                                         <option value="{{$j->id}}">{{$j->nom}}</option>
                                                         @endforeach
                                                     </select>
-                                                    <a type="button" href="{{ route('juridictions.index') }}" class="btn btn-outline-primary" title="Ajouter une juridiction" style="margin-left:5px;">
-                                                        <i class="fa fa-plus"></i>
-                                                    </a>
+                                                    @if(count($juriductions) < 1)
+                                                        <a type="button" href="{{ route('juridictions.index') }}" class="btn btn-outline-primary" title="Ajouter une juridiction" style="margin-left:5px;">
+                                                            <i class="fa fa-plus"></i>
+                                                        </a>
+                                                    @endif
                                                 </div>
                                                 @error('juridiction')
                                                      <div style="color:red">{{ $message }}</div>

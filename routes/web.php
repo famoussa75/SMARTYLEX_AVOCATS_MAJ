@@ -70,6 +70,7 @@ use Illuminate\Support\Facades\Auth;
      * Debut des routes de gestion des publicités
      */
     Route::get('/publicites', [PubliciteController::class, 'index'])->name('publicites.index');
+    Route::get('/api/pub', [PubliciteController::class, 'pub']);
     Route::post('/publicites', [PubliciteController::class, 'store'])->name('publicites.store');
     Route::put('/publicites/{publicite}', [PubliciteController::class, 'update'])->name('publicites.update');
     Route::delete('/publicites/{publicite}', [PubliciteController::class, 'destroy'])->name('publicites.destroy');

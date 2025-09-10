@@ -15,6 +15,11 @@ class PubliciteController extends Controller
         $publicites = Publicite::orderBy('created_at', 'desc')->get();
         return view('publicite.pub', compact('publicites'));
     }
+    public function pub()
+    {
+        $publicites = Publicite::orderBy('created_at', 'desc')->get();
+        return response()->json($publicites);
+    }
 
     public function store(Request $request)
     {
