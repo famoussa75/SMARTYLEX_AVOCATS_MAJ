@@ -44,8 +44,8 @@
             @csrf
                 <div class="card padd-10">
                     <div class="panel-group accordion-stylist" id="accordion" role="tablist" aria-multiselectable="true">
-                   
-                   
+
+
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="headingOne">
                                 <h4 class="panel-title">
@@ -111,7 +111,7 @@
                                                     <option value="contentieux">Contentieuse / Contradictoire</option>
                                                     <option value="requete">Procédure sur requête</option>
                                                 </select>
-                                               
+
                                             </div>
                                         </div>
                                         <div class="col-md-12 col-sm-12" id="orientationProcedurale">
@@ -147,8 +147,8 @@
                                                         <option value="Requête conjointe">Requête conjointe</option>
                                                         <option value="Autres">Autres</option>
                                                     </select>
-                                                
-                                                </div>                       
+
+                                                </div>
                                         </div>
                                         <div class="col-md-4 col-sm-12">
                                             <div class="form-group">
@@ -158,7 +158,7 @@
                                                     <option value="oui">-- OUI --</option>
                                                     <option value="non">-- NON --</option>
                                                 </select>
-                                               
+
                                             </div>
                                         </div>
                                         <div class="col-md-4 cacher" id="clientContent-req" hidden>
@@ -254,16 +254,23 @@
                                         </div>
                                     </div>
                                     <div class="row mrg-0" id="formInstruction" hidden>
-                                        <!--
-                                        <div class="col-md-12" style="text-align:center ;">
-                                            <h2>Instruction ( Facultatif )</h2>
-                                            <hr>
-                                        </div> -->
+
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            {{-- <div class="form-group">
                                                 <label for="inputPr" class="control-label">importer un fichier :</label>
                                                 <input type="file" class="fichiers form-control" id="" placeholder="pièce jointe" data-error=" veillez joindre la pièce de l'assignation" name="pieceInstruction" accept="image/*,.pdf, .doc, docx">
                                                 <div class="help-block with-errors"></div>
+                                            </div> --}}
+
+                                            <div class="form-group">
+                                                <label for="" class="control-label">Nature :</label>
+                                                <select name="pieceInstruction" class="form-select select2" style="width:100%">
+                                                    <option value="" selected disabled>-- Choisissez une option --</option>
+                                                    <option value="Enquête">1.Enquête</option>
+                                                    <option value="Information">2.Information</option>
+                                                    <option value="Jugement">3.Jugement</option>
+
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -299,11 +306,11 @@
                                         <th>Importez les pièces ici</th>
                                         <th></th>
                                     </tr>
-                                    
+
                                     <tr>
                                         <td><input type="file" name="formsetPiece[0][autrePieces]" accept=".pdf"
                                                 placeholder="" class="form-control" id="piece" required/>
-                                
+
 
                                         <td><button type="button" name="add" id="dynamic-piece" onclick="formsetPiece()"
                                                 class="cl-white theme-bg btn btn-outline-default"><i
@@ -319,7 +326,7 @@
                             <button type="submit" id="submitButton" class="theme-bg btn btn-rounded btn-block" style="width:50%;">Enregistrer</button>
                         </div>
                     </div>
-                   
+
                 </div>
             </form>
         </div>
@@ -419,10 +426,10 @@ document.addEventListener('DOMContentLoaded', function () {
 // Controle de la taille des fichiers
 document.addEventListener("DOMContentLoaded", function() {
     var forms = document.querySelectorAll("form");
-   
+
     for (var i = 0; i < forms.length; i++) {
         forms[i].addEventListener("submit", function (e) {
-           
+
             var fichiersInput = this.querySelectorAll(".fichiers"); // Sélectionne tous les éléments avec la classe "fichier" à l'intérieur du formulaire courant
 
             var tailleMaxAutorisée = 104857600; // Taille maximale autorisée en octets (1 Mo ici)
@@ -545,7 +552,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 data-placeholder="Choisissez..." >
                                  <option value="" selected disabled>-- Choisissez --</option>
                                 <option value='in'>Intervenant</option>
-                                <option value='pc'>Partie civile</option>
+                                <option value='pc'>Prévenu(e)/ Accusé(e)</option>
                                 <option value='mp'>Ministère public</option>
                             </select>
                         </div>
@@ -558,7 +565,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 class="form-select select2" style="width:100%"
                                 data-placeholder="Choisissez..."  required>
                                  <option value="" selected disabled>-- Choisissez --</option>
-                                 <option value='1'> 
+                                 <option value='1'>
                                             @if(Session::has('cabinetSession'))
                                                 @foreach (Session::get('cabinetSession') as $cabinet)
                                                     {{$cabinet->nomCourt}}
@@ -608,7 +615,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         </div>
 
                     </div>
-                   
+
                     <div class="col-md-6 cacher" id="otherAvocats-` + i + `" hidden>
                         <div class="form-group">
                             <label for="personne" class="control-label">Ajouter des
@@ -920,7 +927,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                     class="form-select select2" style="width:100%"
                                     data-placeholder="Choisissez..."  required>
                                      <option value="" selected disabled>-- Choisissez --</option>
-                                     <option value='1'> 
+                                     <option value='1'>
                                             @if(Session::has('cabinetSession'))
                                                 @foreach (Session::get('cabinetSession') as $cabinet)
                                                     {{$cabinet->nomCourt}}
@@ -1281,7 +1288,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                         class="form-select select2" style="width:100%"
                                         data-placeholder="Choisissez..." required>
                                          <option value="" selected disabled>-- Choisissez --</option>
-                                         <option value='1'> 
+                                         <option value='1'>
                                             @if(Session::has('cabinetSession'))
                                                 @foreach (Session::get('cabinetSession') as $cabinet)
                                                     {{$cabinet->nomCourt}}
@@ -1643,7 +1650,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 class="form-select select2" style="width:100%"
                                 data-placeholder="Choisissez..."  required>
                                  <option value="" selected disabled>-- Choisissez --</option>
-                                 <option value='1'> 
+                                 <option value='1'>
                                             @if(Session::has('cabinetSession'))
                                                 @foreach (Session::get('cabinetSession') as $cabinet)
                                                     {{$cabinet->nomCourt}}
@@ -2005,7 +2012,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 class="form-select select2" style="width:100%"
                                 data-placeholder="Choisissez..."  required>
                                 <option value="" selected disabled>-- Choisissez --</option>
-                                <option value='1'> 
+                                <option value='1'>
                                             @if(Session::has('cabinetSession'))
                                                 @foreach (Session::get('cabinetSession') as $cabinet)
                                                     {{$cabinet->nomCourt}}
@@ -2055,7 +2062,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         </div>
 
                     </div>
-                
+
                     <div class="col-md-6 cacher" id="otherAvocats-` + i + `" hidden>
                         <div class="form-group">
                             <label for="personne" class="control-label">Ajouter des
@@ -2309,7 +2316,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const domicil = "#domicil-" + id;
         const personneOption = "#domicil-" + id;
 
-       
+
 
         $(representantLegal).removeAttr('required');
         $(formeLegal).removeAttr('required');
@@ -2383,7 +2390,7 @@ document.addEventListener("DOMContentLoaded", function() {
         $(domicil).val('');
     }
 
-    
+
     // Function to validate dates on change
     function validateDatesAss() {
                 const dateAssignation = new Date(document.getElementById('dateAssignation').value);
@@ -2402,7 +2409,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 $('#submitButton').removeClass('btn-default');
                 $('#submitButton').addClass('theme-bg');
             }
-            
+
     }
 
     // Function to validate dates on change
@@ -2430,7 +2437,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-           
+
 </script>
 
 <script>

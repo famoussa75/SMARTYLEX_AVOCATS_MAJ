@@ -1,28 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Publicite;
+namespace App\Http\Controllers\Planification;
 
-use App\Models\Publicite;
 use App\Http\Controllers\Controller;
 use App\Models\Audiences;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
-class PubliciteController extends Controller
+class PlanificationController extends Controller
 {
-    public function index()
+    // Fonction permettante d'envoyer à chaque 16h 00min le recapitulatif des audiences à vénir le lendemain
+    public function sendRecapEmail()
     {
-        $publicites = Publicite::orderBy('created_at', 'desc')->get();
-
-        return view('publicite.pub', compact('publicites'));
-    }
-    public function pub()
-    {
-        $publicites = Publicite::orderBy('created_at', 'desc')->get();
-                // Recuperer toutes les audiences prévues pour le lendemain
+         // Recuperer toutes les audiences prévues pour le lendemain
         $date = now()->addDay()->format('d/m/Y');
         $tomorrow = now()->addDay()->toDateString();
         $date = now()->addDay()->format('d/m/Y');
@@ -37,7 +28,7 @@ class PubliciteController extends Controller
             SEPARATOR ', '
             ) AS parties
             FROM (
-            SELECT MAX(idAudience) as idAudience, MAX(numRg) as numRg, MAX(objet) as objet, MAX(niveauProcedural) as niveauProcedural, 
+            SELECT MAX(idAudience) as idAudience, MAX(numRg) as numRg, MAX(objet) as objet, MAX(niveauProcedural) as niveauProcedural,
             MAX(juriductions.nom) as nom, MAX(juriductions.adresse) as adresse, slugAud, statutAud, MAX(isChild) as isChild, MAX(prochaineAudience) as prochaineAudience,
             MAX(prenom) as prenom, MAX(subquery_internal.nom) as nom, MAX(denomination) as denomination
             FROM (
@@ -48,9 +39,9 @@ class PubliciteController extends Controller
             JOIN parties ON audiences.idAudience = parties.idAudience
             LEFT JOIN clients ON parties.idClient = clients.idClient
             LEFT JOIN juriductions ON juriductions.id = audiences.juridiction
-            
+
             UNION
-            
+
             SELECT audiences.idAudience, audiences.slug AS slugAud, numRg, objet, niveauProcedural, prenom, personne_adverses.nom, NULL as denomination, NULL as numRccm, NULL as formeLegal, audiences.statut as statutAud, audiences.isChild, audiences.prochaineAudience,
             audiences.juridiction,
             juriductions.nom as juridiction_nom, juriductions.adresse
@@ -58,9 +49,9 @@ class PubliciteController extends Controller
             JOIN parties ON audiences.idAudience = parties.idAudience
             JOIN personne_adverses ON parties.idPartie = personne_adverses.idPartie
             LEFT JOIN juriductions ON juriductions.id = audiences.juridiction
-            
+
             UNION
-            
+
             SELECT audiences.idAudience, audiences.slug AS slugAud, numRg, objet, niveauProcedural, NULL as prenom, NULL as nom, denomination, numRccm, formeLegal, audiences.statut as statutAud, audiences.isChild, audiences.prochaineAudience,
             audiences.juridiction,
             juriductions.nom as juridiction_nom, juriductions.adresse
@@ -96,7 +87,7 @@ class PubliciteController extends Controller
             </thead>
             <tbody>';
             foreach ($audiences as $i => $row) {
-            $niveauLabel = $row->niveauProcedural == "1ère instance" ? 
+            $niveauLabel = $row->niveauProcedural == "1ère instance" ?
             '<small style="background:#28a745;color:#fff;padding:2px 6px;border-radius:3px;">'.$row->niveauProcedural.'</small>' :
             ($row->niveauProcedural == "Appel" ?
             '<small style="background:#ffc107;color:#212529;padding:2px 6px;border-radius:3px;">'.$row->niveauProcedural.'</small>' :
@@ -127,92 +118,18 @@ class PubliciteController extends Controller
             ->html($emailBody);
             });
         }
-            return response()->json($publicites);
-        }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'titre' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'lien' => 'nullable|url',
-            'statut' => 'required|in:actif,inactif',
-            'debut' => 'required|date',
-            'fin' => 'required|date|after:debut'
-        ]);
-
-        $uuidName = null;
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $uuidName = Str::uuid() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('publicites', $uuidName, 'public');
-        }
-
-        $publicite = Publicite::create([
-            'titre' => $request->titre,
-            'image' => $uuidName,
-            'lien' => $request->lien,
-            'statut' => $request->statut,
-            'debut' => $request->debut,
-            'fin' => $request->fin
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Publicité créée avec succès'
-        ]);
-    }
-
-    public function update(Request $request, Publicite $publicite)
-    {
-        $request->validate([
-            'titre' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'lien' => 'nullable|url',
-            'statut' => 'required|in:actif,inactif',
-            'debut' => 'required|date',
-            'fin' => 'required|date|after:debut'
-        ]);
-
-        $uuidName = $publicite->image;
-        if ($request->hasFile('image')) {
-            // Supprimer l'ancienne image si elle existe
-            if ($publicite->image) {
-                Storage::disk('public')->delete('publicites/' . $publicite->image);
-            }
-
-            $file = $request->file('image');
-            $uuidName = Str::uuid() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('publicites', $uuidName, 'public');
-        }
-
-        $publicite->update([
-            'titre' => $request->titre,
-            'image' => $uuidName,
-            'lien' => $request->lien,
-            'statut' => $request->statut,
-            'debut' => $request->debut,
-            'fin' => $request->fin
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Publicité modifiée avec succès'
-        ]);
-    }
-
-    public function destroy(Publicite $publicite)
-    {
-        // Suppression de l'image si elle existe
-        if ($publicite->image) {
-            Storage::disk('public')->delete('publicites/' . $publicite->image);
-        }
-
-        $publicite->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Publicité supprimée avec succès'
-        ]);
+        return response()->json(['message' => 'Récapitulatif des audiences envoyé avec succès.']);
     }
 }
+
+
+
+
+
+        // Logique pour envoyer l'email de récapitulatif des audiences
+        // Cela pourrait inclure la récupération des audiences prévues pour le lendemain
+        // et l'envoi d'un email aux utilisateurs concernés.
+
+        // Exemple de code (pseudo-code) :
+        // $audiences = Audience::whereDate('prochaineAudience', '=', now()->addDay()->toDateString())->get();
+        // Mail::to($user->email)->send(new RecapEmail($audiences));

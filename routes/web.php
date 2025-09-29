@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Planification\PlanificationController;
 use App\Http\Controllers\Publicite\PubliciteController;
 use Illuminate\Support\Facades\Auth;
 
@@ -65,7 +66,7 @@ use Illuminate\Support\Facades\Auth;
         Route::get('two-factor-authentication/resend', 'resend')->name('2fa.resend');
     });
 
-    
+
     /**
      * Debut des routes de gestion des publicités
      */
@@ -88,6 +89,12 @@ use Illuminate\Support\Facades\Auth;
      /**
       * Fin des routes de gestion de la juridiction
       */
+
+      /**
+       * Debut des routes de gestion de l'envoi des recapitulatif des audiences
+       */
+        Route::get('/send-audience-recap', [PlanificationController::class, 'sendRecapEmail'])->name('RecapEmail');
+
 
 
     // Les routes permettant d'effectuer la gestion des utilisateurs
@@ -112,7 +119,7 @@ use Illuminate\Support\Facades\Auth;
     /* Fin Module utilisateur */
 
     /* Module personnel */
-    
+
     // La route permettant de trouver les matricules
     Route::get('/Personnel/getMatriculePersonne', [PersonnelController::class, 'getMatriculePersonnel'])->name('getMatricule');
 
@@ -228,18 +235,20 @@ use Illuminate\Support\Facades\Auth;
 
 
 
-    /* 
+    /*
     -------------- UTILISABLE PLUTARD---------------------------
     La route permettantes d'envoyé le message (SMS) à un client
     Route::post('/clientSentSMS/data', [ClientController::class, 'sentSMS'])->name('clientSentSMS');
     */
+
+
 
     /* Fin Module Client */
 
     /* Routes AJAX */
 
    // routes/web.php
-   
+
 
    // liste courrier->affaire->client
     Route::get('/fetch-affaire-couriers/{id}', [CourierArriverController::class, 'fetchAffaireCouriers']);
@@ -331,7 +340,7 @@ use Illuminate\Support\Facades\Auth;
 
     // Routes les affaires style card pour le portail client
     Route::get('/affaire/cardList/client', [AffaireController::class, 'allAffaireClient'])->name('affaireClient');
-    
+
 
     // Detail de l'affaire
     Route::get('/affaire/view/{id}/{slug}', [AffaireController::class, 'show'])->name('showAffaire');
@@ -482,7 +491,7 @@ use Illuminate\Support\Facades\Auth;
     // Desapprobation du courrier depart
     Route::post('/courier_depart/desapprouver/', [CourierDepartController::class, 'desapprouveCourier'])->name('desapprouver');
 
-    // Niveau accusé reception 
+    // Niveau accusé reception
     Route::post('/courier_depart/completer/[slug]', [CourierDepartController::class, 'completCourier'])->name('completeCourier');
 
     // La route permettantes d'afficher la liste des couriers depart'
@@ -522,7 +531,7 @@ use Illuminate\Support\Facades\Auth;
             ->join('personnels', 'affectation_personnels.idPersonnel', '=', 'personnels.idPersonnel')
             ->where('personnels.email', Auth::user()->email)
             ->select('clients.*')
-            ->get();        
+            ->get();
         }else {
             $clients = DB::select('select * from clients');
         }
@@ -541,7 +550,7 @@ use Illuminate\Support\Facades\Auth;
             ->join('personnels', 'affectation_personnels.idPersonnel', '=', 'personnels.idPersonnel')
             ->where('personnels.email', Auth::user()->email)
             ->select('clients.*')
-            ->get();        
+            ->get();
         }else {
             $clients = DB::select('select * from clients');
         }
@@ -562,7 +571,7 @@ use Illuminate\Support\Facades\Auth;
             ->join('personnels', 'affectation_personnels.idPersonnel', '=', 'personnels.idPersonnel')
             ->where('personnels.email', Auth::user()->email)
             ->select('clients.*')
-            ->get();        
+            ->get();
         }else {
             $clients = DB::select('select * from clients');
         }
@@ -581,7 +590,7 @@ use Illuminate\Support\Facades\Auth;
             ->join('personnels', 'affectation_personnels.idPersonnel', '=', 'personnels.idPersonnel')
             ->where('personnels.email', Auth::user()->email)
             ->select('clients.*')
-            ->get();        
+            ->get();
         }else {
             $clients = DB::select('select * from clients');
         }
@@ -601,7 +610,7 @@ use Illuminate\Support\Facades\Auth;
             ->join('personnels', 'affectation_personnels.idPersonnel', '=', 'personnels.idPersonnel')
             ->where('personnels.email', Auth::user()->email)
             ->select('clients.*')
-            ->get();        
+            ->get();
         }else {
             $clients = DB::select('select * from clients');
         }
@@ -628,7 +637,7 @@ use Illuminate\Support\Facades\Auth;
     Route::post('/audience/filtre-periode/list', [AudiencesController::class, 'filtreAudience'])->name('filtreAudience');
 
     // La route permettantes d'afficher les informations d'une audiences
-    Route::get('/audience/view/{id}/{slug}/{niveau}', [AudiencesController::class, 'show'])->name('detailAudience');
+    Route::get('/audience/view/{id}/{slug}', [AudiencesController::class, 'show'])->name('detailAudience');
 
 
     // La route permettantes d'afficher les informations d'une audience de jonction
@@ -714,7 +723,7 @@ use Illuminate\Support\Facades\Auth;
     Route::get('/facturation/creation/{idClient}', [FacturationController::class, 'createFromClient'])->name('factureFormClient');
 
     Route::get('/facturation/creation/{idClient}/{idAffaire}', [FacturationController::class, 'createFromAffaire'])->name('factureFormAffaire');
-    
+
     Route::get('/facturation/historique', [FacturationController::class, 'list'])->name('histoFacture');
 
     Route::post('/facturation/store', [FacturationController::class, 'store'])->name('storeFacture');
@@ -735,7 +744,7 @@ use Illuminate\Support\Facades\Auth;
 
 
 
-    
+
 
     /* Fin Module Facturation */
 
@@ -772,7 +781,7 @@ use Illuminate\Support\Facades\Auth;
 
     Route::post('/annuaires/import', [AnnuairesController::class, 'importAnnuaireData'])->name('importAnnuaireData');
 
-    
+
 
 
 
@@ -800,7 +809,7 @@ use Illuminate\Support\Facades\Auth;
     // Suppression de l'huissier
     Route::post('/huissier/delete', [HuissiersController::class, 'delete'])->name('huissier.delete');
 
-    // Tous les notaires 
+    // Tous les notaires
     //Route::get('', [NotairesController::class, 'list'])->name('notaires.list');
 
 Route::get('/notaires/list', [NotairesController::class, 'index'])->name('notaires.list');
@@ -822,11 +831,11 @@ Route::delete('/notaires', [NotairesController::class, 'destroy'])->name('notair
         if (! in_array($locale, ['en','fr'])) {
             abort(400);
         }
-     
+
         App::setLocale($locale);
         $locale = App::currentLocale();
-        
-     
+
+
         return redirect()->back();
     })->name('changeLang');
 

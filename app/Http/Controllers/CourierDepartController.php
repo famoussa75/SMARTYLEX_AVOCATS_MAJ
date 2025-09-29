@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\CourierDepart;
 use App\Models\CourierFiles;
 use App\Models\Fichiers;
+use App\Models\Notifications;
 use App\Models\Personnels;
 use DateTime;
 use Fpdf\Fpdf;
@@ -200,7 +201,7 @@ class CourierDepartController extends Controller
 
         $logo = DB::select("select logo from cabinets");
         // Contenu de la div que vous souhaitez télécharger
-        
+
 
         // Création d'un nouvel objet PHPWord
         $phpWord = new PhpWord();
@@ -298,7 +299,7 @@ class CourierDepartController extends Controller
         $section->addTextBreak(1);
         $section->addText('Madame / Monsieur,');
         $section->addText('Par la présente, monsieur/madame ' . $courierModel[0]->prenom . ' ' . $courierModel[0]->nom . ', résident à ' . $courierModel[0]->adresse . ' ,ayant pour avocat Maître ' . $signataire[0]->name . ', avocat à la Cour, déclare, avoir formellement relevé appel contre le jugement ' . $courierModel[0]->jugement . ', rendu dans l’affaire suscitée.');
-        $section->addTextBreak(1);       
+        $section->addTextBreak(1);
         $section->addText('L’appelant(e) entend, en effet, développer les motifs de son appel par devant la Cour d’appel de ' . $courierModel[0]->courAppel . '');
         $section->addTextBreak(1);
         $section->addText('Vous en souhaitant bonne réception, nous vous prions d’agréer, monsieur le chef de greffe, nos salutations distinguées.');
@@ -502,14 +503,14 @@ class CourierDepartController extends Controller
     {
 
         $slugSuivit = request()->route('slug');
-       
+
         if ($slugSuivit) {
             $suiviAudiences = DB::select("select * from suivit_audiences where slug=?",[$slugSuivit]);
         } else {
             $suiviAudiences = DB::select("select * from suivit_audiences where typeDecision='viderDeliberer' ");
 
         }
-        
+
         // Recuperation des donnees des Personnels
         $personnels = Personnels::all();
 
@@ -523,7 +524,7 @@ class CourierDepartController extends Controller
             ->join('personnels', 'affectation_personnels.idPersonnel', '=', 'personnels.idPersonnel')
             ->where('personnels.email', Auth::user()->email)
             ->select('clients.*')
-            ->get();        
+            ->get();
         }else {
             $clients = DB::select('select * from clients');
         }
@@ -531,7 +532,7 @@ class CourierDepartController extends Controller
         // Comptage des nombres de courier depart
         $idCourier = CourierDepart::all()->count() == 0 ? 1 : CourierDepart::all()->count() + 1;
 
-        
+
 
         $juriductions = DB::select("select * from juriductions");
 
@@ -548,7 +549,7 @@ class CourierDepartController extends Controller
         //$idCourier = 'N°'.$id.'/AD/ASK/'.date('Y');
         return view('couriers.depart.courierSentForm', compact('personnels', 'clients', 'idCourier', 'admins', 'juriductions','courierArrivers','courierDeparts','suiviAudiences'));
     }
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -558,190 +559,121 @@ class CourierDepartController extends Controller
      */
     public function store(Request $request)
     {
-        // l'instanciation du model courier depart
+        // Instanciation du modèle CourierDepart
         $courierSent = new CourierDepart();
 
-        // linstanciation du model courierFile
-        $courierFile = new Fichiers();
+        // Récupération du personnel connecté
+        $idPersonConnected = Session::has('idPersonnel') && !empty(Session::get('idPersonnel'))
+            ? Session::get('idPersonnel')[0]->idPersonnel
+            : 'admin';
 
+        // Récupération du cabinet (une seule fois)
+        $cabinet = DB::table('cabinets')->first();
 
-        //personnel connecter
-        if (Session::has('idPersonnel')) {
-            foreach (Session::get('idPersonnel') as $Personnel) {
-                $idPersonConnected = $Personnel->idPersonnel;
-            }
-        } else {
-            $idPersonConnected = 'admin';
-        }
+        if ($request) {
+            // Remplissage des champs du courrier
+            $courierSent->fill([
+            'destinataire'      => $request->destinataire,
+            'numCourier'        => $request->idCourier,
+            'objet'             => $request->objet,
+            'dateCourier'       => $request->dateCourier,
+            'idPersonnel'       => $request->idPersonnel,
+            'expediteur'        => $cabinet->nomCabinet ?? '',
+            'idClient'          => $request->idClient,
+            'idAffaire'         => $request->idAffaire,
+            'partieAdverse'     => $request->partieAdverse,
+            'motif'             => $request->motif,
+            'jugement'          => $request->jugement,
+            'courAppel'         => $request->courAppel,
+            'dateProcesVerbal'  => $request->dateProcesVerbal,
+            'typeModel'         => $request->typeModel,
+            'signataire'        => $request->signataire,
+            'dateEnvoi'         => '',
+            'dateReception'     => '',
+            'numeroRecu'        => '',
+            'niveau'            => 'Approbation',
+            'statut'            => 'Transmis',
+            'confidentialite'   => $request->confidentialite,
+            'slug'              => $request->_token . rand(5665, 12873),
+            ]);
 
-        $cabinet = DB::select("select * from cabinets");
-
-        if ($request != null) {
-
-            $courierSent->destinataire = $request->destinataire;
-            $courierSent->numCourier = $request->idCourier;
-            $courierSent->objet = $request->objet;
-            $courierSent->dateCourier = $request->dateCourier;
-            $courierSent->idPersonnel = $request->idPersonnel;
-            $courierSent->expediteur = $cabinet[0]->nomCabinet;
-            $courierSent->idClient = $request->idClient;
-            $courierSent->idAffaire = $request->idAffaire;
-            $courierSent->partieAdverse = $request->partieAdverse;
-            $courierSent->motif = $request->motif;
-            $courierSent->jugement = $request->jugement;
-            $courierSent->courAppel = $request->courAppel;
-            $courierSent->dateProcesVerbal = $request->dateProcesVerbal;
-            $courierSent->typeModel = $request->typeModel;
-            $courierSent->signataire = $request->signataire;
-            $courierSent->dateEnvoi = '';
-            $courierSent->dateReception = '';
-            $courierSent->numeroRecu = '';
-            $courierSent->niveau = 'Approbation';
-            $courierSent->statut = 'Transmis';
-            $courierSent->confidentialite = $request->confidentialite;
-            $courierSent->slug = $request->_token . rand(5665, 12873);
-
-    
-
-            // Creation des fichiers
-            // dossiers : affaires,taches,audiences,courier-departs,courier-arrivers
-            if ($request->file('fichiers') != null) {
-
-                $fichiers = request()->file('fichiers');
-
-
-                foreach ($fichiers as $fichier) {
-
-                    $courierFile = new Fichiers();
-
-                    $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
-                    $courierFile->nomOriginal = $fichier->getClientOriginalName();
-                    $courierFile->slugSource = $courierSent->slug;
-                    $courierFile->filename = $filename;
-                    $courierFile->slug = $request->_token . "" . rand(1234, 3458);
-                    $courierFile->path = 'assets/upload/fichiers/courier-departs/' . $filename;
-                    $fichier->move(public_path('assets/upload/fichiers/courier-departs'), $filename);
-                    $courierFile->save();
-                }
-            }
-            /*
-
-            //personnel connecter
-            if (Session::has('idPersonnel')) {
-                foreach (Session::get('idPersonnel') as $Personnel) {
-                    $idPersonConnected = $Personnel->idPersonnel;
-                }
-                $admins = DB::select("select * from users where role='Administrateur'");
-
-                    foreach ($admins as $a) {
-                        DB::select(
-                            'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
-                            [
-                                'Courriers - Départ',
-                                "Un courrier départ a été enregistré.",
-                                'masquer',
-                                'admin',
-                                $request->_token . "" . rand(1234, 3458),
-                                'non',
-                                "infoCourierDepart",
-                                $courierSent->slug,
-                                $a->id
-                            ]
-                        );
-                    }
-            } else {
-                $assistantSelect = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
-                if (empty($assistantSelect)) {
-                    $assistant = 'Assistant';
-                } else {
-                    $assistant = $assistantSelect[0]->idPersonnel;
-                }
-
-                DB::select(
-                    'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
-                    [
-                        'Courriers - Départ',
-                        "Un courrier départ a été enregistré.",
-                        'masquer',
-                        $assistant,
-                        $request->_token . "" . rand(1234, 3458),
-                        'non',
-                        "infoCourierDepart",
-                        $courierSent->slug
-                    ]
-                );
-            }
-
-            */
-            $admins = DB::select("select * from users where role='Administrateur'");
-
-            foreach ($admins as $a) {
-                DB::select(
-                    'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
-                    [
-                        'Courriers - Départ',
-                        "Un courrier arrivé a été enregistré.",
-                        'masquer',
-                        'admin',
-                        'non',
-                        $request->_token . "" . rand(1234, 3458),
-                        "infoCourierDepart",
-                        $courierSent->slug,
-                        $a->id
-                    ]
-                );
-            }
-
-            $assistantSelect = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
-           
-            foreach($assistantSelect as $assistant){
-                DB::select(
-                    'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
-                    [
-                        'Courriers - Départ',
-                        "Un courrier arrivé a été enregistré.",
-                        'masquer',
-                        $assistant->idPersonnel,
-                        'non',
-                        $request->_token . "" . rand(1234, 3458),
-                        "infoCourierDepart",
-                        $courierSent->slug
-                    ]
-                );
-            }
-
-            $slug = $courierSent->slug;
-
-        
             // Enregistrement du courrier
             $courierSent->save();
 
-            $cleCommune = $request->_token . "" . rand(1234, 3458);
+            // Gestion des fichiers joints
+            if ($request->hasFile('fichiers')) {
+            foreach ($request->file('fichiers') as $fichier) {
+                $filename = strtoupper(substr(str_shuffle(md5($request->_token . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
+                $fichier->move(public_path('assets/upload/fichiers/courier-departs'), $filename);
 
+                Fichiers::create([
+                'nomOriginal' => $fichier->getClientOriginalName(),
+                'slugSource'  => $courierSent->slug,
+                'filename'    => $filename,
+                'slug'        => $request->_token . rand(1234, 3458),
+                'path'        => 'assets/upload/fichiers/courier-departs/' . $filename,
+                ]);
+            }
+            }
+
+            // Gestion des liaisons de courrier
+            $cleCommune = $request->_token . rand(1234, 3458);
             courierLiers::create([
-                'slugCourierLier' => $slug,
-                'cleCommune' => $cleCommune,
-                'slug' => $request->_token . "" . rand(1234, 3458),
+            'slugCourierLier' => $courierSent->slug,
+            'cleCommune'      => $cleCommune,
+            'slug'            => $request->_token . rand(1234, 3458),
             ]);
-
-            foreach ($request->idCourierLier as $key => $value) {
-                if ($value==0) {
-                 # ne rien faire
-                } else {
-                 courierLiers::create([
-                     'slugCourierLier' => $value,
-                     'cleCommune' => $cleCommune,
-                     'slug' => $request->_token . "" . rand(1234, 3458),
-                 ]);
+            if (!empty($request->idCourierLier)) {
+            foreach ($request->idCourierLier as $value) {
+                if ($value) {
+                courierLiers::create([
+                    'slugCourierLier' => $value,
+                    'cleCommune'      => $cleCommune,
+                    'slug'            => $request->_token . rand(1234, 3458),
+                ]);
                 }
-                
-             }
+            }
+            }
 
-             if ($request->slugSuivitAudience!='') {
-                DB::update("update suivit_audiences set rappelLettre='ne_pas_rappeler' where slug=?",[$request->slugSuivitAudience]);
-             }
+            // Mise à jour du suivi audience si besoin
+            if (!empty($request->slugSuivitAudience)) {
+            DB::update("update suivit_audiences set rappelLettre='ne_pas_rappeler' where slug=?", [$request->slugSuivitAudience]);
+            }
 
-            return redirect()->route('infoCourierDepart',  [$slug])->with('success', 'Enregistrement effectué avec succès !');
+            // Notifications (optimisé en batch)
+            $notifData = [
+            'categorie' => 'Courriers - Départ',
+            'messages'  => "Un courrier arrivé a été enregistré.",
+            'etat'      => 'masquer',
+            'a_biper'   => 'non',
+            'slug'      => $request->_token . rand(1234, 3458),
+            'urlName'   => "infoCourierDepart",
+            'urlParam'  => $courierSent->slug,
+            ];
+
+            // Administrateurs
+            $admins = DB::table('users')->where('role', 'Administrateur')->get();
+            foreach ($admins as $a) {
+            Notifications::create(array_merge($notifData, [
+                'idRecepteur' => 'admin',
+                'idAdmin'     => $a->id,
+            ]));
+            }
+
+            // Assistants
+            $assistants = DB::table('personnels')
+            ->join('users', 'personnels.email', '=', 'users.email')
+            ->where('users.role', 'Assistant')
+            ->select('personnels.idPersonnel')
+            ->get();
+            foreach ($assistants as $assistant) {
+            Notifications::create(array_merge($notifData, [
+                'idRecepteur' => $assistant->idPersonnel,
+                'idAdmin'     => null,
+            ]));
+            }
+
+            return redirect()->route('infoCourierDepart', [$courierSent->slug])->with('success', 'Enregistrement effectué avec succès !');
         }
     }
 
@@ -762,7 +694,7 @@ class CourierDepartController extends Controller
 
 
         if (empty($personnel)) {
-            
+
             DB::update("update notifications set etat='vue' where idRecepteur='admin' and idAdmin=? and urlParam=?", [Auth::user()->id,$slug]);
         } else {
             $idPersonnel = $personnel[0]->idPersonnel;
@@ -775,12 +707,12 @@ class CourierDepartController extends Controller
         }
 
         $courierSent = DB::select("select * from courier_departs where slug=?", [$slug]);
-        
+
         $courierFile = DB::select("select * from fichiers where slugSource=?", [$slug]);
 
         $courierModel = DB::select("select * from courier_departs,affaires,personnels,clients where courier_departs.idPersonnel=personnels.idPersonnel and courier_departs.idClient=clients.idClient and courier_departs.idAffaire=affaires.idAffaire and courier_departs.slug=?", [$slug]);
         if (!empty($courierModel)) {
-           
+
             $signataire = DB::select('select * from users where initial=?', [$courierModel[0]->signataire]);
             $annee = date("Y", strtotime($courierModel[0]->created_at));
         } else {
@@ -792,25 +724,25 @@ class CourierDepartController extends Controller
 
 
         if (empty($courierSent)) {
-           
+
           return redirect()->back()->with('error', 'Courrier introuvable !');
 
         }else {
-            
-            
+
+
             if ($courierSent[0]->niveau == "Terminé") {
 
                 return redirect()->route('detailCourierDepart', [$courierSent[0]->slug]);
-    
+
             } else {
                 //dd($slug, $courierFile, $courierSent, $courierSent, $courierModel, $signataire, $annee, $clientAffaire, $courierArrivers);
                 return view('couriers.depart.courierSentViewForm', compact('slug', 'courierFile', 'courierSent', 'courierModel', 'signataire', 'annee','clientAffaire','paramCabinet','annuaires'));
             }
         }
 
-       
 
-       
+
+
     }
 
     /**
@@ -935,7 +867,7 @@ class CourierDepartController extends Controller
         }
 
         $assistantSelect = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
-       
+
         foreach($assistantSelect as $assistant){
             DB::select(
                 'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
@@ -1039,7 +971,7 @@ class CourierDepartController extends Controller
     public function informationDuty($slug)
     {
 
-    
+
         $courierSent = DB::select('select * from courier_departs where slug = ?', [$slug]);
 
         $cleCommune = DB::select('select * from courier_liers where slugCourierLier=?',[$slug]);
@@ -1052,20 +984,20 @@ class CourierDepartController extends Controller
             foreach ($cleCommune as $key => $value) {
 
                 $courierDepartLiersItem = DB::select("SELECT courier_departs.slug as slugDepart,numCourier, courier_departs.idCourierDep, courier_liers.slugCourierLier, courier_liers.slug as slugTCourierLier, cleCommune, objet
-                FROM courier_departs, courier_liers 
+                FROM courier_departs, courier_liers
                 WHERE courier_departs.slug = courier_liers.slugCourierLier AND courier_liers.cleCommune = :cle1",['cle1' => $value->cleCommune]);
 
                 $courierArriverLiersItem = DB::select("SELECT courier_arrivers.slug as slugArriver,numero, courier_liers.slugCourierLier, courier_liers.slug as slugTCourierLier, cleCommune, courier_arrivers.idCourierArr, objet
-                FROM courier_arrivers, courier_liers 
+                FROM courier_arrivers, courier_liers
                 WHERE courier_arrivers.slug = courier_liers.slugCourierLier AND courier_liers.cleCommune = :cle2",['cle2' => $value->cleCommune]);
 
                 $courierDepartLiers = array_merge($courierDepartLiers, $courierDepartLiersItem);
                 $courierArriverLiers = array_merge($courierArriverLiers, $courierArriverLiersItem);
-                
+
             }
-         
+
         }
-       
+
         $accuser = DB::select('select fichiers.slug from courier_departs,fichiers where courier_departs.accuse_reception=fichiers.slugSource and courier_departs.slug = ?', [$slug]);
 
         $courierFile =  DB::select("select * from fichiers where slugSource = ? ", [$slug]);
@@ -1081,7 +1013,7 @@ class CourierDepartController extends Controller
       $client = DB::select("select * from clients");
 
       $courriersArriverCabinet = DB::select("SELECT * FROM courier_arrivers WHERE statut != 'Annulé' AND idAffaire is null  AND (? IS NULL OR courier_arrivers.slug != ?) ",[$slug,$slug] );
-    
+
       $courriersDepartCabinet = DB::select("SELECT * FROM courier_departs WHERE  statut != 'Annulé' AND idAffaire is null AND (? IS NULL OR courier_departs.slug != ?) ",[$slug,$slug]);
 
         $suggeCourierDepart = DB::select("
@@ -1095,14 +1027,14 @@ class CourierDepartController extends Controller
     ", [$slug]);
 
         $infoCourierArrivers = DB::SELECT(" SELECT * FROM courier_arrivers,clients,affaires ,courier_liers where clients.idClient = courier_arrivers.idClient and affaires.idAffaire = courier_arrivers.idAffaire and courier_liers.slugCourierLier = courier_arrivers.slug");
-       
-        
+
+
        // dd( $infoCourier);
-    
-        
+
+
        $infoCourierDepart = DB::SELECT(" SELECT * FROM courier_departs,clients,affaires ,courier_liers where clients.idClient = courier_departs.idClient and affaires.idAffaire = courier_departs.idAffaire and courier_liers.slugCourierLier = courier_departs.slug");
-        
-        
+
+
         //dd($infoCourierDepart);
 
         return view('couriers.depart.infoCourierDepart', compact('courierFile', 'courierSent','accuser','clientAffaire','courierDepartLiers','courierArriverLiers','courierArrivers','courierDeparts','client','courriersArriverCabinet','courriersDepartCabinet','suggeCourierDepart','infoCourierDepart'));
@@ -1158,7 +1090,7 @@ class CourierDepartController extends Controller
                         ]
                     );
                 }
-               
+
             }
             return redirect()->route('infoCourierDepart', $slug)->with('success', 'Le courrier a été approuvé avec succès !');
         }
@@ -1227,9 +1159,9 @@ class CourierDepartController extends Controller
                     );
                 }
 
-               
 
-                
+
+
             }
             $updateStatut = DB::update("update courier_departs set statut='Désapprouvé',niveau='Approbation',consignes=? where slug=? ", [$consigne, $slug]);
             return redirect()->route('infoCourierDepart', $slug)->with('success', 'Le courier a été desaprouver ');
@@ -1255,7 +1187,7 @@ class CourierDepartController extends Controller
         //         if (file_exists($value->path)) {
         //             unlink(public_path($value->path));
         //         } else {
-                   
+
         //         }
         //     }
         //     DB::delete("delete from fichiers where slugSource=? ", [$slug]);
@@ -1281,9 +1213,9 @@ class CourierDepartController extends Controller
 
     public function sendCourrierMail(Request $request)
     {
-        $cabinet = DB::select("select * from cabinets"); 
+        $cabinet = DB::select("select * from cabinets");
         $serveurEmail = DB::select("select * from serveur_mails");
-       
+
         require base_path("vendor/autoload.php");
         $mail = new PHPMailer(true);     // Passing `true` enables exceptions
 
@@ -1314,7 +1246,7 @@ class CourierDepartController extends Controller
                     $mail->addCC($_POST['emails'][$i]);
                 }
             }
-          
+
 
 
             if ($_FILES['attachment']['tmp_name'][0] != "") {
@@ -1330,21 +1262,21 @@ class CourierDepartController extends Controller
             $mail->CharSet = "UTF-8";
             $mail->Encoding = 'base64';
             $mail->Body = $body = "
-           
+
                 <div class='container'>
-                    
+
                      $request->body <br/><br/><br/>
                     ".$cabinet[0]->signature."
-        
+
                 </div>
-          
+
             ";
 
             // $mail->AltBody = plain text version of email body;
 
             if (!$mail->send()) {
                 return back()->with("error", "Message non envoyé ! Réessayez à nouveau.")->withErrors($mail->ErrorInfo);
-                
+
             } else {
                 $enCharge = Auth::user()->name;
                 $today = date('Y-m-d H:i:s'); // date du jour
@@ -1381,9 +1313,9 @@ class CourierDepartController extends Controller
                         ]
                     );
                 }
-    
+
                 $assistantSelect = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
-               
+
                 foreach($assistantSelect as $assistant){
                     DB::select(
                         'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
@@ -1399,15 +1331,15 @@ class CourierDepartController extends Controller
                         ]
                     );
                 }
-                
+
 
                 return back()->with("success", "Email envoyé avec succès...");
             }
 
-           
+
 
         } catch (Exception $e) {
-           
+
 
             return back()->with('error', 'Erreur d\'envoie de mail. Veuillez vous assurer que vous êtes connecté à internet et que les emails sont bien configurés dans les paramètres avancés.');
         }
@@ -1416,7 +1348,7 @@ class CourierDepartController extends Controller
     public function soumetre(Request $request)
     {
         $slug = $request->input('slugCourier');
-    
+
         // Récupération du courrier + client + affaire
         $courierClient = DB::table('courier_departs')
             ->join('clients', 'courier_departs.idClient', '=', 'clients.idClient')
@@ -1431,25 +1363,25 @@ class CourierDepartController extends Controller
             )
             ->where('courier_departs.slug', $slug)
             ->first();
-    
+
         // Récupération des fichiers liés par slugSource = $slug
         $courierFiles = DB::select("SELECT * FROM fichiers WHERE slugSource = ?", [$slug]);
-        
-    
+
+
         // Configuration cabinet et serveur mail
         $cabinet = DB::table('cabinets')->first();
         $serveurEmail = DB::table('serveur_mails')->first();
-    
+
         if (!$cabinet || !$serveurEmail) {
             return back()->with('error', "Configuration du cabinet ou du serveur mail manquante.");
         }
-    
+
         // Données client
         $email  = $courierClient->emailClient;
         $objet  = $courierClient->objetCourier;
         $prenom = $courierClient->clientPrenom;
         $nom    = $courierClient->nomClient;
-    
+
         try {
             $mail = new PHPMailer(true);
             $mail->isSMTP();
@@ -1467,22 +1399,22 @@ class CourierDepartController extends Controller
                     'allow_self_signed' => true,
                 ],
             ];
-    
+
             $mail->setFrom($cabinet->emailFinance, $cabinet->nomCabinet);
             $mail->addAddress($email, "$prenom $nom");
             $mail->addAddress($cabinet->emailContact);
-    
+
             // Attacher les fichiers (physiquement) : on utilise le chemin public
             $inlineImagesHtml = ''; // si on veut afficher les images inline
             foreach ($courierFiles as $index => $file) {
                 // $file->path est par ex. "assets/upload/fichiers/courier-departs/xxx.png"
                 $fullPath = public_path($file->path);
                 $filename = $file->filename ?? basename($file->path);
-    
+
                 if (file_exists($fullPath)) {
                     // Joindre comme pièce jointe
                     $mail->addAttachment($fullPath, $filename);
-    
+
                     // Si c'est une image, intégrer inline aussi (optionnel)
                     $ext = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
                     if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
@@ -1492,10 +1424,10 @@ class CourierDepartController extends Controller
                         $inlineImagesHtml .= "<p>Prévisualisation :<br><img src=\"cid:$cid\" style=\"max-width:300px; height:auto;\" /></p>";
                     }
                 } else {
-                    \Log::warning("Fichier introuvable pour attachement : $fullPath");
+                    Log::warning("Fichier introuvable pour attachement : $fullPath");
                 }
             }
-    
+
             // Corps du mail
             $body = "
                 <div class='container'>
@@ -1506,27 +1438,27 @@ class CourierDepartController extends Controller
                     <p>Cordialement,<br>{$cabinet->nomCabinet}<br>{$cabinet->signature}</p>
                 </div>
             ";
-    
+
             $mail->isHTML(true);
             $mail->Subject = "Notification d'envoi de courrier : $objet";
             $mail->CharSet = 'UTF-8';
             $mail->Encoding = 'base64';
             $mail->Body = $body;
             $mail->AltBody = "Bonjour $prenom $nom,\n\nNous vous informons que le courrier intitulé \"$objet\" a été envoyé avec ses documents joints.\n\nCordialement,\n{$cabinet->nomCabinet}";
-    
+
             if (!$mail->send()) {
-                \Log::error("Erreur envoi mail : " . $mail->ErrorInfo);
+                Log::error("Erreur envoi mail : " . $mail->ErrorInfo);
                 return back()->with('error', "Échec de l'envoi de la notification au client.");
             }
-    
+
             return back()->with('success', "Notification envoyée au client ($prenom $nom) concernant « $objet ».");
         } catch (Exception $e) {
-            \Log::error("Exception PHPMailer : " . $e->getMessage());
+            Log::error("Exception PHPMailer : " . $e->getMessage());
             return back()->with('error', "Erreur interne lors de l'envoi du mail : " . $e->getMessage());
         }
     }
-    
-    
-    
-    
+
+
+
+
 }

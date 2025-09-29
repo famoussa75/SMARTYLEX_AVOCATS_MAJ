@@ -938,9 +938,7 @@ class AudiencesController extends Controller
                     'juridiction.required' => 'Le champ juridiction est obligatoire.',
                     'objet.required' => 'Le champ objet est obligatoire.',
                     'niveauProcedural.required' => 'Le champ niveau procedural est obligatoire.',
-                    'nature.required' => 'Le champ nature est obligatoire.',
-
-                    // ...
+                    'nature.required' => 'Le champ nature est obligatoire.'
                 ];
 
 
@@ -976,18 +974,6 @@ class AudiencesController extends Controller
 
 
                     $arr = is_array($request->requeteLier) ? $request->requeteLier : [$request->requeteLier];
-                    //dd($arr);
-
-                    /*
-
-                    foreach ($arr as $requete) {
-                        RequeteLiers::create([
-                            'requete' => $requete,
-                            'slugProcedure' => $procedure->slug,
-                            'slug' => $request->_token . rand(1234, 3458),
-                        ]);
-                    }
-                    */
 
                     // On filtre les valeurs nulles ou vides
                     $arr = array_filter($arr, function ($val) {
@@ -1133,7 +1119,6 @@ class AudiencesController extends Controller
                             $suivi->reponse = 'Déposée';
                             $suivi->suiviPar = Auth::user()->name;
                             $suivi->slug = rand(124, 875) . $request->_token . rand(1234, 8765);
-                            //dd($suivi);
 
                             // Enregistrement en base
                             $suivi->save();
@@ -1219,20 +1204,20 @@ class AudiencesController extends Controller
                     $admins = DB::select("select * from users where role='Administrateur'");
 
                     foreach ($admins as $a) {
-                                DB::select(
-                                    'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
-                                    [
-                                        'Requete',
-                                        'Une nouvelle requête a été introduite.',
-                                        'masquer',
-                                        'admin',
-                                        $request->_token . "" . rand(1234, 3458),
-                                        "non",
-                                        "detailRequete",
-                                        $procedure->slug,
-                                        $a->id
-                                    ]
-                                );
+                        DB::select(
+                            'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
+                            [
+                                'Requete',
+                                'Une nouvelle requête a été introduite.',
+                                'masquer',
+                                'admin',
+                                $request->_token . "" . rand(1234, 3458),
+                                "non",
+                                "detailRequete",
+                                $procedure->slug,
+                                $a->id
+                            ]
+                        );
                     }
 
 
@@ -2800,7 +2785,7 @@ class AudiencesController extends Controller
      * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
-    public function show($id, $slug, $niveau)
+    public function show($id, $slug)
     {
 
         $monClient = DB::table('parties')
@@ -2848,7 +2833,7 @@ class AudiencesController extends Controller
                 ) AS subquery_internal
                 GROUP BY subquery_internal.slugAud, subquery_internal.statutAud
             ) AS subquery
-            WHERE niveauProcedural = '$niveau'
+            WHERE slugAud = '$slug'
             ORDER BY idAudience ASC
         ");
 
@@ -2863,8 +2848,9 @@ class AudiencesController extends Controller
 
 
         $idAudience = $id;
+        $niveau = DB::select('select niveauProcedural from audiences where slug =?', [$slug]);
 
-        $audience = DB::select("select * from audiences,juriductions where audiences.juridiction=juriductions.id and audiences.slug=? and niveauProcedural=?", [$slug, $niveau]);
+        $audience = DB::select("select * from audiences,juriductions where audiences.juridiction=juriductions.id and audiences.slug=? ", [$slug]);
 
         $SqltacheSuivit = DB::select("select idSuivit,slug from taches where audTache=?",[$id]);
 
@@ -3144,11 +3130,6 @@ class AudiencesController extends Controller
 
         $clients = DB::select('select * from clients');
 
-
-
-       // $contraditoire_requete = DB::select("SELECT * FROM procedure_liers,procedure_requetes WHERE typeProcedure ='requete' and procedure_liers.slugProcedure=procedure_requetes.slug and procedure_liers.slugSource=?",[$slug]);
-       // dd($contraditoire_requete);
-
         $audiences_contraditoire = DB::select("SELECT * FROM procedure_liers,audiences  WHERE procedure_liers.typeProcedure ='audience' and procedure_liers.slugProcedure = audiences.slug  and  procedure_liers.slugSource=?",[$slug]);
 
         $audiences_contraditoire_lier = DB::select("SELECT * FROM procedure_liers,audiences  WHERE procedure_liers.typeProcedure ='audience' and procedure_liers.slugSource = audiences.slug  and  procedure_liers.slugProcedure=?",[$slug]);
@@ -3177,45 +3158,35 @@ class AudiencesController extends Controller
             AND procedure_liers.slugSource = ?
         ", [$slug]);
 
-        //dd($audience_contraditoire_partie2);
 
 
 
         $procedure_autreRole = DB::select("SELECT * From audiences, parties ,procedure_liers where  audiences.idAudience = parties.idAudience and procedure_liers.slugProcedure = audiences.slug  and parties.role = 'Autre'");
 
-        //dd($procedure_autreRole);
 
         $procedure_autreRole1 = DB::select("SELECT * From audiences, parties ,procedure_liers where  audiences.idAudience = parties.idAudience and procedure_liers.slugSource = audiences.slug  and parties.role = 'Autre'");
 
-        //dd($procedure_autreRole);
 
         $procedure_autreRole_requete = DB::select("SELECT * From procedure_requetes, parties_requetes ,procedure_liers where  procedure_requetes.idProcedure = parties_requetes.idRequete and procedure_liers.slugProcedure = procedure_requetes.slug  and parties_requetes.role = 'Autre'");
 
-        //dd($procedure_autreRole);
+
 
         $procedure_autreRole_requete1 = DB::select("SELECT * From procedure_requetes, parties_requetes ,procedure_liers where  procedure_requetes.idProcedure = parties_requetes.idRequete and procedure_liers.slugSource = procedure_requetes.slug  and parties_requetes.role = 'Autre'");
-      //dd($procedure_autreRole_requete1);
+
 
 
 
         $audience_contraditoire_entreprise_adverses = DB::select("SELECT * FROM entreprise_adverses,parties, audiences, procedure_liers where  entreprise_adverses.idPartie = parties.idPartie and procedure_liers.typeProcedure ='audience' and  parties.idAudience = audiences.idAudience and procedure_liers.slugSource = audiences.slug and procedure_liers.slugProcedure =? ",[$slug]) ;
 
         $audience_contraditoire_entreprise_adverses2 = DB::select("SELECT * FROM entreprise_adverses,parties, audiences, procedure_liers where  entreprise_adverses.idPartie = parties.idPartie and procedure_liers.typeProcedure ='audience' and  parties.idAudience = audiences.idAudience and procedure_liers.slugProcedure = audiences.slug and procedure_liers.slugSource =? ",[$slug]) ;
-        //dd($audience_contraditoire_entreprise_adverses2);
+
 
         $audience_contraditoire_personne_adverses = DB::select("SELECT * FROM personne_adverses,parties, audiences, procedure_liers where  personne_adverses.idPartie = parties.idPartie and procedure_liers.typeProcedure ='audience' and  parties.idAudience = audiences.idAudience and procedure_liers.slugSource = audiences.slug and procedure_liers.slugProcedure =? ",[$slug]) ;
-        //dd($audience_contraditoire_partie,$audience_contraditoire_personne_adverses);
+
 
         $audience_contraditoire_personne_adverses2 = DB::select("SELECT * FROM personne_adverses,parties, audiences, procedure_liers where  personne_adverses.idPartie = parties.idPartie and procedure_liers.typeProcedure ='audience' and  parties.idAudience = audiences.idAudience and procedure_liers.slugProcedure = audiences.slug and procedure_liers.slugSource =? ",[$slug]) ;
-        //dd($audience_contraditoire_personne_adverses2);
-
-
-        //dd($audiences_contraditoire_lier,$audience_contraditoire_partie,$audience_contraditoire_entreprise_adverses,$audience_contraditoire_personne_adverses);
-
 
         $requete_contraditoire = DB::select("SELECT * FROM procedure_liers ,audiences,procedure_requetes where procedure_liers.typeProcedure ='audience' and  procedure_liers.slugSource=procedure_requetes.slug and procedure_liers.slugProcedure = audiences.slug  and procedure_liers.slugProcedure =?",[$slug]);
-        //dd($requete_contraditoire);
-
 
         $requete_contraditoire_partie = DB::select("
         SELECT clients.*, parties_requetes.*, procedure_requetes.*, procedure_liers.*, audiences.*
@@ -3250,9 +3221,6 @@ class AudiencesController extends Controller
        $personne_adverses = DB::select("select * from personne_adverses, parties, audiences where personne_adverses.idPartie = parties.idPartie and parties.idAudience = audiences.idAudience  and audiences.slug = ?",[$slug]);
 
        $entreprise_adverses = DB::select("select * from entreprise_adverses, parties,audiences  where entreprise_adverses.idPartie = parties.idPartie and parties.idAudience = audiences.idAudience and audiences.slug =?",[$slug]);
-       //dd($entreprise_adverses,$personne_adverses);
-
-        //dd($audiencesFilles);
 
 
         // requete
