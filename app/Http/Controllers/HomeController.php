@@ -435,6 +435,9 @@ class HomeController extends Controller
             }
        }
        
+
+      
+        
         $factureEcheance = DB::table('factures')->get();
 
         foreach ($factureEcheance as $c) {

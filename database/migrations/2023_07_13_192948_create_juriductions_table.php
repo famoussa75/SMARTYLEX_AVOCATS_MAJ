@@ -19,8 +19,7 @@ return new class extends Migration
             $table->text('nom');  
             $table->text('adresse')->nullable();  
             $table->text('telephone')->nullable(); 
-            $table->text('type_tribunal')->nullable();
-            $table->timestamps();
+            $table->text('type_tribunal')->nullable(); 
         });
     }
 

@@ -55,7 +55,7 @@
                         <div class="col-lg-10 col-md-10 col-sm-12" style="font-size:medium;text-align:center">
                             <p><b>Juridiction :</b> {{ $audience2[0]->nom }} | <b>Objet :</b>
                                 {{ $audience2[0]->objet }} |
-                                <b>Parties :</b>
+                                <b>Parties :</b> 
                                 @foreach($audience as $w)
 
                                         <!-- Ministere public -->
@@ -91,7 +91,7 @@
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }} c/</span>
                                                     @break <!-- Sortir de la boucle une fois que le match est trouvé -->
                                                 @endif
-
+                                                
                                             @endforeach
 
                                         <!-- Affichage de l'entreprise adverse -->
@@ -127,7 +127,7 @@
 
 
                                             <!--------------------------------------------------------------- -->
-
+                                            
                                         <!-- Affichage des entreprises adverses -->
                                             @php
                                                 $entreprises = [];
@@ -167,43 +167,43 @@
                                                         @if($r->autreRole === 'mp')
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                         @else
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                         @endif
-                                                        @break
+                                                        @break 
                                                     @endif
                                                 @endforeach
-
-                                            @endforeach
+                                            
+                                            @endforeach 
 
                                             <!-- Affichage partie civile-->
                                             @php
@@ -240,7 +240,7 @@
                                             <span>Partie civile : {{ implode(', ', $entreprises) }}</span>
                                             @endif
 
-
+                                        
 
 
                                             <!-- Affichage Intervenant-->
@@ -277,10 +277,10 @@
                                             @else
                                             <span>Intervenant : {{ implode(', ', $entreprises) }}</span>
                                             @endif
-
+                                       
                                         @endforeach
 
-
+                               
                             </p>
                             <p>
                                 <b>Niveau procédural :</b> <span
@@ -381,7 +381,7 @@
                         <i class="fa fa-eye"></i> Voir les audiences
                     </a>
                 </div>
-
+               
                 &nbsp;&nbsp;
                 <div class="dropdown" style="float: right ;">
                     <button class="btn btn-rounded theme-bg dropdown-toggle @if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" type="button" id="dropdownMenuButton1"
@@ -403,27 +403,27 @@
                             title="Terminé l'audience"><i class="fa fa-check"></i> Terminé l'audience</a>
                         <a class=" dropdown-item " href="{{route('deleteAud',[$audience[0]->idAudience])}}"
                             title="Reprendre cet audience"><i class="ti-trash mr-2"></i>Supp & Reprendre</a>
-
+                           
                             <div class="dropdown-item text-center">
                                 <button class="btn btn-sm btn-primary hidden-print" onclick="exportDivToPDF()">
                                     <i class="ti-download mr-1"></i> Télécharger PDF
                                 </button>
-                            </div>
+                            </div>               
 
 
                     </div>
                 </div>
             </div>
-
+           
 
         </div>
 
     </div>
-
+    
     <div class="row" id="pdfContent1">
         <div class="col-md-12">
-
-
+            
+       
             <div class="card box"  >
                 <div class="ruban left @if ($audience[0]->statut=='En cours') rubanEncour @elseif ($audience[0]->statut=='Jonction') rubanJonction @else rubanTerminer @endif ">
                     <span><b>{{ $audience[0]->statut }}</b></span>
@@ -434,7 +434,7 @@
                             &nbsp;&nbsp;
                         </div>
                     </div>
-
+                    
                     <div class="row  mrg-0 detail-invoice">
                         <div class="col-md-12">
 
@@ -446,7 +446,7 @@
                                 <div class="col-lg-10 col-md-10 col-sm-12" style="font-size:medium;text-align:center">
                                     <p><b>Juridiction :</b> {{ $audience[0]->nom }} | <b>Objet :</b>
                                         {{ $audience2[0]->objet }} |
-                                        <b>Parties :</b>
+                                        <b>Parties :</b> 
                                         @foreach($audience as $w)
 
                                             <!-- Ministere public -->
@@ -482,7 +482,7 @@
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }} c/</span>
                                                     @break <!-- Sortir de la boucle une fois que le match est trouvé -->
                                                 @endif
-
+                                                
                                             @endforeach
 
                                             <!-- Affichage de l'entreprise adverse -->
@@ -536,7 +536,7 @@
 
 
                                             <!--------------------------------------------------------------- -->
-
+                                            
                                             <!-- Affichage des entreprises adverses -->
                                             @php
                                                 $entreprises = [];
@@ -594,43 +594,43 @@
                                                         @if($r->autreRole === 'mp')
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                         @else
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break
+                                                                @break 
                                                             @endif
                                                         @endif
-                                                        @break
+                                                        @break 
                                                     @endif
                                                 @endforeach
-
-                                            @endforeach
+                                            
+                                            @endforeach 
 
                                             <!-- Affichage partie civile-->
                                             @php
@@ -667,7 +667,7 @@
                                             <span>Partie civile : {{ implode(', ', $entreprises) }}</span>
                                             @endif
 
-
+                                        
                                             <!-- Affichage Intervenant-->
                                             @php
                                                 $personnes = [];
@@ -702,7 +702,7 @@
                                             @else
                                             <span>Intervenant : {{ implode(', ', $entreprises) }}</span>
                                             @endif
-
+                                       
                                         @endforeach
 
                                     </p>
@@ -748,7 +748,7 @@
                     <i class="fa fa-warning"></i>&nbsp;<b style="font-size:16px">Recours :</b> le délibéré a été vidé, voulez-vous exercer une voie de recours ?&nbsp;
                     <div style="float:right;">
                         <a href="{{route('createCourierDepart', $s->slug )}}" type="button" class="btn btn-primary alert-link" style="color:white">
-                            <i class="fa fa-arrow-right"></i>&nbsp;Oui
+                            <i class="fa fa-arrow-right"></i>&nbsp;Oui 
                         </a>
                         &nbsp;&nbsp;
                         @if (Auth::user()->role=='Administrateur')
@@ -777,7 +777,7 @@
                             @endif
                          </div>
                     </div>
-
+                
                 @endif
 
             @endforeach
@@ -808,7 +808,7 @@
                         <p style="text-align:right">Audience créée par : <b>{{$audience[0]->createur}}</b></p>
                         @endif
                     </div>
-
+                    
                 </div>
                 <div class="row mrg-0">
                     <div class="col-md-12">
@@ -865,7 +865,7 @@
 
                                                     @foreach ($suiviAppel as $suivi )
                                                     <tr class="@if(in_array($suivi->idSuivitAppel, $tacheSuivit) && strpos($nomRoutePrecedente, 'tache') !==false)bg-default-light cl-black @else @endif ">
-
+                                                   
                                                         <td>{{ $loop->iteration }} </td>
                                                         <td>
                                                             @if($suivi->dateLimite=='N/A')
@@ -914,7 +914,7 @@
                                                             @endif
 
                                                         </td>
-
+                                                        
                                                         @endif
                                                         <td> {{ $suivi->suiviPar }}</td>
 
@@ -933,31 +933,31 @@
                                                             @endif
                                                             @if (Auth::user()->role=='Administrateur' && in_array($suivi->idSuivitAppel, $tacheSuivit))
                                                             <small>
-                                                                <a href="{{route('infosTaskFromAudience', [$suivi->idSuivitAppel])}}"
+                                                                <a href="{{route('infosTaskFromAudience', [$suivi->idSuivitAppel])}}" 
                                                                     type="" class="@if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" title="voir la tâche"
                                                                     style="font-size:5px;"><i
                                                                         class="fa fa-mail-forward"></i></a>
                                                             </small>
-
+                                                          
                                                             @endif
                                                             @if (Auth::user()->role=='Administrateur' && !in_array($suivi->idSuivitAppel, $tacheSuivit))
                                                             <small>
-                                                                <a href="{{route('taskForm',[$suivi->idSuivitAppel,'audienceAppel'])}}"
+                                                                <a href="{{route('taskForm',[$suivi->idSuivitAppel,'audienceAppel'])}}" 
                                                                     type="" class="@if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" title="créer une tâche"
                                                                     style="font-size:5px;"><i
                                                                         class="fa fa-legal"></i></a>
                                                             </small>
-
+                                                          
                                                             @endif
 
                                                             @if (Auth::user()->role!='Administrateur' && in_array($suivi->idSuivitAppel, $tacheSuivit))
                                                             <small>
-                                                                <a href="{{ route('infosTaskFromAudience', [$suivi->idSuivitAppel]) }}"
+                                                                <a href="{{ route('infosTaskFromAudience', [$suivi->idSuivitAppel]) }}" 
                                                                     type="" class="@if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" title="voir la tâche"
                                                                     style="font-size:5px;"><i
                                                                         class="fa fa-mail-forward"></i></a>
                                                             </small>
-
+                                                          
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -975,7 +975,7 @@
                                         </h4>
                                     </div>
                                     @else
-
+                                    
                                     <div class="timeline-body">
                                         <div class="table-responsive">
 
@@ -993,12 +993,12 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-
+                                               
 
                                                     @foreach ($suivi as $suivi )
                                                     <tr class="@if(in_array($suivi->idSuivit, $tacheSuivit) && strpos($nomRoutePrecedente, 'tache') !==false)bg-default-light cl-black @else @endif ">
-
-
+                                                        
+                                                        
                                                         <td>
                                                             <div class="panel-group accordion-stylist" id="accordion{{ $loop->iteration }}" role="tablist" aria-multiselectable="true">
                                                                 <div class="panel panel-default">
@@ -1048,16 +1048,16 @@
                                                                 class="label bg-info">{{ date('d/m/Y', strtotime( $suivi->dateProchaineAudience))}}</small>
                                                             @endif
                                                         </td>
-                                                        <td>
-                                                            {{ $suivi->decision }}
+                                                        <td> 
+                                                            {{ $suivi->decision }} 
                                                             @if($suivi->extrait)
                                                             <br><br><b>Extrait</b>
                                                             <hr style="margin-top:-1px;margin-bottom:7px">
-                                                            {{ $suivi->extrait }}
+                                                            {{ $suivi->extrait }} 
                                                             @endif
                                                         </td>
 
-
+                                                       
                                                         @if($suivi->email=="envoyer")
                                                         <td style="text-align:center">
                                                             <small class="label bg-success"><i class="fa fa-check"
@@ -1081,7 +1081,7 @@
                                                         <td style="text-align: center;">
                                                             @if (Auth::user()->role=='Client')
                                                             @else
-
+                                                            
                                                                 @if($suivi->suiviPar==Auth::user()->name)
                                                                 <small>
                                                                     <a href="{{route('deleteSuiviAud',$suivi->slug)}}"  onclick="event.preventDefault(); confirmDelete(this.href)" type="" class="@if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" title="supprimer"
@@ -1094,24 +1094,24 @@
                                                             @endif
                                                             @if ( in_array($suivi->idSuivit, $tacheSuivit))
                                                             <small>
-                                                                <a href="{{route('infosTaskFromAudience', [$suivi->idSuivit])}}"
+                                                                <a href="{{route('infosTaskFromAudience', [$suivi->idSuivit])}}" 
                                                                     type="" class="@if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" title="voir la tâche"
                                                                     style="font-size:5px;"><i
                                                                         class="fa fa-mail-forward"></i></a>
                                                             </small>
-
+                                                          
                                                             @endif
                                                             @if ( !in_array($suivi->idSuivit, $tacheSuivit))
                                                             <small>
-                                                                <a href="{{route('taskForm',[$suivi->idSuivit,'audience'])}}"
+                                                                <a href="{{route('taskForm',[$suivi->idSuivit,'audience'])}}" 
                                                                     type="" class="@if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" title="créer une tâche"
                                                                     style="font-size:5px;"><i
                                                                         class="fa fa-legal"></i></a>
                                                             </small>
-
+                                                          
                                                             @endif
 
-
+                                                           
                                                         </td>
                                                     </tr>
                                                     @endforeach
@@ -1456,7 +1456,7 @@
                                             </div>
                                             @endif
                                         </div>
-
+                                           
                                         @endif
                                         @if($a->typeActe=='Requete' && !empty($requete))
                                         <div class="row col-md-12">
@@ -2091,7 +2091,7 @@
 
                                     </div>
                                     @endforeach
-
+                                    
 
                                     @if($audience[0]->isChild=='oui')
                                         <hr>
@@ -2179,7 +2179,7 @@
                                             <!-- <h5><b>Nature de l'action :</b> </h5>
                                             <hr> -->
                                         </div>
-
+                                       
                                         <div class="row col-md-12">
                                             <div class="col-sm-6">
                                                 <div class="form-group">
@@ -2225,7 +2225,7 @@
                                                     <label for="inputASN" class="control-label">Reserve
                                                         :</label>
                                                     <textarea class="form-control" name="reserve" id="" cols="30" rows="5" disabled>{{$s->reserve}}</textarea>
-
+                                                  
                                                     <div class="help-block with-errors"></div>
                                                 </div>
                                             </div>
@@ -2257,7 +2257,7 @@
                                                 </div>
                                             </div>
                                         </div>
-
+                                        
 
                                     </div>
                                     @endforeach
@@ -2302,7 +2302,7 @@
 
                                                         <td>
                                                             <a class="" href="{{route('readFile', [$p->slug, 'x'])}}"
-                                                                class="toggle"
+                                                                class="toggle"  
                                                                 title="Cliquer pour afficher le contenu du fichier"><i
                                                                     class="fa  fa-file-pdf-o"
                                                                     style="color:red; font-size:1.5em;"></i>&nbsp;&nbsp;{{$p->nomOriginal}}</a>
@@ -2364,29 +2364,29 @@
 
                                                 @if(empty($audiences_contraditoire) && empty($contraditoire_requete))
                                                     <h4 class="text-center">
-
+                                                        
                                                     </h4>
                                                 @else
                                                     @foreach($audiences_contraditoire as $r)
 
-
+                                                    
                                                         <div class="row mb-2">
                                                             <div class="col-md-12">
 
-
+                                                            
                                                                     <a class="" href="{{ route('detailAudience', ['id' => $r->idAudience, 'slug' => $r->slug, 'niveau' => $r->niveauProcedural]) }}"
                                                                     class="toggle"
-                                                                    title="Cliquer pour afficher le contenu du fichier">
+                                                                    title="Cliquer pour afficher le contenu du fichier"> 
 
-
+                                                                        
                                                                         {{-- Clients liés à l'audience en cours avec leur rôle --}}
                                                                         @foreach($audience_contraditoire_partie2 as $client)
                                                                             @if($client->idAudience == $r->idAudience)
-
-
+                                                                                
+                                                                               
                                                                                 {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}
                                                                                 c/
-
+                                                                               
                                                                                 @foreach($procedure_autreRole as $p1)
                                                                                     @if($client->idProcedureLier == $p1->idProcedureLier)
                                                                                         @if($p1->autreRole == 'pc')
@@ -2403,7 +2403,7 @@
                                                                         @endforeach
 
 
-
+                                                                       
 
                                                                         {{-- Entreprises adverses liées à l'audience --}}
                                                                         @foreach($audience_contraditoire_entreprise_adverses as $entreprise)
@@ -2421,20 +2421,20 @@
 
                                                                         {{-- Personnes adverses liées à l'audience --}}
                                                                         @foreach($audience_contraditoire_personne_adverses as $personne)
-
+                                                                    
                                                                             @if($personne->idProcedureLier == $r->idProcedureLier)
                                                                                 {{ $personne->prenom ?? '' }} {{ $personne->nom ?? '' }}
                                                                             @endif
                                                                         @endforeach
                                                                         {{-- Personnes adverses liées à l'audience --}}
                                                                         @foreach($audience_contraditoire_personne_adverses2 as $personne)
-
+                                                                    
                                                                             @if($personne->idProcedureLier == $r->idProcedureLier)
                                                                                 {{ $personne->prenom ?? '' }} {{ $personne->nom ?? '' }}
                                                                             @endif
                                                                         @endforeach
                                                                     </a>
-
+                                                                   
                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                     <a href="{{ route('deleteRequeteLier', $r->idProcedureLier) }}"
                                                                         type="button"
@@ -2447,34 +2447,34 @@
                                                         </div>
                                                     @endforeach
                                                 @endif
-
-
+                                            
+                                            
 
                                                 @if(!empty($audiences_contraditoire_lier))
-
+                                                    
                                                     @foreach($audiences_contraditoire_lier as $r)
-
+                                                                                                    
                                                             <div class="mb-2 p-2 border rounded">
-
+                                                                
                                                                 <a href="{{ route('detailAudience', [
                                                                     'id' => $r->idAudience,
                                                                     'slug' => $r->slug,
                                                                     'niveau' => $r->niveauProcedural
                                                                 ]) }}">
-
+                                                                
 
                                                                 {{-- Clients liés à l'audience en cours avec leur rôle --}}
                                                                 @foreach($audience_contraditoire_partie as $client)
                                                                     @if($client->idAudience == $r->idAudience)
-
-
+                                                                        
+                                                                        
                                                                         {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}
                                                                         c/
-
+                                                                        
                                                                         @foreach($procedure_autreRole1 as $p1)
-
+                                                                        
                                                                             @if($client->idProcedureLier == $p1->idProcedureLier)
-
+                                                                           
                                                                                 @if($p1->autreRole == 'pc')
                                                                                     <small>(Partie civile)</small>
                                                                                 @elseif($p1->autreRole == 'in')
@@ -2489,9 +2489,9 @@
                                                                 @endforeach
 
 
+                                                                   
 
-
-
+                                                                  
                                                                     {{-- Entreprises adverses liées à l'audience --}}
                                                                     @foreach($audience_contraditoire_entreprise_adverses as $entreprise)
                                                                         @if($entreprise->idAudience == $r->idAudience)
@@ -2505,8 +2505,8 @@
                                                                             {{ $personne->prenom ?? '' }} {{ $personne->nom ?? '' }}
                                                                         @endif
                                                                     @endforeach
-
-
+                                                                    
+                                                                    
                                                                 </a>
                                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                 <a href="{{ route('deleteRequeteLier', $r->idProcedureLier) }}"
@@ -2515,17 +2515,17 @@
                                                                     onclick="event.preventDefault(); confirmDelete(this.href)">
                                                                         <i class="ti-trash"></i>
                                                                 </a>
-
+                                                                    
                                                             </div>
-
+                                                    
                                                     @endforeach
-
+                                            
                                                 @else
-                                                @endif
+                                                @endif   
 
                                             @endif
 
-
+                                              
 
                                             <h4 class="text text-center bg-primary  text-white m-2 p-2" >Procédure  non  contraditoires </h4>
 
@@ -2538,12 +2538,12 @@
 
                                                 @if(empty($procedure_requete))
                                                     <h4 class="text-center">
-
+                                                    
                                                     </h4>
                                                 @else
-
+                                                    
                                                     @foreach($procedure_requete as $r)
-
+                                                
 
                                                     <div class="row mb-2">
                                                         <div class="col-md-12">
@@ -2553,17 +2553,17 @@
                                                                 <a class="" href="{{ route('detailRequete', $r->slug) }}"
                                                                 class="toggle"
                                                                 title="Cliquer pour afficher le contenu du fichier">
-
-
+                                                                
+                                                              
                                                                 {{-- Clients liés à l'audience en cours avec leur rôle --}}
                                                                 @foreach($procedure_requete_clients as $client)
                                                                     @if($client->idProcedureLier == $r->idProcedureLier)
                                                                         {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}
                                                                         c/
                                                                         @foreach($procedure_autreRole_requete as $p1)
-
+                                                                        
                                                                             @if($client->idProcedureLier == $p1->idProcedureLier)
-
+                                                                           
                                                                                 @if($p1->autreRole == 'pc')
                                                                                     <small>(Partie civile)</small>
                                                                                 @elseif($p1->autreRole == 'in')
@@ -2575,24 +2575,24 @@
                                                                         @endforeach
                                                                     @endif
                                                                 @endforeach
-
-
+                                                                
+                                                                
                                                                 {{-- Entreprises adverses liées à l'audience --}}
                                                                 @foreach($procedure_requete_entreprise_adverses_requetes as $entreprise)
                                                                     @if($entreprise->idProcedureLier == $r->idProcedureLier)
                                                                         {{ $entreprise->denomination ?? '' }}
                                                                     @endif
                                                                 @endforeach
-
-
+                                                            
+                                                            
                                                                 {{-- Personnes adverses liées à l'audience --}}
                                                                 @foreach($procedure_requete_personne_adverses_requetes as $personne)
-
+                                                                
                                                                     @if($personne->idProcedureLier == $r->idProcedureLier)
                                                                         {{ $personne->prenom ?? '' }} {{ $personne->nom ?? '' }}
                                                                     @endif
                                                                 @endforeach
-
+                                                            
                                                             </a>
                                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                 <a href="{{ route('deleteRequeteLier', $r->idProcedureLier) }}"
@@ -2607,26 +2607,26 @@
                                                     </div>
                                                     @endforeach
                                                 @endif
-
+                                                
 
 
                                                 @if(!empty($requete_contraditoire))
-
+                                                    
                                                     @foreach($requete_contraditoire as $requeteLiers)
                                                         <div class="mb-2 p-2 border rounded">
                                                             <a href="{{ route('detailRequete', ['slug' => $requeteLiers->slugSource]) }}">
-
+                                                                
                                                                 {{-- Clients liés à l'audience en cours avec leur rôle --}}
                                                                 @foreach($requete_contraditoire_partie as $client)
-
+                                                                
                                                                     @if($client->idProcedure == $requeteLiers->idProcedure)
                                                                         {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}
-
+                                                                        
                                                                         c/
                                                                         @foreach($procedure_autreRole_requete1 as $p1)
-
+                                                                        
                                                                             @if($client->idProcedureLier == $p1->idProcedureLier)
-
+                                                                           
                                                                                 @if($p1->autreRole == 'pc')
                                                                                     <small>(Partie civile)</small>
                                                                                 @elseif($p1->autreRole == 'in')
@@ -2639,7 +2639,7 @@
                                                                     @endif
                                                                 @endforeach
 
-
+                                                                
 
                                                                 {{-- Entreprises adverses liées à l'audience --}}
                                                                 @foreach($requete_contraditoire_entreprise_adverses as $entreprise)
@@ -2651,7 +2651,7 @@
 
                                                                 {{-- Personnes adverses liées à l'audience --}}
                                                                 @foreach($requete_contraditoire_presonne_adverses as $personne)
-
+                                                            
                                                                     @if($personne->idProcedure == $requeteLiers->idProcedure)
                                                                         {{ $personne->prenom ?? '' }} {{ $personne->nom ?? '' }}
                                                                     @endif
@@ -2674,14 +2674,14 @@
 
 
                                         </div>
-
-                                    </div>
+                                                                       
+                                    </div>                                    
 
                                 </div>
                             </li>
-
+                          
                         </ul>
-
+   
                     </div>
                 </div>
             </div>
@@ -2766,7 +2766,7 @@
                                     </select>
 
                             </div>
-
+                         
 
                         </div>
                         <div class="col-md-4 cacher" id="affaireContent-req" hidden>
@@ -2784,13 +2784,13 @@
                         </div>
                         <div class="col-md-12 col-sm-12">
                             <div class="form-group">
-                                <label for="affaire" class="control-label">Procédure(s)
+                                <label for="affaire" class="control-label">Procédure(s) 
                                     concernant le client*
                                     :</label>
                                 <select class="form-control select2" data-placeholder="" multiple style="width: 100%;height:28px" name="contraditoireLier[]" id="requeteClient" required>
                                     <option value="" disabled>-- Choisissez --</option>
-
-                                </select>
+                                
+                                </select>   
                                 <input type="hidden" name="slugProcedure" id="currentSlug" value="{{$audience[0]->slug}}">
 
                                 <div class="help-block with-errors"></div>
@@ -2950,7 +2950,7 @@
 
                                     </div>
                                 </div>
-
+                              
                                 <div class="row mrg-0" id="conclusion">
                                     <div class="col-sm-12">
                                         <div class="form-group">
@@ -3298,17 +3298,17 @@
                             @else
                             <!-- form premiere instance -->
                             <form class="padd-20" method="post" action="{{ route('suiviAudience') }}"
-                                accept-charset="utf-8" enctype="multipart/form-data" name="formSuiviAudience">
+                                accept-charset="utf-8" enctype="multipart/form-data">
                                 <div class="text-center">
                                     @csrf
                                 </div>
                                 <div class="row mrg-0">
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label for="dateAudiences" class="control-label">Date audience </label>
+                                            <label for="inputPName" class="control-label">Date audience </label>
                                             <input type="number" name="idAudience"
                                                 value="{{ $audience[0]->idAudience }}" id="idAudienceAssign" hidden>
-                                            <input type="date" class="form-control" id="dateAudiences"
+                                            <input type="date" class="form-control" id="inputPName"
                                                 data-error=" entrer la date de l'audience" name="dateAudience" required>
                                             <div class="help-block with-errors"></div>
                                         </div>
@@ -3348,7 +3348,7 @@
                                         </div>
                                     </div>
                                 </div>
-
+                              
                                 <div class="row mrg-0" id="renvoi" hidden>
                                     <div class="col-sm-12">
                                         <div class="form-group">
@@ -3395,37 +3395,17 @@
                                                 <div class="col-6">
                                                     <input class="form-control" type="text" name="viderDeliberer"
                                                         value="" id="example-text-input">
-
+                                                   
                                                 </div>
 
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
-                                         <fieldset class="form-group">
-									<h5>Dispositif de recours:</h5>
-									<h5> Le délibéré a été vidé, voulez-vous exercer une voie de recours ?</h5>
-									<div class="form-check">
-									  <label class="form-check-label">
-										<input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-										Oui
-									  </label>
-									</div>
-                                    <br>
-									<div class="form-check">
-										<label class="form-check-label">
-											<input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="option2">
-											Non
-										</label>
-									</div>
-								  </fieldset>
-
-                                    </div>
-                                    <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="example-text-input" class="">Extrait</label>
                                             <textarea name="extrait" id="" class="form-control" cols="30" rows="5"></textarea>
-
+                                                 
                                         </div>
                                     </div>
                                 </div>
@@ -3674,7 +3654,7 @@
                                                             <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }} c/</span>
                                                             @break <!-- Sortir de la boucle une fois que le match est trouvé -->
                                                         @endif
-
+                                                        
                                                     @endforeach
 
                                                     <!-- Affichage de l'entreprise adverse -->
@@ -3750,43 +3730,43 @@
                                                                 @if($r->autreRole === 'mp')
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                                         <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break
+                                                                        @break 
                                                                     @endif
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                                         <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break
+                                                                        @break 
                                                                     @endif
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                                         <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break
+                                                                        @break 
                                                                     @endif
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                                         <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break
+                                                                        @break 
                                                                     @endif
                                                                 @else
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                                         <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break
+                                                                        @break 
                                                                     @endif
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                                         <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break
+                                                                        @break 
                                                                     @endif
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                                         <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break
+                                                                        @break 
                                                                     @endif
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                                         <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break
+                                                                        @break 
                                                                     @endif
                                                                 @endif
-                                                                @break
+                                                                @break 
                                                             @endif
                                                         @endforeach
 
-                                                    @endforeach
+                                                    @endforeach 
 
                                                     <!-- Affichage partie civile-->
                                                     @php
@@ -3912,50 +3892,7 @@
 <!-- End modal-sent-message -->
 
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const dateAudience = document.getElementById('dateAudiences');
-    const dateProchaine = document.getElementById('PDate');
 
-    function checkDates() {
-
-        var audienceDT = '';
-        var audiencePDT = '';
-        // recuperation et verification des dates
-        if(dateAudience.value !=null && dateAudience.value !=""){
-            audienceDT = dateAudience.value;
-        } else {
-            return;
-        }
-
-
-        if(dateProchaine.value !=null && dateProchaine.value !=""){
-            audiencePDT = dateProchaine.value;
-        } else {
-           return;
-        }
-
-        if (audienceDT !='' && audiencePDT !='') {
-            const audienceDate = new Date(audienceDT);
-            const prochaineDate = new Date(audiencePDT);
-
-
-            audienceDate.setDate(audienceDate.getDate()+0);
-
-            if (prochaineDate < audienceDate) {
-                SweetAlert.fire({
-                    icon: 'error',
-                    title: 'Erreur de date',
-                    text: 'La date de la prochaine audience doit être supérieur à la date de l\'audience.',
-                });
-                dateProchaine.value = '';
-            }
-        }
-    }
-    dateAudience.addEventListener('change', checkDates);
-    dateProchaine.addEventListener('change', checkDates);
-});
-</script>
 
 <script>
 // Controle de la taille des fichiers
@@ -3989,6 +3926,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+
 
 
 
@@ -4027,7 +3965,7 @@ function emailModal(id) {
                             <p>{{$cabinetInfo->nomCourt}} vous informe :</p>
                             @endforeach
                             @endif
-
+                           
                             <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Juridiction :</b> {{ $audience[0]->nom }}</p>
                             <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Audience du :</b> ${value.dateAudience}</p>
                             <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Parties :</b> @foreach($audience as $w)
@@ -4065,7 +4003,7 @@ function emailModal(id) {
                                         <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }} c/</span>
                                         @break <!-- Sortir de la boucle une fois que le match est trouvé -->
                                     @endif
-
+                                    
                                 @endforeach
 
                                 <!-- Affichage de l'entreprise adverse -->
@@ -4141,43 +4079,43 @@ function emailModal(id) {
                                             @if($r->autreRole === 'mp')
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                             @else
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                             @endif
-                                            @break
+                                            @break 
                                         @endif
                                     @endforeach
 
-                                @endforeach
+                                @endforeach 
 
                                 <!-- Affichage partie civile-->
                                 @php
@@ -4266,14 +4204,14 @@ function emailModal(id) {
                             </p>
                             <p>N'hesitez pas à nous contacter pour toute précision complémentaire.</p>
                             @if($paramCabinet[0]->nomCabinet=='ASK AVOCATS')
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Maître Jonas KOUROUMA </b> Tel: +224 623 20 70 63 / Email: jkourouma@ask-avocats.com </p>
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Amara CISSE </b> Tel: +224 612 12 50 02 / Email: acisse@ask-avocats.com </p>
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Sayon OULARE </b> Tel: +224 612 12 50 01 / Email: sayonoulare@ask-avocats.com </p>
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Karamo Oulen TOURE </b> Tel: +224 612 12 50 07 / Email: ktoure@ask-avocats.com </p>
-                            @endif
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Maître Jonas KOUROUMA </b> Tel: +224 623 20 70 63 / Email: jkourouma@ask-avocats.com </p>                        
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Amara CISSE </b> Tel: +224 612 12 50 02 / Email: acisse@ask-avocats.com </p>                        
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Sayon OULARE </b> Tel: +224 612 12 50 01 / Email: sayonoulare@ask-avocats.com </p>                        
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Karamo Oulen TOURE </b> Tel: +224 612 12 50 07 / Email: ktoure@ask-avocats.com </p> 
+                            @endif   
                             <br><br>
                             <p>Cordialement</p><br>
-
+                    
                             <?php echo $paramCabinet[0]->signature; ?>
                         </div>
                         `
@@ -4324,7 +4262,7 @@ function emailModalAppel(id) {
                             <p>{{$cabinetInfo->nomCourt}} vous informe :</p>
                             @endforeach
                             @endif
-
+                           
                             <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Juridiction :</b> {{ $audience[0]->nom }}</p>
                             <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Audience du :</b> ${value.dateActe}</p>
                             <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Parties :</b> @foreach($audience as $w)
@@ -4362,7 +4300,7 @@ function emailModalAppel(id) {
                                         <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }} c/</span>
                                         @break <!-- Sortir de la boucle une fois que le match est trouvé -->
                                     @endif
-
+                                    
                                 @endforeach
 
                                 <!-- Affichage de l'entreprise adverse -->
@@ -4438,43 +4376,43 @@ function emailModalAppel(id) {
                                             @if($r->autreRole === 'mp')
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                             @else
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break
+                                                    @break 
                                                 @endif
                                             @endif
-                                            @break
+                                            @break 
                                         @endif
                                     @endforeach
 
-                                @endforeach
+                                @endforeach 
 
                                 <!-- Affichage partie civile-->
                                 @php
@@ -4563,14 +4501,14 @@ function emailModalAppel(id) {
                             </p>
                             <p>N'hesitez pas à nous contacter pour toute précision complémentaire.</p>
                             @if($paramCabinet[0]->nomCabinet=='ASK AVOCATS')
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Maître Jonas KOUROUMA </b> Tel: +224 623 20 70 63 / Email: jkourouma@ask-avocats.com </p>
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Amara CISSE </b> Tel: +224 612 12 50 02 / Email: acisse@ask-avocats.com </p>
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Sayon OULARE </b> Tel: +224 612 12 50 01 / Email: sayonoulare@ask-avocats.com </p>
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Karamo Oulen TOURE </b> Tel: +224 612 12 50 07 / Email: ktoure@ask-avocats.com </p>
-                            @endif
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Maître Jonas KOUROUMA </b> Tel: +224 623 20 70 63 / Email: jkourouma@ask-avocats.com </p>                        
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Amara CISSE </b> Tel: +224 612 12 50 02 / Email: acisse@ask-avocats.com </p>                        
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Sayon OULARE </b> Tel: +224 612 12 50 01 / Email: sayonoulare@ask-avocats.com </p>                        
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Karamo Oulen TOURE </b> Tel: +224 612 12 50 07 / Email: ktoure@ask-avocats.com </p> 
+                            @endif   
                             <br><br>
                             <p>Cordialement</p><br>
-
+                    
                             <?php echo $paramCabinet[0]->signature; ?>
                         </div>
                         `

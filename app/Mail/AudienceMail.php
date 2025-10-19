@@ -27,7 +27,7 @@ class AudienceMail extends Mailable
     public function build()
     {
         return $this->subject('Alerte : Audiences prévues demain')
-                    ->view('audiences.allAudiences'); 
+                    ->view('audiences.allAudiences');
     }
 
 

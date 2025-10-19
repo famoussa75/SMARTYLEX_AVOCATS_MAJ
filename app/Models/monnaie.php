@@ -15,5 +15,6 @@ class monnaie extends Model
         'symbole',
         'tauxEchangeGn',
         'valeurTaux',
+      
     ];
 }

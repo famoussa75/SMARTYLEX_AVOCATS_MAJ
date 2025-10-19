@@ -22,6 +22,14 @@ return new class extends Migration
             $table->unsignedBigInteger('smtpPort');
             $table->timestamps();
         });
+
+          // Insérez des données dans la table
+          DB::table('serveur_mails')->insert([
+            'nom' => 'Titan',
+            'host' => 'smtp.titan.email',
+            'smtpSecure' => 'ssl',
+            'smtpPort' => 465,
+        ]);
     }
 
     /**

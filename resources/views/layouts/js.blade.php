@@ -40,7 +40,7 @@
 <!-- PdfObject -->
 <script src="{{ asset('assets/apiReader/pdfobject.min.js') }}"></script>
 
-<!--Swe etAlert2 -->
+<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- Scripts personnalisés -->
@@ -52,7 +52,7 @@
 <!-- générer un PDF avec html2pdf   -->
 
 <script>
-    function exportDivToPDF() {
+     function exportDivToPDF() {
         const elementsToHide = document.querySelectorAll('.hidden-print');
         const buttonsToHide = document.querySelectorAll('button[type="button"]');
         const linksToHide = document.querySelectorAll('a[type="button"], a[href="#"], a[href=""], a[href="@{{}}"], a[href="@{{}}"]');
@@ -195,7 +195,7 @@
         $('.categorie').val('Simple');
         document.getElementById('dateFinCond1').required = false;
         document.getElementById('dateFinCond2').required = false;
-
+        
     } catch (error) {}
 
     function openRightMenu() {
@@ -223,9 +223,9 @@
     // Nettoyer la signature (si c'est du HTML, on enlève les balises ; tu peux aussi la rendre en image séparément)
     //$signatureText = strip_tags($cabinet->signature);
 
-
+        
     $signatureText = strip_tags($cabinet->piedPage);
-
+        
 
 ?>
 
@@ -257,38 +257,470 @@
 </script>
 
 <script>
-    $(document).ready(function() {
 
 
-// Fonction ajax permettante d'envoyer le recap des audience chaque jour à 16h00min
-function sendDailyAudienceRecap() {
-    // Vérifie l'heure locale (16h00:00)
-    var now = new Date();
-    if (now.getHours() === 11 && now.getMinutes() === 38 && now.getSeconds() === 5) {
+
+$(document).ready(function() {
+
+
+    function getBase64FromImageUrl(url, callback) {
+    var img = new Image();
+        img.crossOrigin = 'Anonymous';
+        
+        img.onload = function() {
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            canvas.height = this.naturalHeight;
+            canvas.width = this.naturalWidth;
+            ctx.drawImage(this, 0, 0);
+            var dataURL = canvas.toDataURL('image/png');
+            callback(dataURL);
+        };
+        
+        img.onerror = function() {
+            console.error("Erreur de chargement de l'image: " + url);
+            callback(null);
+        };
+        
+        // Ajoute un timestamp pour éviter le cache
+        img.src = url + '?' + new Date().getTime();
+    }
+
+    // Préchargez l'image avant l'initialisation de DataTable
+    var smartylexLogoBase64 = null;
+
+    // Utilisez le chemin absolu correct
+    getBase64FromImageUrl(window.location.origin + '/assets/upload/photos/Logo.png', function(base64) {
+        smartylexLogoBase64 = base64;
+        
+        // Initialisez DataTable seulement après le chargement de l'image
+        initDataTable();
+    });
+
+    const cabinetName = <?php echo json_encode($cabinet->nomCabinet); ?>;
+    const signatureText = <?php echo json_encode($signatureText); ?>;
+
+    const logoBase64 = "<?php echo $logoData; ?>";
+
+
+    
+    $('.dataTableExport').DataTable({
+        dom: 'Bfrtip',
+        searching: true,
+        pageLength: 20,
+        responsive: true,
+        buttons: [
+            'copy',
+            'csv',
+            'excel',
+            {
+                extend: 'pdfHtml5',
+                orientation: 'landscape',
+                pageSize: 'A4',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                customize: function (doc) {
+                    // 1. MARGES DU DOCUMENT
+                    doc.pageMargins = [30, 70, 20, 50]; // réduit la marge bas pour moins d'espace blanc
+
+                    // 2. EN-TÊTE
+                    doc.header = function (currentPage, pageCount, pageSize) {
+                        const now = new Date().toLocaleString('fr-FR', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+
+                        return {
+                            margin: [0, 0, 0, 5],
+                            columns: [
+                                // Colonne gauche : logo principal
+                                {
+                                    width: 'auto',
+                                    stack: [
+                                        logoBase64 ? {
+                                            image: logoBase64,
+                                            width: 50,
+                                            margin: [10, 10, 0, 10] // ✅ marge gauche bien appliquée ici
+                                        } : { text: '', width: 50 }
+                                    ]
+                                },
+
+                                // Colonne centrale : vide ou texte centré
+                                {
+                                    width: '*',
+                                    text: '', // ou un titre centré ici
+                                    alignment: 'center',
+                                    margin: [0, 20, 0, 0],
+                                    fontSize: 12,
+                                    bold: true
+                                },
+                            
+                                {
+                                    text: 'Téléchargé à partir de www.smartylex.com le : ' + now,
+                                    alignment: 'left',
+                                    margin: [0, 10, 10, 0],
+                                    italics: true,
+                                    fontSize: 9
+                                },
+                                smartylexLogoBase64 ? {
+                                    image: smartylexLogoBase64,
+                                    width: 60,
+                                    height: 35,
+                                    margin: [0, 5, 10, 0]
+                                } : { text: '', width: 60 }
+
+                            ]
+                        };
+
+                    };
+
+                    // 3. PIED DE PAGE
+                    doc.footer = function (currentPage, pageCount) {
+                        return {
+                            columns: [
+                                {
+                                    text: signatureText,
+                                    alignment: 'center',
+                                    margin: [6, 6, 6, 6],
+                                    fontSize: 9,
+                                    preserveLeadingSpaces: true
+                                }
+                            ],
+                            margin: [10, 10, 10, 0]
+                        };
+                    };
+
+                    // 4. CENTRAGE ET AJUSTEMENT DU TABLEAU
+                    if (doc.content) {
+                        doc.content.forEach(function(section, index) {
+                            if (section.table && Array.isArray(section.table.body) && section.table.body.length > 0) {
+                                const headerRow = section.table.body[0];
+
+                                // Trouver les index de colonnes à supprimer
+                                const forbiddenKeywords = ['action', 'voir/sup', 'voir', 'sup', 'details'];
+                                const columnsToRemove = [];
+
+                                headerRow.forEach((cell, i) => {
+                                    let text = '';
+                                    if (typeof cell === 'object' && cell.text) {
+                                        text = cell.text.toString().toLowerCase().trim();
+                                    } else if (typeof cell === 'string') {
+                                        text = cell.toLowerCase().trim();
+                                    }
+
+                                    if (forbiddenKeywords.some(keyword => text.includes(keyword))) {
+                                        columnsToRemove.push(i);
+                                    }
+                                });
+
+                                // Si toutes les colonnes doivent être supprimées, on ignore cette table
+                                if (columnsToRemove.length === headerRow.length) return;
+
+                                // Fonction pour filtrer les colonnes d'une ligne
+                                function filterRow(row) {
+                                    return row.filter((_, idx) => !columnsToRemove.includes(idx));
+                                }
+
+                                // Appliquer la suppression de colonnes
+                                const filteredBody = section.table.body.map(filterRow);
+
+                                // Nettoyage et style
+                                filteredBody.forEach(row => {
+                                    row.forEach(cell => {
+                                        if (typeof cell === 'object') {
+                                            if (cell.text && typeof cell.text === 'string') {
+                                                cell.text = cell.text.trim();
+                                            }
+                                            cell.alignment = 'left';
+                                            cell.fontSize = 9;
+                                            cell.margin = [20, 10, 10, 10];
+                                        }
+                                    });
+                                });
+
+                                section.table.body = filteredBody;
+
+                                doc.content[index] = {
+                                    alignment: 'center',
+                                    stack: [
+                                        {
+                                            table: section.table,
+                                            layout: {
+                                                hLineWidth: () => 1.0,
+                                                vLineWidth: () => 0,
+                                                hLineColor: () => '#ccc',
+                                                paddingLeft: () => 3,
+                                                paddingRight: () => 3,
+                                                paddingTop: () => 1,
+                                                paddingBottom: () => 1
+                                            }
+                                        }
+                                    ],
+                                    margin: [0, 20, 0, 0]
+                                };
+                            }
+                        });
+                    }
+
+
+
+
+
+                    // 5. STYLES
+                    doc.styles.tableHeader = {
+                        bold: true,
+                        fontSize: 9,
+                        alignment: 'center',
+                        color: 'white',
+                        fillColor: '#003366'
+                    };
+
+                    doc.defaultStyle = {
+                        fontSize: 9,
+                        alignment: 'center',
+                        lineHeight: 1.1
+                    };
+                }
+
+            },
+            'print'
+        ],
+        order: []
+    });
+    var monSwitchButton = document.getElementById("infowitch");
+
+   // var elements = document.querySelectorAll(".infoPrive");
+
+        /*
+
+        for (var i = 0; i < elements.length; i++) {
+        elements[i].style.filter = "blur(5px)"; // Ajustez la valeur de flou selon vos besoins
+        }
+        // Mode prive et public 
+        $('#infowitch').on('change', function(e) {
+            if (monSwitchButton.checked) {
+                // Le switch button est activé
+                for (var i = 0; i < elements.length; i++) {
+                    elements[i].style.filter = "blur(5px)"; // Ajustez la valeur de flou selon vos besoins
+                    }
+            } else {
+                // Le switch button n'est pas activé
+                for (var i = 0; i < elements.length; i++) {
+                elements[i].style.filter = ""; // Ajustez la valeur de flou selon vos besoins
+                }
+            }
+        });
+
+        */
+
+        const elements = document.querySelectorAll(".infoPrive");
+
+            $('#infowitch').on('change', function () {
+            if (this.checked) {
+                // Masquer les données
+                elements.forEach(el => el.classList.remove('revealed'));
+            } else {
+                // Afficher les données
+                elements.forEach(el => el.classList.add('revealed'));
+            }
+    });
+
+
+    $('#togglePasswordField').click(function(){
+        var passwordField = $('#passwordField');
+        var fieldType = passwordField.attr('type');
+
+        if(fieldType === 'password') {
+            passwordField.attr('type', 'text');
+            $('#togglePasswordField').removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            passwordField.attr('type', 'password');
+            $('#togglePasswordField').removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
+
+    $('#togglePasswordField2').click(function(){
+        var passwordField = $('#passwordField2');
+        var fieldType = passwordField.attr('type');
+
+        if(fieldType === 'password') {
+            passwordField.attr('type', 'text');
+            $('#togglePasswordField2').removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            passwordField.attr('type', 'password');
+            $('#togglePasswordField2').removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
+
+    $('#togglePasswordField3').click(function(){
+        var passwordField = $('#passwordField3');
+        var fieldType = passwordField.attr('type');
+
+        if(fieldType === 'password') {
+            passwordField.attr('type', 'text');
+            $('#togglePasswordField3').removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            passwordField.attr('type', 'password');
+            $('#togglePasswordField3').removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
+
+    /// Pour le modal de modif password
+    $('#mtogglePasswordField').click(function(){
+        var passwordField = $('#mpasswordField');
+        var fieldType = passwordField.attr('type');
+
+        if(fieldType === 'password') {
+            passwordField.attr('type', 'text');
+            $('#mtogglePasswordField').removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            passwordField.attr('type', 'password');
+            $('#mtogglePasswordField').removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
+
+    $('#mtogglePasswordField2').click(function(){
+        var passwordField = $('#mpasswordField2');
+        var fieldType = passwordField.attr('type');
+
+        if(fieldType === 'password') {
+            passwordField.attr('type', 'text');
+            $('#mtogglePasswordField2').removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            passwordField.attr('type', 'password');
+            $('#mtogglePasswordField2').removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
+
+    $('#mtogglePasswordField3').click(function(){
+        var passwordField = $('#mpasswordField3');
+        var fieldType = passwordField.attr('type');
+
+        if(fieldType === 'password') {
+            passwordField.attr('type', 'text');
+            $('#mtogglePasswordField3').removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            passwordField.attr('type', 'password');
+            $('#mtogglePasswordField3').removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
+
+
+     //----- Initialisation des div et champ pour les models de couriers.
+    //Div
+    $('#partieAdverseDiv').attr('hidden', true);
+    $('#appelDiv').attr('hidden', true);
+    $('#dateProcesDiv').attr('hidden', true);
+    $('#models').attr('hidden', true);
+
+    $('#piece').removeAttr('hidden');
+    $('#file').attr('required', true);
+
+    //Champs
+    $('#partieAdverse').removeAttr('required');
+    $('#motif').removeAttr('required');
+    $('#jugement').removeAttr('required');
+    $('#courAppel').removeAttr('required');
+    $('#dateProcesVerbal').removeAttr('required');
+
+          
+
+    const scrollableDiv = document.getElementById('scrollableDiv');
+    let direction = 'bas'; // Initialise la direction du défilement vers le bas
+
+    function faireDefiler() {
+        const hauteurTotale = scrollableDiv.scrollHeight;
+        const hauteurVisible = scrollableDiv.clientHeight;
+        if (direction === 'bas') {
+            if (scrollableDiv.scrollTop < hauteurTotale - hauteurVisible) {
+            scrollableDiv.scrollTop += 200; // Fait défiler vers le bas
+            } else {
+            direction = 'haut'; // Change la direction vers le haut
+            }
+        } else if (direction === 'haut') {
+            if (scrollableDiv.scrollTop > 0) {
+            scrollableDiv.scrollTop -= 200; // Fait défiler vers le haut
+            } else {
+            direction = 'bas'; // Change la direction vers le bas
+            }
+        }
+    }
+    
+    // Appel de la fonction faireDefiler toutes les 50 millisecondes pour simuler le défilement
+    faireDefiler();
+
+   
+
+    $(".js') }}-example-tags").select2({
+        tags: true,
+        selectedIndex: true,
+        tokenSeparators: [',', ' ']
+    });
+
+    $('.tacheSimpleDate').show();
+    $('.tacheConditionnelDate').attr('hidden', true);
+    $('.tacheSimpleClient').show();
+    $('.tacheConditionnelClient').hide();
+
+    //retirer les required
+    document.getElementById('dateDebutTa').required = true;
+    document.getElementById('dateDebutTa2').required = true;
+    document.getElementById('dateFinTa').required = true;
+    document.getElementById('dateFinTa2').required = true;
+    document.getElementById('client').required = true;
+    document.getElementById('affaireClient').required = true;
+
+
+    document.getElementById('dateFinCond1').required = false;
+    document.getElementById('dateFinCond2').required = false;
+
+
+
+    //Mettre l'onglet tache client par defaut a la creation d'une tache
+    //attribution de la valeur simple au champ
+    $('.categorie').val('Simple');
+    // Fonction permettant de verifier l'utilisateur
+    function checkUsers() {
+        // Les variables globales du programme
+        const date = new Date().toLocaleString();
+
+        const date1 = new Date().toLocaleTimeString();
+
+        const date2 = new Date('07/10/2022 22:41:41').toLocaleTimeString()
+
+        //console.log(` data ${date1} > ${date2}`);
+        var userMail = $('#email').val();
+
+        //console.log(` mail de l'utilisateur: ${userMail}`);
+
         $.ajax({
-            type: "get",
-            url: "/send-audience-recap",
+            type: "GET",
+            url: `/check-user/${userMail}`,
             dataType: "json",
             success: function(response) {
-                // récupération du message dans la réponse
-                console.log("Récapitulatif des audiences envoyé avec succès.", response.message);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Succès',
-                    text: 'Récapitulatif des audiences envoyé avec succès.',
-                    timer: 3000,
-                    showConfirmButton: false
+                $.each(response.users, function(key, value) {
+
+                    if (value.lastConnexion == null) {
+
+                        localStorage.setItem('derniereConnexion', date);
+                        updateConnexion(date);
+                    } else {
+                        localStorage.setItem('derniereConnexion', lastConnexion);
+                        // Comparaison des dates pour la deconnexion de l'utilisateur
+                    }
                 });
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                console.error("Erreur lors de l'envoi du récapitulatif des audiences.");
+               // console.log('Erreur de connexion')
+                //console.log(`JQHR ${jqXHR} \n status: ${textStatus}\n error: ${errorThrown}`);
             }
         });
     }
-}
-// Vérifie toutes les minutes si c'est l'heure d'envoyer le récapitulatif
-setInterval(sendDailyAudienceRecap, 3000);
-// setInterval(sendDailyAudienceRecap, 60000);
 });
 
 
@@ -313,11 +745,11 @@ function updateConnexion(date) {
 }
 </script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
 
      var monSwitchButtonLang = document.getElementById("infowitchLangInvoice");
-
-          // FR/EN
+          
+          // FR/EN 
           $('#infowitchLangInvoice').on('change', function(e) {
               if (monSwitchButtonLang.checked) {
                   // Le switch button est fr
@@ -356,7 +788,7 @@ function updateConnexion(date) {
                         }
                     });
 
-
+                 
               } else {
                   // Le switch button est en
                   $('#labelFacture').text('INVOICE') ;
@@ -393,7 +825,7 @@ function updateConnexion(date) {
                             $(this).text('Wire');
                         }
                     });
-
+                  
               }
           });
 
@@ -402,7 +834,7 @@ function updateConnexion(date) {
 // Script permettant de chercher les informations du personnels dans la base de données
 $(document).ready(function() {
 
-
+   
 
     console.warn = () => {};
 
@@ -452,7 +884,7 @@ $(document).ready(function() {
 </script>
 
 <script>
-    /**
+/**
  *Script permettant de lire les fichiers
  *@param string file
  *@param string type
@@ -481,7 +913,7 @@ function readFile(file) {
 }
 </script>
 <script>
-    // Les script spécifique pour l'application
+// Les script spécifique pour l'application
 $(document).ready(function() {
     console.warn = () => {};
 
@@ -490,7 +922,7 @@ $(document).ready(function() {
 
     $('.tacheConditionnelClient').hide();
     // Mettre les champ priorite cacher a Faible
-    $('.priorite').val('Faible');
+    $('.priorite').val('Faible'); 
 
 
     //activer personne physique au demarrage
@@ -579,7 +1011,7 @@ $(document).ready(function() {
 
 
     $('#radioStackedPro1').on('click', function() {
-        if ($('#radioStackedPro1').is(':checked') == true) {
+        if ($('#radioStackedPro1').is(':checked') == true) { 
             // Actions
         }
     });
@@ -598,7 +1030,7 @@ $(document).ready(function() {
             $('#divTypeRequete').attr('hidden', true);
             $('#orientationProcedurale').removeAttr('hidden');
             $('#divNiveauProcedural').removeAttr('hidden');
-            $('#radioStackedPro1').attr('required', true);
+            $('#radioStackedPro1').attr('required', true); 
 
             $('#radioStackedPro1').val("Fond");
             $('#radioStackedPro2').val("");
@@ -610,8 +1042,8 @@ $(document).ready(function() {
         if (selectTypeProcedure == 'requete') {
             $('#divTypeRequete').removeAttr('hidden');
             $('#divNiveauProcedural').attr('hidden', true); radioStackedPro1
-            $('#orientationProcedurale').attr('hidden', true);
-            $('#radioStackedPro1').removeAttr('required');
+            $('#orientationProcedurale').attr('hidden', true); 
+            $('#radioStackedPro1').removeAttr('required'); 
             $('#radioStackedPro2').val("Référé");
             $('#radioStackedPro1').val("");
 
@@ -633,7 +1065,7 @@ $(document).ready(function() {
 
             $('#formInstruction').removeAttr('hidden');
 
-
+                    
         }
 
     });
@@ -648,7 +1080,7 @@ $(document).ready(function() {
 
             $('.mentionsInjonctionRestituer').attr('hidden', true);
             $('.mentionsInjonctionFaire').attr('hidden', true);
-
+          
 
         }
         else if (selectTypeRequete == 'Requête aux fins d\'injonction de restituer ou de délivrer') {
@@ -676,7 +1108,7 @@ $(document).ready(function() {
 
     });
 
-
+    
     // traitement du formulaire d'enregistrement d'une audience
     // l'action sur les buttons radio lors du lancement de l'application
     // $('#adversePersonne0').attr('hidden', false);
@@ -907,12 +1339,12 @@ $(document).ready(function() {
                 if (response.client == '') {
 
                     $('.clientCond').append(`
-
+                       
                        <option value="Cabinet">Cabinet</option>
                    `)
 
                     $('.idAffaireCond').append(`
-
+                       
                        <option value="Cabinet">Cabinet</option>
                    `)
 
@@ -938,7 +1370,7 @@ $(document).ready(function() {
 
                 $.each(response.affaire, function(key, value) {
                     $('.idAffaireCond').append(`
-
+                       
                         <option value="${value.idAffaire}">${value.nomAffaire}</option>
                     `)
                 });
@@ -1010,7 +1442,7 @@ $(document).ready(function() {
         $('.categorie').val('Simple');
         $('#rowParente').attr('hidden', true);
         $('#idTacheParente').removeAttr('required');
-
+     
         tacheSimpleConditionnelReverse();
     });
 
@@ -1018,7 +1450,7 @@ $(document).ready(function() {
         $('.categorie').val('Conditionnelle');
         $('#rowParente').removeAttr('hidden');
         $('#idTacheParente').attr('required', true);
-
+      
         $('#tacheEntreprise').attr('hidden', true);
         $('#descOrdinaire').removeAttr('hidden');
 
@@ -1141,15 +1573,15 @@ function newNotificationListe() {
 
             var nbre = response.newNotif.length;
 
-
+            
             $.each(response.newNotif, function(key, value) {
                 var slug = value.urlParam;
                 var category = value.categorie;
-
+              
 
             });
 
-
+           
 
             $.each(response.newNotifsCourierArriversCabinet, function(key, value) {
                 $('#notification-box').append(`
@@ -1158,9 +1590,9 @@ function newNotificationListe() {
                             <i class="fa fa-envelope"></i>
                         </div>
                         <div class="ground-content">
-                            <a href="/courier_arriver/view/${value.urlParam}"
-                            id="${value.urlParam}"
-                            class="${value.id}"
+                            <a href="/courier_arriver/view/${value.urlParam}" 
+                            id="${value.urlParam}" 
+                            class="${value.id}"  
                             onclick="var param=this.id; var idNotif=this.className; voir(param,idNotif)">
                                 <h5><b>${value.categorie} <small class="label bg-primary">Cabinet</small></b></h5>
                             </a>
@@ -1190,9 +1622,9 @@ function newNotificationListe() {
                             <i class="fa fa-envelope"></i>
                         </div>
                         <div class="ground-content">
-                            <a href="/courier_arriver/view/${value.urlParam}"
-                            id="${value.urlParam}"
-                            class="${value.id}"
+                            <a href="/courier_arriver/view/${value.urlParam}" 
+                            id="${value.urlParam}" 
+                            class="${value.id}"  
                             onclick="var param=this.id; var idNotif=this.className; voir(param,idNotif)">
                                 <h5><b>${h5Text} </b></h5>
                             </a>
@@ -1203,7 +1635,7 @@ function newNotificationListe() {
             });
 
             $.each(response.newNotifsCourierDepartsCabinet, function(key, value) {
-
+                
                 $('#notification-box').append(`
                     <div class="ground ground-list-single">
                         <div class="btn-circle-40 btn-info">
@@ -1211,8 +1643,8 @@ function newNotificationListe() {
                         </div>
                         <div class="ground-content">
                             <a href="/courier_depart/viewFonction/${value.urlParam}"
-                            id="${value.urlParam}"
-                            class="${value.id}"
+                            id="${value.urlParam}" 
+                            class="${value.id}"  
                             onclick="var param=this.id; var idNotif=this.className; voir(param,idNotif)">
                                 <h5><b>${value.categorie} <small class="label bg-primary">Cabinet</small></b></h5>
                             </a>
@@ -1240,9 +1672,9 @@ function newNotificationListe() {
                             <i class="fa fa-envelope"></i>
                         </div>
                         <div class="ground-content">
-                            <a href="/courier_depart/viewFonction/${value.urlParam}"
-                            id="${value.urlParam}"
-                            class="${value.id}"
+                            <a href="/courier_depart/viewFonction/${value.urlParam}" 
+                            id="${value.urlParam}" 
+                            class="${value.id}"  
                             onclick="var param=this.id; var idNotif=this.className; voir(param,idNotif)">
                                 <h5><b>${h5Text} </b></h5>
                             </a>
@@ -1332,7 +1764,7 @@ function newNotificationListe() {
 
                 console.log(response.newNotifAudience);
 
-
+                
 
 
             });
@@ -1364,7 +1796,7 @@ function newNotificationListe() {
 
                 console.log(response.newNotifAudience);
 
-
+                
 
 
             });
@@ -1421,7 +1853,7 @@ function newNotificationListe() {
                 </div></div>`
                 )
                 console.log(response.newNotifRequeteSuivi);
-
+             
             });
 
             $.each(response.newNotifRequete, function(key, value) {
@@ -1437,7 +1869,7 @@ function newNotificationListe() {
                 let message = value.messages.length > 27
                     ? value.messages.substring(0, 27) + '...'
                     : value.messages;
-
+              
                 $('#notification-box').append(
                     `<div class="ground ground-list-single">
                         <div class="btn-circle-40 btn-info">
@@ -1453,7 +1885,7 @@ function newNotificationListe() {
                     </div>`
                 );
 
-
+              
             });
 
 
@@ -1583,7 +2015,7 @@ $.ajax({
             $('#telephoneContact').val(value.telephone);
             $('#emailContact').val(value.email);
             $('#idContact').val(value.id);
-
+           
         });
 
     },
@@ -1644,7 +2076,7 @@ function deleteHuissier(id) {
 }
 </script>
 <script>
-    $('.dropdown-toggle').dropdown()
+$('.dropdown-toggle').dropdown()
 </script>
 
 <script type="text/javascript" src="{{ asset('assets/DataTables/js/jquery-3.5.1.js')}}"></script>
@@ -1658,7 +2090,7 @@ function deleteHuissier(id) {
 
 
 <script type="text/javascript">
-    $(document).ready(function() {
+$(document).ready(function() {
     console.warn = () => {};
 
     $('#conclusion').attr('hidden', true);
@@ -1730,12 +2162,12 @@ function deleteHuissier(id) {
 
 
 
+    
 
+    
 
-
-
-    //Un seule filtre a la fois
-
+    //Un seule filtre a la fois 
+    
     $("#filterTable_filter.dataTables_filter").append($(".categoryFilter"));
 
     $(".categoryFilter").change(function(e) {
@@ -1787,7 +2219,7 @@ function deleteHuissier(id) {
         $.fn.dataTable.ext.search = []; // Supprimer les filtres actifs
         table.search("").draw(); // Effacer la recherche et rafraîchir le tableau
     });
-
+    
 
     $("#filterTable3_filter.dataTables_filter").append($(".categoryFilter3"));
 
@@ -1847,7 +2279,7 @@ $(".categoryFilter4").change(function(e) {
                 categoryIndex = i;
                 return false;
             }
-
+        
         });
 
         $.fn.dataTable.ext.search.push(
@@ -1892,7 +2324,7 @@ $(".categoryFilter5").change(function(e) {
                 categoryIndex = i;
                 return false;
             }
-
+        
         });
 
         $.fn.dataTable.ext.search.push(
@@ -1920,7 +2352,7 @@ $(".categoryFilter6").change(function(e) {
                 categoryIndex = i;
                 return false;
             }
-
+        
         });
 
         $.fn.dataTable.ext.search.push(
@@ -1948,7 +2380,7 @@ $("#filterTable7_filter.dataTables_filter").append($(".categoryFilter7"));
                 categoryIndex = i;
                 return false;
             }
-
+        
         });
 
         $.fn.dataTable.ext.search.push(
@@ -1987,12 +2419,12 @@ $("#filterTable7_filter.dataTables_filter").append($(".categoryFilter7"));
 
 
 //  fin  filtre  courriers depart * infoClient.blade.php *
-
+    
 
 
     // Deux filtre a la fois
-    $("#filterTable2_filter.dataTables_filter").append($(".categoryFilter1"));
-    $("#filterTable2_filter.dataTables_filter").append($(".categoryFilter2"));
+    $("#filterTable2_filter.dataTables_filter").append($(".categoryFilter1")); 
+    $("#filterTable2_filter.dataTables_filter").append($(".categoryFilter2")); 
 
     $(".categoryFilter1, .categoryFilter2").change(function(e) {
 
@@ -2001,10 +2433,10 @@ $("#filterTable7_filter.dataTables_filter").append($(".categoryFilter7"));
             $.fn.dataTable.ext.search.push(
                 function(settings, data, dataIndex) {
                     var selectedItem1 = $('.categoryFilter1').val();
-                    var category1 = data[4];
+                    var category1 = data[4]; 
 
                     var selectedItem2 = $('.categoryFilter2').val();
-                    var category2 = data[6];
+                    var category2 = data[6]; 
 
                     return (selectedItem1 === "" || category1.includes(selectedItem1)) &&
                         (selectedItem2 === "" || category2.includes(selectedItem2));
@@ -2060,8 +2492,9 @@ $("#filterTable7_filter.dataTables_filter").append($(".categoryFilter7"));
 </script>
 
 <script>
+    
     function fetchAffaireCouriers(idClient) {
-        var currentSlug = $('#slugCourier').val();
+        var currentSlug = $('#slugCourier').val(); 
         if (!idClient) return;
 
         $.ajax({
@@ -2186,7 +2619,7 @@ $("#filterTable7_filter.dataTables_filter").append($(".categoryFilter7"));
 
 <script src="{{ asset('assets/build/js/intlTelInput.js') }}"></script>
 <script>
-    var input = document.querySelector('.phone');
+var input = document.querySelector('.phone');
 window.intlTelInput(input, {
     initialCountry: 'gn',
     nationalMode: true,
@@ -2215,7 +2648,7 @@ window.intlTelInput(input3, {
 <script src="{{ asset('assets/paginga.jquery.js') }}"></script>
 
 <script>
-    $(function() {
+$(function() {
     $(".paginate").paginga({
         // use default options
         // how many items per page
@@ -2235,7 +2668,7 @@ window.intlTelInput(input3, {
 
 <!-- Scripts audiences-->
 <script>
-    function typeAvocat(id) {
+function typeAvocat(id) {
 
     const typeAvocat = "#typeAvocat-" + id;
     const clientContent = "#clientContent-" + id;
@@ -2316,7 +2749,7 @@ $('#requeteLier').on("change", function() {
 $('#affaireClient-req').on("change", function() {
 
    // Route ajax pour reccuperer les procedures de requetes pour cette affaire.
-
+  
 });
 
 
@@ -2342,7 +2775,7 @@ function fechRequeteClient(idClient) {
                     `<option value=${value.slug}> ${value.objet}</option>`
                 )
             });
-
+        
         },
         error: function(jqXHR, textStatus, errorThrown) {
         // console.log(`JQHR ${jqXHR} \n status: ${textStatus}\n error: ${errorThrown}`);
@@ -2408,7 +2841,7 @@ function roleASKa(id) {
     $(personneExterne).attr('hidden', true);
     $(typeAvocat).attr('required', true);
 
-
+    
 
 
 };
@@ -2641,7 +3074,7 @@ function natureAud() {
 
         $('#formInstruction').removeAttr('hidden');
     }
-
+    
 
 
 };
@@ -2659,8 +3092,8 @@ function formAssignation() {
     $('#mentionParticuliereAssign').attr('required', true);
     $('#pieceAS').attr('required', true);
     $('#pieceREQ').removeAttr('required');
-    $('#pieceOPP').removeAttr('required');
-
+    $('#pieceOPP').removeAttr('required'); 
+    
 
     $('#formRequete').attr('hidden', true);
     //$('#numRgRequete').removeAttr('required');
@@ -2708,9 +3141,9 @@ function formRequete() {
     $('#datePremiereComp').removeAttr('required');
     $('#dateEnrollement').removeAttr('required');
     $('#mentionParticuliereAssign').removeAttr('required');
-    $('#pieceAS').removeAttr('required');
+    $('#pieceAS').removeAttr('required');    
     $('#pieceREQ').attr('required', true);
-    $('#pieceOPP').removeAttr('required');
+    $('#pieceOPP').removeAttr('required'); 
     $('#formRequete').removeAttr('hidden');
     //$('#numRgRequete').attr('required', true);
     $('#dateRequete').attr('required', true);
@@ -2908,9 +3341,9 @@ function formCitation() {
     $('#datePremiereComp').removeAttr('required');
     $('#dateEnrollement').removeAttr('required');
     $('#mentionParticuliereAssign').removeAttr('required');
-    $('#pieceAS').removeAttr('required');
+    $('#pieceAS').removeAttr('required');    
     $('#pieceREQ').removeAttr('required');
-    $('#pieceOPP').removeAttr('required');
+    $('#pieceOPP').removeAttr('required'); 
 
    $('#formRequete').attr('hidden', true);
     //$('#numRgRequete').removeAttr('required');
@@ -2955,9 +3388,9 @@ function formAutre() {
     $('#datePremiereComp').removeAttr('required');
     $('#dateEnrollement').removeAttr('required');
     $('#mentionParticuliereAssign').removeAttr('required');
-    $('#pieceAS').removeAttr('required');
+    $('#pieceAS').removeAttr('required');    
     $('#pieceREQ').removeAttr('required');
-    $('#pieceOPP').removeAttr('required');
+    $('#pieceOPP').removeAttr('required'); 
 
     $('#formRequete').attr('hidden', true);
     //$('#numRgRequete').removeAttr('required');
@@ -3163,7 +3596,7 @@ function saisiPar() {
 </script>
 
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
     console.warn = () => {};
     /** Mise en forme des SELECT **/
     LoadSelect2Script(oSelectForm);
@@ -3222,7 +3655,7 @@ function saisiPar() {
             $('#miseDeliberer').attr('hidden', true);
             $('#autreDecision').attr('hidden', true);
         }
-
+       
         if (decision == 'autre') {
             $('#autreDecision').removeAttr('hidden');
             $('#renvoi').attr('hidden', true);
@@ -3234,7 +3667,7 @@ function saisiPar() {
     });
 })
 
-// Changement de type tache
+// Changement de type tache 
 $('#typeTache').on("change", function() {
     var typeTache = $('#typeTache').val();
 
@@ -4292,17 +4725,17 @@ function fechAClientExist2() {
         dataType: "json",
         success: function(response) {
             if (response.client.length==0) {
-
+                
                 if (form.checkValidity()) {
                     form.submit();
                 } else {
                     alert('Veuillez remplir correctement tous les champs obligatoires.');
                 }
-
+                
             } else {
                 $('#confirmClient2').modal('show');
             }
-
+          
         },
         error: function(jqXHR, textStatus, errorThrown) {
         // console.log(`JQHR ${jqXHR} \n status: ${textStatus}\n error: ${errorThrown}`);

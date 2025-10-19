@@ -440,40 +440,41 @@
 
 <script>
     document.getElementById('clt').classList.add('active');
-    
+</script>
 
-    // Controle de la taille des fichiers
-    document.addEventListener("DOMContentLoaded", function() {
-        var forms = document.querySelectorAll("form");
+<script>
 
-        for (var i = 0; i < forms.length; i++) {
-            forms[i].addEventListener("submit", function(e) {
+// Controle de la taille des fichiers
+document.addEventListener("DOMContentLoaded", function() {
+    var forms = document.querySelectorAll("form");
 
-                var fichiersInput = this.querySelectorAll(
-                    ".fichiers"
-                ); // Sélectionne tous les éléments avec la classe "fichier" à l'intérieur du formulaire courant
+    for (var i = 0; i < forms.length; i++) {
+        forms[i].addEventListener("submit", function(e) {
 
-                var tailleMaxAutorisée = 104857600; // Taille maximale autorisée en octets (1 Mo ici)
+            var fichiersInput = this.querySelectorAll(
+                ".fichiers"
+            ); // Sélectionne tous les éléments avec la classe "fichier" à l'intérieur du formulaire courant
 
-                for (var j = 0; j < fichiersInput.length; j++) {
-                    var fichierInput = fichiersInput[j];
-                    var fichiers = fichierInput.files; // Liste des fichiers sélectionnés
+            var tailleMaxAutorisée = 104857600; // Taille maximale autorisée en octets (1 Mo ici)
 
-                    for (var k = 0; k < fichiers.length; k++) {
-                        var fichier = fichiers[k];
+            for (var j = 0; j < fichiersInput.length; j++) {
+                var fichierInput = fichiersInput[j];
+                var fichiers = fichierInput.files; // Liste des fichiers sélectionnés
 
-                        if (fichier.size > tailleMaxAutorisée) {
-                            alert("Le fichier " + fichier.name +
-                                " est trop volumineux. Veuillez choisir un fichier plus petit.");
-                            e.preventDefault(); // Empêche la soumission du formulaire
-                            return; // Arrête la boucle dès qu'un fichier est trop volumineux
-                        }
+                for (var k = 0; k < fichiers.length; k++) {
+                    var fichier = fichiers[k];
+
+                    if (fichier.size > tailleMaxAutorisée) {
+                        alert("Le fichier " + fichier.name +
+                            " est trop volumineux. Veuillez choisir un fichier plus petit.");
+                        e.preventDefault(); // Empêche la soumission du formulaire
+                        return; // Arrête la boucle dès qu'un fichier est trop volumineux
                     }
                 }
-            });
-        }
-    });
-</script>
+            }
+        });
+    }
+});
 
 
 @endsection
