@@ -29,10 +29,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Auth\NewPasswordController;
-
-
-
-
+use App\Http\Controllers\Planification\PlanificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -587,6 +584,12 @@ use App\Http\Controllers\Auth\NewPasswordController;
         $natureActions = DB::select('select * from nature_actions');
         return view('audiences.formRequetes.requete', compact('clients', 'avocats', 'huissiers', 'juriductions', 'natureActions'));
     });
+
+
+      /**
+       * Debut des routes de gestion de l'envoi des recapitulatif des audiences
+       */
+        Route::get('/send-audience-recap', [PlanificationController::class, 'sendRecapEmail'])->name('RecapEmail');
 
 
     // Enregistrement de l'audience

@@ -156,23 +156,19 @@
                     </tr>
                 </thead>
                 <tbody>
-
+ 
                     @foreach ($formattedAudiences as $row)
                     @php
                     $dateAudience = $row['prochaineAudience'] ?? null;
-                    $showRow = true;
-                    if (!empty($dateAudience) && $dateAudience != 'N/A') {
-                    $showRow = strtotime($dateAudience) >= strtotime(date('Y-m-d'));
-                    }
                     @endphp
-                    @if ($showRow)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $row['numRg'] ?? 'N/A' }}</td>
                         <td>
                             <a href="{{ route('detailAudience', [
                                 'id' => $row['idAudience'],
-                                'slug' => $row['slugAud']
+                                'slug' => $row['slugAud'],
+                                'niveau' =>$row['niveauProcedural']
                             ]) }}"
                                 data-toggle="tooltip" title="Voir plus de cette audience">
                                 <span>{{ $row['ministerePublic'] }}</span>
@@ -221,9 +217,14 @@
                         </td>
                         <td>
                             @if (empty($dateAudience) || $dateAudience == 'N/A')
-                            N/A
+                            <small class="label bg-warning-light">suivi à compléter</small>
                             @else
+                                @if(strtotime($dateAudience) < strtotime(date('Y-m-d')))
+                            <small class="label bg-warning-light">suivi à compléter</small>
+                                @else
                             {{ date('d/m/Y', strtotime($dateAudience)) }}
+                                
+                                @endif
                             @endif
                         </td>
                         <td>
@@ -238,20 +239,14 @@
                             </span>
                         </td>
                     </tr>
-                    @endif
                     @endforeach
                 </tbody>
             </table>
         </div>
         @endif
     </div>
-
-
-
-
 </div>
 <!-- /.row -->
-
 <script>
     document.getElementById('aud').classList.add('active');
 </script>

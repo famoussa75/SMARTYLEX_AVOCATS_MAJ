@@ -1,162 +1,6 @@
-<style>
-    .pub-container {
-        width: 200px;
-        height: 30vh;
-        overflow: hidden;
-        position: relative;
-        margin: 20px;
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    .slider {
-        display: flex;
-        flex-wrap: nowrap;
-        width: 300%;
-        height: 100%;
-        animation: slide 15s infinite ease-in-out;
-    }
-
-    .slide {
-        flex: 0 0 33.333%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        transition: transform 0.2s ease;
-    }
-
-    .slide:hover {
-        transform: scale(0.80);
-    }
-
-    .slide img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        transition: transform 0.2s ease;
-    }
-
-    /* Animation professionnelle avec transitions douces */
-    @keyframes slide {
-        0% { 
-            transform: translateX(0);
-            animation-timing-function: ease-out;
-        }
-        26% { 
-            transform: translateX(0);
-            animation-timing-function: ease-in;
-        }
-        33% { 
-            transform: translateX(-33.333%);
-            animation-timing-function: ease-out;
-        }
-        59% { 
-            transform: translateX(-33.333%);
-            animation-timing-function: ease-in;
-        }
-        66% { 
-            transform: translateX(-66.666%);
-            animation-timing-function: ease-out;
-        }
-        92% { 
-            transform: translateX(-66.666%);
-            animation-timing-function: ease-in;
-        }
-        100% { 
-            transform: translateX(0);
-        }
-    }
-
-    /* Indicateurs de progression */
-    .pub-container::before {
-        content: '';
-        position: absolute;
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80px;
-        height: 4px;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 2px;
-        z-index: 10;
-    }
-
-    /* Barre de progression animée */
-    .progress-bar {
-        position: absolute;
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80px;
-        height: 4px;
-        background: rgba(255, 255, 255, 0.8);
-        border-radius: 2px;
-        z-index: 11;
-        animation: progress 25s infinite linear;
-        transform-origin: left center;
-    }
-
-    @keyframes progress {
-        0% { 
-            width: 0;
-            left: 50%;
-        }
-        33% { 
-            width: 80px;
-            left: 50%;
-        }
-        33.1% { 
-            width: 0;
-            left: 50%;
-        }
-        66% { 
-            width: 80px;
-            left: 50%;
-        }
-        66.1% { 
-            width: 0;
-            left: 50%;
-        }
-        99% { 
-            width: 80px;
-            left: 50%;
-        }
-        100% { 
-            width: 0;
-            left: 50%;
-        }
-    }
-
-    /* Overlay pour meilleure lisibilité */
-    .slide::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 30%;
-        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
-        pointer-events: none;
-    }
-
-    /* Effet de flou pendant la transition */
-    .slider {
-        backdrop-filter: blur(0px);
-        transition: backdrop-filter 0.3s ease;
-    }
-
-    .slider:active {
-        backdrop-filter: blur(2px);
-    }
-</style>
-
-
 <div class="navbar-side" >
     <ul class="navbar-nav side-navbar" id="exampleAccordion" style="background: linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)), url('/assets/dist/img/sidebar-bg.png');background-size:cover;background-position:20%">
-  
+
         <!-- Start Dashboard-->
         <li class="nav-item" title="Accueil" id="hm">
             <a class="load nav-link" href="{{route('home')}}">
@@ -169,7 +13,7 @@
         <!-- Start Messages -->
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tâche" id="tch">
             <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#taches" data-parent="#exampleAccordion">
-                
+
                 <i class="ti i-cl-0 ti-layers"></i>
                 <span class="nav-link-text" style="color:white"><b>Tâches</b></span>
             </a>
@@ -266,14 +110,14 @@
                 <li>
                     <a class="load" href="{{ route('createCourierArriver') }}"><span class="submenu"> Courriers - Arrivée</span></a>
                 </li>
-                
+
                 <li>
                     <a class="load" href="{{ route('allCouriers') }}"><span class="submenu">Tous les courriers</span></a>
                 </li>
-               
+
             </ul>
         </li>
-       
+
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Facturation" id="fact">
             <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#Facturation" data-parent="#exampleAccordion">
                 <i class="ti i-cl-0 fa fa-money"></i>
@@ -290,7 +134,7 @@
             </ul>
 
         </li>
-        
+
         <!-- End UI Elements -->
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Ressources Humaines" id="rh">
             <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#RH" data-parent="#exampleAccordion">
@@ -311,7 +155,7 @@
                 <li>
                     <a class="load" href="{{ route('clientPersonnel') }}"><span class="submenu">Affecter un client au personnel</span></a>
                 </li>
-                
+
             </ul>
 
         </li>
@@ -366,16 +210,62 @@
 
         </li>
 
-        <div class="pub-container ">
-            <div class="slider">
-                <div class="slide"><img src="/assets/dist/img/29.png" alt="Pub 1"></div>
-                <div class="slide"><img src="/assets/dist/img/43.png" alt="Pub 2"></div>
-                <div class="slide"><img src="/assets/dist/img/123.png" alt="Pub 3"></div>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" style="heigth: 500px">
+            <div id="publiciteCarousel" class="carousel slide" data-ride="carousel" data-interval="100000">
+                <!-- Indicateurs -->
+                <ol class="carousel-indicators">
+                    @if(Session::has('publicite') && count(Session::get('publicite')) > 0)
+                        @foreach(Session::get('publicite') as $index => $pub)
+                            <li data-target="#publiciteCarousel" data-slide-to="{{ $index }}"
+                                class="{{ $index == 0 ? 'active' : '' }}"></li>
+                        @endforeach
+                    @endif
+                </ol>
+
+                <!-- Contenu du carousel -->
+                <div class="carousel-inner">
+                    @if(Session::has('publicite') && count(Session::get('publicite')) > 0)
+                        @foreach(Session::get('publicite') as $index => $pub)
+                            <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                <img class="d-block w-100" src="{{ asset('storage/publicites/' . $pub->image) }}"
+                                    alt="{{ $pub->titre }}" style="max-height: 300px; object-fit: cover;">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5 class="text-warning">{{ $pub->titre }}</h5>
+                                    @if($pub->lien)
+                                        <a href="{{ $pub->lien }}" target="_blank" class="btn btn-sm btn-primary">Voir plus</a>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <!-- Aucune publicité -->
+                        <div class="carousel-item active">
+                            <div class="d-block w-100 bg-light" style="height: 300px; display: flex; align-items: center; justify-content: center;">
+                                <div class="text-center">
+                                    <i class="fa fa-bullhorn fa-3x text-muted mb-2"></i>
+                                    <h5 class="text-muted">Aucune publicité active</h5>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Contrôles (uniquement si plus d'une publicité) -->
+                @if(Session::has('publicite') && count(Session::get('publicite')) > 1)
+                    <a class="carousel-control-prev" href="#publiciteCarousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Précédent</span>
+                    </a>
+                    <a class="carousel-control-next" href="#publiciteCarousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Suivant</span>
+                    </a>
+                @endif
             </div>
-        </div>
+        </li>
 
     </ul>
-   
+
 
 </div>
 

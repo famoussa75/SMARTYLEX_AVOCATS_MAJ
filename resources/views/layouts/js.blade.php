@@ -263,6 +263,24 @@
 $(document).ready(function() {
 
 
+    // fonction ajax pour send-audience-recap a partir de js chaque soir a 16h00
+    function checkTime() {
+        const now = new Date();
+        if (now.getHours() === 16 && now.getMinutes() === 0 && now.getSeconds() === 0) {
+            $.ajax({
+                type: "GET",
+                url: "/send-audience-recap",
+                success: function(response) {
+                },
+                error: function(xhr, status, error) {
+                }
+            });
+        }
+    }
+
+    setInterval(checkTime, 1000);
+
+
     function getBase64FromImageUrl(url, callback) {
     var img = new Image();
         img.crossOrigin = 'Anonymous';

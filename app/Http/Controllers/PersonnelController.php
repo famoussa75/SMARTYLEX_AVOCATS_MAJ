@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Session;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Controller de la class Personnels
@@ -115,14 +117,14 @@ class PersonnelController extends Controller
 
 
     /**
-     * Fonction permettante d'annuler l'affectation d'un personnel sur les dossiers 
+     * Fonction permettante d'annuler l'affectation d'un personnel sur les dossiers
      * d'un client
      * @param  \Illuminate\Http\Request  $request
      * @param  String $slug
      * @return \Illuminate\Http\Response
      */
     public function destroyAffectation($slug){
-        
+
         AffectationPersonnels::where('slug', $slug)->delete();
         return back()->with('success', 'affectation annuler avec succès');
     }
@@ -136,7 +138,7 @@ class PersonnelController extends Controller
     public function store(Request $request)
     {
 
-         // mise a jour 
+         // mise a jour
         // Vérifie si l'email existe déjà
         //$emailExist = Personnels::where('email', $request->email)->exists();
         $emailExist = DB::table('personnels')->where('email', $request->email)->first();
@@ -157,7 +159,7 @@ class PersonnelController extends Controller
         } else {
             // Pass
         }
-      
+
 
         $personnel = new Personnels();
         if ($request) {
@@ -242,7 +244,7 @@ class PersonnelController extends Controller
                 ]
             );
 
-           
+
             DB::select("update users set email=? where email=?",[$request->email,$emailPrecedent[0]->email]);
 
             if ($request->file('photo')) {
@@ -277,12 +279,72 @@ class PersonnelController extends Controller
     public function updatePassword(Request $request)
     {
 
-       
-        $newPassword = Hash::make($request->newPass);
-        //     modification du mot de passe du personnel
-        DB::select('update users set password = ?  where email = ? ', [$newPassword, Auth::user()->email]);
+        $user = Auth::user();
+        if (Hash::check($request->current_password, $user->password)) {
+           $user->update([
+                'password' => Hash::make($request->password)
+           ]);
+                   // Email body for successful password change
+        $emailBody = '
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <div style="background-color: #f8f9fa; padding: 20px; text-align: center;">
+                <h2 style="color: #28a745;">Mot de passe modifié avec succès</h2>
+            </div>
 
-        return back()->with('success', 'Votre modification à été apporter avec succès sur votre profil, votre nouveau mot de passe est : ' . $request->newPass);
+            <div style="padding: 20px; border: 1px solid #dee2e6; margin-top: 20px;">
+                <p>Bonjour,</p>
+                <p>Votre mot de passe a été modifié avec succès sur votre compte Smartylex.</p>
+                <p>Si vous n\'êtes pas à l\'origine de ce changement, veuillez contacter immédiatement l\'administrateur.</p>
+                <p>Date et heure : '.date('d/m/Y H:i:s').'</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px; color: #6c757d;">
+                <small>Ceci est un message automatique, merci de ne pas y répondre</small><br>
+                <em>Envoyé depuis <a href="https://smartylex.com" style="color:#007bff;">smartylex.com</a></em>
+            </div>
+        </div>';
+
+        Mail::send([], [], function ($message) use ($user, $emailBody) {
+            $message->to(Auth::user()->email)
+                    ->subject("Mot de passe modifié avec succès")
+                    ->html($emailBody);
+        });
+           return redirect()->back()->with('success', 'Mot de passe modifié avec succès !');
+        }else{
+
+                        // Email body for failed password change attempt
+            $emailBody = '
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background-color: #f8f9fa; padding: 20px; text-align: center;">
+                    <h2 style="color: #dc3545;">Tentative de modification de mot de passe</h2>
+                </div>
+
+                <div style="padding: 20px; border: 1px solid #dee2e6; margin-top: 20px;">
+                    <p>Bonjour,</p>
+                    <p>Une tentative de modification de votre mot de passe a été effectuée sur votre compte Smartylex mais a échoué.</p>
+                    <p>Si vous n\'êtes pas à l\'origine de cette tentative, veuillez sécuriser votre compte immédiatement.</p>
+                    <p>Date et heure : '.date('d/m/Y H:i:s').'</p>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px; color: #6c757d;">
+                    <small>Ceci est un message automatique, merci de ne pas y répondre</small><br>
+                    <em>Envoyé depuis <a href="https://smartylex.com" style="color:#007bff;">smartylex.com</a></em>
+                </div>
+            </div>';
+
+            Mail::send([], [], function ($message) use ($user, $emailBody) {
+                $message->to(Auth::user()->email)
+                        ->subject("Tentative de modification de mot de passe")
+                        ->html($emailBody);
+            });
+
+            // Déconnecter l'utilisateur pour sécurité et rediriger vers la page de login
+            Auth::logout();
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+            return redirect()->route('login')->with('error', 'Vous avez été déconnecté pour des raisons de sécurité. Veuillez vous reconnecter ou contacter l\'administrateur.');
+        return redirect()->back()->with('error', 'Mot de passe incorrecte !');
+        }
     }
 
 
@@ -300,10 +362,10 @@ class PersonnelController extends Controller
         $taches = DB::select("
 
         select titre,dateDebut,dateFin,taches.statut,taches.slug,nom,prenom,denomination,nomAffaire,taches.idTache,taches.idClient,taches.idAffaire,clients.idClient as idClient,taches.created_at,tache_personnels.fonction,tache_personnels.idPersonnel from taches,clients,affaires,tache_personnels where taches.idClient=clients.idClient AND taches.idAffaire=affaires.idAffaire and tache_personnels.idTache=taches.idTache and tache_personnels.idPersonnel=$idPersonnel
-            
+
             UNION
-            
-            SELECT 
+
+            SELECT
             t.titre,
             t.dateDebut,
             t.dateFin,
@@ -320,16 +382,16 @@ class PersonnelController extends Controller
             t.created_at,
             p.fonction,
             p.idPersonnel
-        FROM 
+        FROM
             taches AS t
-        LEFT JOIN 
+        LEFT JOIN
             clients AS c ON t.idClient = c.idClient
-        LEFT JOIN 
+        LEFT JOIN
             affaires AS a ON t.idAffaire = a.idAffaire
-        LEFT JOIN 
+        LEFT JOIN
             tache_personnels AS p ON p.idTache = t.idTache
-        WHERE 
-            t.idClient IS NULL 
+        WHERE
+            t.idClient IS NULL
             AND t.idAffaire IS NULL
             AND  p.idPersonnel=$idPersonnel
 
@@ -371,10 +433,10 @@ class PersonnelController extends Controller
         $taches = DB::select("
 
         select titre,dateDebut,dateFin,taches.statut,taches.slug,nom,prenom,denomination,nomAffaire,taches.idTache,taches.idClient,taches.idAffaire,clients.idClient as idClient,taches.created_at,tache_personnels.idPersonnel,tache_personnels.fonction from taches,clients,affaires,tache_personnels where taches.idClient=clients.idClient AND taches.idAffaire=affaires.idAffaire and tache_personnels.idTache=taches.idTache and tache_personnels.idPersonnel=$idPersonnel
-            
+
             UNION
-            
-            SELECT 
+
+            SELECT
             t.titre,
             t.dateDebut,
             t.dateFin,
@@ -391,16 +453,16 @@ class PersonnelController extends Controller
             t.created_at,
             p.idPersonnel,
             p.fonction
-        FROM 
+        FROM
             taches AS t
-        LEFT JOIN 
+        LEFT JOIN
             clients AS c ON t.idClient = c.idClient
-        LEFT JOIN 
+        LEFT JOIN
             affaires AS a ON t.idAffaire = a.idAffaire
-        LEFT JOIN 
+        LEFT JOIN
             tache_personnels AS p ON p.idTache = t.idTache
-        WHERE 
-            t.idClient IS NULL 
+        WHERE
+            t.idClient IS NULL
             AND t.idAffaire IS NULL
             AND  p.idPersonnel=$idPersonnel
 
@@ -413,7 +475,7 @@ class PersonnelController extends Controller
         $tachesEncour = DB::select("select titre,dateDebut,dateFin,statut,taches.slug from taches,tache_personnels where taches.idTache = tache_personnels.idTache and tache_personnels.idPersonnel=? and taches.statut='En cours'", [$idPersonnel]);
         $totalE = count($tachesEncour);
 
-       
+
 
         return view('Personnels.infoPersonnel', compact('personnel', 'taches', 'totalTV', 'totalE'));
     }

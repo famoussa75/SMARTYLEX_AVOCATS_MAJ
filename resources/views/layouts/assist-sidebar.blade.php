@@ -41,31 +41,31 @@
 
     /* Animation professionnelle avec transitions douces */
     @keyframes slide {
-        0% { 
+        0% {
             transform: translateX(0);
             animation-timing-function: ease-out;
         }
-        26% { 
+        26% {
             transform: translateX(0);
             animation-timing-function: ease-in;
         }
-        33% { 
+        33% {
             transform: translateX(-33.333%);
             animation-timing-function: ease-out;
         }
-        59% { 
+        59% {
             transform: translateX(-33.333%);
             animation-timing-function: ease-in;
         }
-        66% { 
+        66% {
             transform: translateX(-66.666%);
             animation-timing-function: ease-out;
         }
-        92% { 
+        92% {
             transform: translateX(-66.666%);
             animation-timing-function: ease-in;
         }
-        100% { 
+        100% {
             transform: translateX(0);
         }
     }
@@ -100,31 +100,31 @@
     }
 
     @keyframes progress {
-        0% { 
+        0% {
             width: 0;
             left: 50%;
         }
-        33% { 
+        33% {
             width: 80px;
             left: 50%;
         }
-        33.1% { 
+        33.1% {
             width: 0;
             left: 50%;
         }
-        66% { 
+        66% {
             width: 80px;
             left: 50%;
         }
-        66.1% { 
+        66.1% {
             width: 0;
             left: 50%;
         }
-        99% { 
+        99% {
             width: 80px;
             left: 50%;
         }
-        100% { 
+        100% {
             width: 0;
             left: 50%;
         }
@@ -227,11 +227,11 @@
                 <li>
                     <a class="load" href="{{ route('createCourierArriver') }}"><span class="submenu"> Courriers - Arrivée</span></a>
                 </li>
-              
+
                 <li>
                     <a class="load" href="{{ route('allCouriers') }}"><span class="submenu">Tous les courriers</span></a>
                 </li>
-              
+
             </ul>
         </li>
          <!-- Start UI Elements -->
@@ -297,7 +297,7 @@
                 <li>
                     <a class="load" href="{{ route('clientPersonnel') }}"><span class="submenu">Affecter un client au personnel</span></a>
                 </li>
-                
+
             </ul>
 
         </li>
@@ -329,7 +329,7 @@
                 <div class="slide"><img src="/assets/dist/img/123.png" alt="Pub 3"></div>
             </div>
         </div>
-      
+
 
     </ul>
 </div>

@@ -55,7 +55,7 @@
                         <div class="col-lg-10 col-md-10 col-sm-12" style="font-size:medium;text-align:center">
                             <p><b>Juridiction :</b> {{ $audience2[0]->nom }} | <b>Objet :</b>
                                 {{ $audience2[0]->objet }} |
-                                <b>Parties :</b> 
+                                <b>Parties :</b>
                                 @foreach($audience as $w)
 
                                         <!-- Ministere public -->
@@ -91,7 +91,7 @@
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }} c/</span>
                                                     @break <!-- Sortir de la boucle une fois que le match est trouvé -->
                                                 @endif
-                                                
+
                                             @endforeach
 
                                         <!-- Affichage de l'entreprise adverse -->
@@ -127,7 +127,7 @@
 
 
                                             <!--------------------------------------------------------------- -->
-                                            
+
                                         <!-- Affichage des entreprises adverses -->
                                             @php
                                                 $entreprises = [];
@@ -167,43 +167,43 @@
                                                         @if($r->autreRole === 'mp')
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                         @else
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                         @endif
-                                                        @break 
+                                                        @break
                                                     @endif
                                                 @endforeach
-                                            
-                                            @endforeach 
+
+                                            @endforeach
 
                                             <!-- Affichage partie civile-->
                                             @php
@@ -240,7 +240,7 @@
                                             <span>Partie civile : {{ implode(', ', $entreprises) }}</span>
                                             @endif
 
-                                        
+
 
 
                                             <!-- Affichage Intervenant-->
@@ -277,10 +277,10 @@
                                             @else
                                             <span>Intervenant : {{ implode(', ', $entreprises) }}</span>
                                             @endif
-                                       
+
                                         @endforeach
 
-                               
+
                             </p>
                             <p>
                                 <b>Niveau procédural :</b> <span
@@ -381,7 +381,7 @@
                         <i class="fa fa-eye"></i> Voir les audiences
                     </a>
                 </div>
-               
+
                 &nbsp;&nbsp;
                 <div class="dropdown" style="float: right ;">
                     <button class="btn btn-rounded theme-bg dropdown-toggle @if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" type="button" id="dropdownMenuButton1"
@@ -403,27 +403,27 @@
                             title="Terminé l'audience"><i class="fa fa-check"></i> Terminé l'audience</a>
                         <a class=" dropdown-item " href="{{route('deleteAud',[$audience[0]->idAudience])}}"
                             title="Reprendre cet audience"><i class="ti-trash mr-2"></i>Supp & Reprendre</a>
-                           
+
                             <div class="dropdown-item text-center">
                                 <button class="btn btn-sm btn-primary hidden-print" onclick="exportDivToPDF()">
                                     <i class="ti-download mr-1"></i> Télécharger PDF
                                 </button>
-                            </div>               
+                            </div>
 
 
                     </div>
                 </div>
             </div>
-           
+
 
         </div>
 
     </div>
-    
+
     <div class="row" id="pdfContent1">
         <div class="col-md-12">
-            
-       
+
+
             <div class="card box"  >
                 <div class="ruban left @if ($audience[0]->statut=='En cours') rubanEncour @elseif ($audience[0]->statut=='Jonction') rubanJonction @else rubanTerminer @endif ">
                     <span><b>{{ $audience[0]->statut }}</b></span>
@@ -434,7 +434,7 @@
                             &nbsp;&nbsp;
                         </div>
                     </div>
-                    
+
                     <div class="row  mrg-0 detail-invoice">
                         <div class="col-md-12">
 
@@ -446,7 +446,7 @@
                                 <div class="col-lg-10 col-md-10 col-sm-12" style="font-size:medium;text-align:center">
                                     <p><b>Juridiction :</b> {{ $audience[0]->nom }} | <b>Objet :</b>
                                         {{ $audience2[0]->objet }} |
-                                        <b>Parties :</b> 
+                                        <b>Parties :</b>
                                         @foreach($audience as $w)
 
                                             <!-- Ministere public -->
@@ -482,7 +482,7 @@
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }} c/</span>
                                                     @break <!-- Sortir de la boucle une fois que le match est trouvé -->
                                                 @endif
-                                                
+
                                             @endforeach
 
                                             <!-- Affichage de l'entreprise adverse -->
@@ -536,7 +536,7 @@
 
 
                                             <!--------------------------------------------------------------- -->
-                                            
+
                                             <!-- Affichage des entreprises adverses -->
                                             @php
                                                 $entreprises = [];
@@ -594,43 +594,43 @@
                                                         @if($r->autreRole === 'mp')
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                                 <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                         @else
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                             @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                                 <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                @break 
+                                                                @break
                                                             @endif
                                                         @endif
-                                                        @break 
+                                                        @break
                                                     @endif
                                                 @endforeach
-                                            
-                                            @endforeach 
+
+                                            @endforeach
 
                                             <!-- Affichage partie civile-->
                                             @php
@@ -667,7 +667,7 @@
                                             <span>Partie civile : {{ implode(', ', $entreprises) }}</span>
                                             @endif
 
-                                        
+
                                             <!-- Affichage Intervenant-->
                                             @php
                                                 $personnes = [];
@@ -702,7 +702,7 @@
                                             @else
                                             <span>Intervenant : {{ implode(', ', $entreprises) }}</span>
                                             @endif
-                                       
+
                                         @endforeach
 
                                     </p>
@@ -748,7 +748,7 @@
                     <i class="fa fa-warning"></i>&nbsp;<b style="font-size:16px">Recours :</b> le délibéré a été vidé, voulez-vous exercer une voie de recours ?&nbsp;
                     <div style="float:right;">
                         <a href="{{route('createCourierDepart', $s->slug )}}" type="button" class="btn btn-primary alert-link" style="color:white">
-                            <i class="fa fa-arrow-right"></i>&nbsp;Oui 
+                            <i class="fa fa-arrow-right"></i>&nbsp;Oui
                         </a>
                         &nbsp;&nbsp;
                         @if (Auth::user()->role=='Administrateur')
@@ -777,7 +777,7 @@
                             @endif
                          </div>
                     </div>
-                
+
                 @endif
 
             @endforeach
@@ -808,7 +808,7 @@
                         <p style="text-align:right">Audience créée par : <b>{{$audience[0]->createur}}</b></p>
                         @endif
                     </div>
-                    
+
                 </div>
                 <div class="row mrg-0">
                     <div class="col-md-12">
@@ -865,7 +865,7 @@
 
                                                     @foreach ($suiviAppel as $suivi )
                                                     <tr class="@if(in_array($suivi->idSuivitAppel, $tacheSuivit) && strpos($nomRoutePrecedente, 'tache') !==false)bg-default-light cl-black @else @endif ">
-                                                   
+
                                                         <td>{{ $loop->iteration }} </td>
                                                         <td>
                                                             @if($suivi->dateLimite=='N/A')
@@ -914,7 +914,7 @@
                                                             @endif
 
                                                         </td>
-                                                        
+
                                                         @endif
                                                         <td> {{ $suivi->suiviPar }}</td>
 
@@ -933,31 +933,31 @@
                                                             @endif
                                                             @if (Auth::user()->role=='Administrateur' && in_array($suivi->idSuivitAppel, $tacheSuivit))
                                                             <small>
-                                                                <a href="{{route('infosTaskFromAudience', [$suivi->idSuivitAppel])}}" 
+                                                                <a href="{{route('infosTaskFromAudience', [$suivi->idSuivitAppel])}}"
                                                                     type="" class="@if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" title="voir la tâche"
                                                                     style="font-size:5px;"><i
                                                                         class="fa fa-mail-forward"></i></a>
                                                             </small>
-                                                          
+
                                                             @endif
                                                             @if (Auth::user()->role=='Administrateur' && !in_array($suivi->idSuivitAppel, $tacheSuivit))
                                                             <small>
-                                                                <a href="{{route('taskForm',[$suivi->idSuivitAppel,'audienceAppel'])}}" 
+                                                                <a href="{{route('taskForm',[$suivi->idSuivitAppel,'audienceAppel'])}}"
                                                                     type="" class="@if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" title="créer une tâche"
                                                                     style="font-size:5px;"><i
                                                                         class="fa fa-legal"></i></a>
                                                             </small>
-                                                          
+
                                                             @endif
 
                                                             @if (Auth::user()->role!='Administrateur' && in_array($suivi->idSuivitAppel, $tacheSuivit))
                                                             <small>
-                                                                <a href="{{ route('infosTaskFromAudience', [$suivi->idSuivitAppel]) }}" 
+                                                                <a href="{{ route('infosTaskFromAudience', [$suivi->idSuivitAppel]) }}"
                                                                     type="" class="@if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" title="voir la tâche"
                                                                     style="font-size:5px;"><i
                                                                         class="fa fa-mail-forward"></i></a>
                                                             </small>
-                                                          
+
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -975,7 +975,7 @@
                                         </h4>
                                     </div>
                                     @else
-                                    
+
                                     <div class="timeline-body">
                                         <div class="table-responsive">
 
@@ -993,12 +993,12 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                               
+
 
                                                     @foreach ($suivi as $suivi )
                                                     <tr class="@if(in_array($suivi->idSuivit, $tacheSuivit) && strpos($nomRoutePrecedente, 'tache') !==false)bg-default-light cl-black @else @endif ">
-                                                        
-                                                        
+
+
                                                         <td>
                                                             <div class="panel-group accordion-stylist" id="accordion{{ $loop->iteration }}" role="tablist" aria-multiselectable="true">
                                                                 <div class="panel panel-default">
@@ -1048,16 +1048,16 @@
                                                                 class="label bg-info">{{ date('d/m/Y', strtotime( $suivi->dateProchaineAudience))}}</small>
                                                             @endif
                                                         </td>
-                                                        <td> 
-                                                            {{ $suivi->decision }} 
+                                                        <td>
+                                                            {{ $suivi->decision }}
                                                             @if($suivi->extrait)
                                                             <br><br><b>Extrait</b>
                                                             <hr style="margin-top:-1px;margin-bottom:7px">
-                                                            {{ $suivi->extrait }} 
+                                                            {{ $suivi->extrait }}
                                                             @endif
                                                         </td>
 
-                                                       
+
                                                         @if($suivi->email=="envoyer")
                                                         <td style="text-align:center">
                                                             <small class="label bg-success"><i class="fa fa-check"
@@ -1081,7 +1081,7 @@
                                                         <td style="text-align: center;">
                                                             @if (Auth::user()->role=='Client')
                                                             @else
-                                                            
+
                                                                 @if($suivi->suiviPar==Auth::user()->name)
                                                                 <small>
                                                                     <a href="{{route('deleteSuiviAud',$suivi->slug)}}"  onclick="event.preventDefault(); confirmDelete(this.href)" type="" class="@if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" title="supprimer"
@@ -1094,24 +1094,24 @@
                                                             @endif
                                                             @if ( in_array($suivi->idSuivit, $tacheSuivit))
                                                             <small>
-                                                                <a href="{{route('infosTaskFromAudience', [$suivi->idSuivit])}}" 
+                                                                <a href="{{route('infosTaskFromAudience', [$suivi->idSuivit])}}"
                                                                     type="" class="@if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" title="voir la tâche"
                                                                     style="font-size:5px;"><i
                                                                         class="fa fa-mail-forward"></i></a>
                                                             </small>
-                                                          
+
                                                             @endif
                                                             @if ( !in_array($suivi->idSuivit, $tacheSuivit))
                                                             <small>
-                                                                <a href="{{route('taskForm',[$suivi->idSuivit,'audience'])}}" 
+                                                                <a href="{{route('taskForm',[$suivi->idSuivit,'audience'])}}"
                                                                     type="" class="@if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" title="créer une tâche"
                                                                     style="font-size:5px;"><i
                                                                         class="fa fa-legal"></i></a>
                                                             </small>
-                                                          
+
                                                             @endif
 
-                                                           
+
                                                         </td>
                                                     </tr>
                                                     @endforeach
@@ -1456,7 +1456,7 @@
                                             </div>
                                             @endif
                                         </div>
-                                           
+
                                         @endif
                                         @if($a->typeActe=='Requete' && !empty($requete))
                                         <div class="row col-md-12">
@@ -2091,7 +2091,7 @@
 
                                     </div>
                                     @endforeach
-                                    
+
 
                                     @if($audience[0]->isChild=='oui')
                                         <hr>
@@ -2179,7 +2179,7 @@
                                             <!-- <h5><b>Nature de l'action :</b> </h5>
                                             <hr> -->
                                         </div>
-                                       
+
                                         <div class="row col-md-12">
                                             <div class="col-sm-6">
                                                 <div class="form-group">
@@ -2225,7 +2225,7 @@
                                                     <label for="inputASN" class="control-label">Reserve
                                                         :</label>
                                                     <textarea class="form-control" name="reserve" id="" cols="30" rows="5" disabled>{{$s->reserve}}</textarea>
-                                                  
+
                                                     <div class="help-block with-errors"></div>
                                                 </div>
                                             </div>
@@ -2257,7 +2257,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
 
                                     </div>
                                     @endforeach
@@ -2302,7 +2302,7 @@
 
                                                         <td>
                                                             <a class="" href="{{route('readFile', [$p->slug, 'x'])}}"
-                                                                class="toggle"  
+                                                                class="toggle"
                                                                 title="Cliquer pour afficher le contenu du fichier"><i
                                                                     class="fa  fa-file-pdf-o"
                                                                     style="color:red; font-size:1.5em;"></i>&nbsp;&nbsp;{{$p->nomOriginal}}</a>
@@ -2364,29 +2364,29 @@
 
                                                 @if(empty($audiences_contraditoire) && empty($contraditoire_requete))
                                                     <h4 class="text-center">
-                                                        
+
                                                     </h4>
                                                 @else
                                                     @foreach($audiences_contraditoire as $r)
 
-                                                    
+
                                                         <div class="row mb-2">
                                                             <div class="col-md-12">
 
-                                                            
+
                                                                     <a class="" href="{{ route('detailAudience', ['id' => $r->idAudience, 'slug' => $r->slug, 'niveau' => $r->niveauProcedural]) }}"
                                                                     class="toggle"
-                                                                    title="Cliquer pour afficher le contenu du fichier"> 
+                                                                    title="Cliquer pour afficher le contenu du fichier">
 
-                                                                        
+
                                                                         {{-- Clients liés à l'audience en cours avec leur rôle --}}
                                                                         @foreach($audience_contraditoire_partie2 as $client)
                                                                             @if($client->idAudience == $r->idAudience)
-                                                                                
-                                                                               
+
+
                                                                                 {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}
                                                                                 c/
-                                                                               
+
                                                                                 @foreach($procedure_autreRole as $p1)
                                                                                     @if($client->idProcedureLier == $p1->idProcedureLier)
                                                                                         @if($p1->autreRole == 'pc')
@@ -2403,7 +2403,7 @@
                                                                         @endforeach
 
 
-                                                                       
+
 
                                                                         {{-- Entreprises adverses liées à l'audience --}}
                                                                         @foreach($audience_contraditoire_entreprise_adverses as $entreprise)
@@ -2421,20 +2421,20 @@
 
                                                                         {{-- Personnes adverses liées à l'audience --}}
                                                                         @foreach($audience_contraditoire_personne_adverses as $personne)
-                                                                    
+
                                                                             @if($personne->idProcedureLier == $r->idProcedureLier)
                                                                                 {{ $personne->prenom ?? '' }} {{ $personne->nom ?? '' }}
                                                                             @endif
                                                                         @endforeach
                                                                         {{-- Personnes adverses liées à l'audience --}}
                                                                         @foreach($audience_contraditoire_personne_adverses2 as $personne)
-                                                                    
+
                                                                             @if($personne->idProcedureLier == $r->idProcedureLier)
                                                                                 {{ $personne->prenom ?? '' }} {{ $personne->nom ?? '' }}
                                                                             @endif
                                                                         @endforeach
                                                                     </a>
-                                                                   
+
                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                     <a href="{{ route('deleteRequeteLier', $r->idProcedureLier) }}"
                                                                         type="button"
@@ -2447,34 +2447,34 @@
                                                         </div>
                                                     @endforeach
                                                 @endif
-                                            
-                                            
+
+
 
                                                 @if(!empty($audiences_contraditoire_lier))
-                                                    
+
                                                     @foreach($audiences_contraditoire_lier as $r)
-                                                                                                    
+
                                                             <div class="mb-2 p-2 border rounded">
-                                                                
+
                                                                 <a href="{{ route('detailAudience', [
                                                                     'id' => $r->idAudience,
                                                                     'slug' => $r->slug,
                                                                     'niveau' => $r->niveauProcedural
                                                                 ]) }}">
-                                                                
+
 
                                                                 {{-- Clients liés à l'audience en cours avec leur rôle --}}
                                                                 @foreach($audience_contraditoire_partie as $client)
                                                                     @if($client->idAudience == $r->idAudience)
-                                                                        
-                                                                        
+
+
                                                                         {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}
                                                                         c/
-                                                                        
+
                                                                         @foreach($procedure_autreRole1 as $p1)
-                                                                        
+
                                                                             @if($client->idProcedureLier == $p1->idProcedureLier)
-                                                                           
+
                                                                                 @if($p1->autreRole == 'pc')
                                                                                     <small>(Partie civile)</small>
                                                                                 @elseif($p1->autreRole == 'in')
@@ -2489,9 +2489,9 @@
                                                                 @endforeach
 
 
-                                                                   
 
-                                                                  
+
+
                                                                     {{-- Entreprises adverses liées à l'audience --}}
                                                                     @foreach($audience_contraditoire_entreprise_adverses as $entreprise)
                                                                         @if($entreprise->idAudience == $r->idAudience)
@@ -2505,8 +2505,8 @@
                                                                             {{ $personne->prenom ?? '' }} {{ $personne->nom ?? '' }}
                                                                         @endif
                                                                     @endforeach
-                                                                    
-                                                                    
+
+
                                                                 </a>
                                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                 <a href="{{ route('deleteRequeteLier', $r->idProcedureLier) }}"
@@ -2515,17 +2515,17 @@
                                                                     onclick="event.preventDefault(); confirmDelete(this.href)">
                                                                         <i class="ti-trash"></i>
                                                                 </a>
-                                                                    
+
                                                             </div>
-                                                    
+
                                                     @endforeach
-                                            
+
                                                 @else
-                                                @endif   
+                                                @endif
 
                                             @endif
 
-                                              
+
 
                                             <h4 class="text text-center bg-primary  text-white m-2 p-2" >Procédure  non  contraditoires </h4>
 
@@ -2538,12 +2538,12 @@
 
                                                 @if(empty($procedure_requete))
                                                     <h4 class="text-center">
-                                                    
+
                                                     </h4>
                                                 @else
-                                                    
+
                                                     @foreach($procedure_requete as $r)
-                                                
+
 
                                                     <div class="row mb-2">
                                                         <div class="col-md-12">
@@ -2553,17 +2553,17 @@
                                                                 <a class="" href="{{ route('detailRequete', $r->slug) }}"
                                                                 class="toggle"
                                                                 title="Cliquer pour afficher le contenu du fichier">
-                                                                
-                                                              
+
+
                                                                 {{-- Clients liés à l'audience en cours avec leur rôle --}}
                                                                 @foreach($procedure_requete_clients as $client)
                                                                     @if($client->idProcedureLier == $r->idProcedureLier)
                                                                         {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}
                                                                         c/
                                                                         @foreach($procedure_autreRole_requete as $p1)
-                                                                        
+
                                                                             @if($client->idProcedureLier == $p1->idProcedureLier)
-                                                                           
+
                                                                                 @if($p1->autreRole == 'pc')
                                                                                     <small>(Partie civile)</small>
                                                                                 @elseif($p1->autreRole == 'in')
@@ -2575,24 +2575,24 @@
                                                                         @endforeach
                                                                     @endif
                                                                 @endforeach
-                                                                
-                                                                
+
+
                                                                 {{-- Entreprises adverses liées à l'audience --}}
                                                                 @foreach($procedure_requete_entreprise_adverses_requetes as $entreprise)
                                                                     @if($entreprise->idProcedureLier == $r->idProcedureLier)
                                                                         {{ $entreprise->denomination ?? '' }}
                                                                     @endif
                                                                 @endforeach
-                                                            
-                                                            
+
+
                                                                 {{-- Personnes adverses liées à l'audience --}}
                                                                 @foreach($procedure_requete_personne_adverses_requetes as $personne)
-                                                                
+
                                                                     @if($personne->idProcedureLier == $r->idProcedureLier)
                                                                         {{ $personne->prenom ?? '' }} {{ $personne->nom ?? '' }}
                                                                     @endif
                                                                 @endforeach
-                                                            
+
                                                             </a>
                                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                                 <a href="{{ route('deleteRequeteLier', $r->idProcedureLier) }}"
@@ -2607,26 +2607,26 @@
                                                     </div>
                                                     @endforeach
                                                 @endif
-                                                
+
 
 
                                                 @if(!empty($requete_contraditoire))
-                                                    
+
                                                     @foreach($requete_contraditoire as $requeteLiers)
                                                         <div class="mb-2 p-2 border rounded">
                                                             <a href="{{ route('detailRequete', ['slug' => $requeteLiers->slugSource]) }}">
-                                                                
+
                                                                 {{-- Clients liés à l'audience en cours avec leur rôle --}}
                                                                 @foreach($requete_contraditoire_partie as $client)
-                                                                
+
                                                                     @if($client->idProcedure == $requeteLiers->idProcedure)
                                                                         {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}
-                                                                        
+
                                                                         c/
                                                                         @foreach($procedure_autreRole_requete1 as $p1)
-                                                                        
+
                                                                             @if($client->idProcedureLier == $p1->idProcedureLier)
-                                                                           
+
                                                                                 @if($p1->autreRole == 'pc')
                                                                                     <small>(Partie civile)</small>
                                                                                 @elseif($p1->autreRole == 'in')
@@ -2639,7 +2639,7 @@
                                                                     @endif
                                                                 @endforeach
 
-                                                                
+
 
                                                                 {{-- Entreprises adverses liées à l'audience --}}
                                                                 @foreach($requete_contraditoire_entreprise_adverses as $entreprise)
@@ -2651,7 +2651,7 @@
 
                                                                 {{-- Personnes adverses liées à l'audience --}}
                                                                 @foreach($requete_contraditoire_presonne_adverses as $personne)
-                                                            
+
                                                                     @if($personne->idProcedure == $requeteLiers->idProcedure)
                                                                         {{ $personne->prenom ?? '' }} {{ $personne->nom ?? '' }}
                                                                     @endif
@@ -2674,14 +2674,14 @@
 
 
                                         </div>
-                                                                       
-                                    </div>                                    
+
+                                    </div>
 
                                 </div>
                             </li>
-                          
+
                         </ul>
-   
+
                     </div>
                 </div>
             </div>
@@ -2766,7 +2766,7 @@
                                     </select>
 
                             </div>
-                         
+
 
                         </div>
                         <div class="col-md-4 cacher" id="affaireContent-req" hidden>
@@ -2784,13 +2784,13 @@
                         </div>
                         <div class="col-md-12 col-sm-12">
                             <div class="form-group">
-                                <label for="affaire" class="control-label">Procédure(s) 
+                                <label for="affaire" class="control-label">Procédure(s)
                                     concernant le client*
                                     :</label>
                                 <select class="form-control select2" data-placeholder="" multiple style="width: 100%;height:28px" name="contraditoireLier[]" id="requeteClient" required>
                                     <option value="" disabled>-- Choisissez --</option>
-                                
-                                </select>   
+
+                                </select>
                                 <input type="hidden" name="slugProcedure" id="currentSlug" value="{{$audience[0]->slug}}">
 
                                 <div class="help-block with-errors"></div>
@@ -2920,397 +2920,300 @@
 
                             @if($audience[0]->niveauProcedural=='Appel')
                             <!-- form appel -->
-                            <form class="padd-20" method="post" action="{{route('suiviAudienceAppel')}}"
-                                accept-charset="utf-8" enctype="multipart/form-data">
-                                @csrf
-                                <input type="hidden" name="idAudience" value={{$audience[0]->idAudience}}>
-                                <div class="row mrg-0">
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label for="inputPName" class="control-label">Actes</label>
-                                            <select class="form-control select js-example-tags" id="acteDecision"
-                                                data-placeholder="" style="width: 100%;" name="acte" required>
-                                                <option value="" selected disabled>-- Choisissez --</option>
-                                                <option value="Conclusions">Conclusions</option>
-                                                <option value="Invitation à conclure">Invitation à conclure</option>
-                                                <option value="Injonction à conclure">Injonction à conclure</option>
-                                                <option value="PV de constat de carence">PV de constat de carence
-                                                </option>
-                                                <option value="Avenir d'audience">Avenir d'audience</option>
-                                                <option value="Conférence de mise en état/cloture">Conférence de mise en
-                                                    état/cloture</option>
-                                                <option value="Mise en délibéré">Mise en délibéré</option>
-                                                <option value="Délibéré prorogé">Délibéré prorogé</option>
-                                                <option value="Renvoi">Renvoi</option>
-                                                <option value="Autre">Autre</option>
-                                            </select>
+                            <form class="padd-20" method="post" action="{{route('suiviAudienceAppel')}}" accept-charset="utf-8" enctype="multipart/form-data" id="audienceAppelForm">
+    @csrf
+    <input type="hidden" name="idAudience" value="{{$audience[0]->idAudience}}">
+    <!-- Ajout d'un champ caché pour la date de l'audience actuelle -->
+    <input type="hidden" id="dateAudienceActuelle" value="{{ $audience[0]->dateAudience ?? '' }}">
+    
+    <div class="row mrg-0">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="inputPName" class="control-label">Actes</label>
+                <select class="form-control select js-example-tags" id="acteDecision" data-placeholder="" style="width: 100%;" name="acte" required>
+                    <option value="" selected disabled>-- Choisissez --</option>
+                    <option value="Conclusions">Conclusions</option>
+                    <option value="Invitation à conclure">Invitation à conclure</option>
+                    <option value="Injonction à conclure">Injonction à conclure</option>
+                    <option value="PV de constat de carence">PV de constat de carence</option>
+                    <option value="Avenir d'audience">Avenir d'audience</option>
+                    <option value="Conférence de mise en état/cloture">Conférence de mise en état/cloture</option>
+                    <option value="Mise en délibéré">Mise en délibéré</option>
+                    <option value="Délibéré prorogé">Délibéré prorogé</option>
+                    <option value="Renvoi">Renvoi</option>
+                    <option value="Autre">Autre</option>
+                </select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+    </div>
 
-                                            <div class="help-block with-errors"></div>
-                                        </div>
+    <!-- Sections spécifiques aux actes -->
+    <div class="row mrg-0" id="conclusion" style="display: none;">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <div class="row">
+                    <label for="example-text-input" class="col-3" style="padding-top: 20px;margin-right:-70px;">Conclusions de l'</label>
+                    <div class="col-3">
+                        <select class="form-control select" data-placeholder="" style="width: 100%;margin-top:10px;" id="appelantIntimeConclusion" name="appelantIntimeConclusion">
+                            <option value="" selected disabled>-- Choisissez --</option>
+                            <option value="Appelant">Appelant</option>
+                            <option value="Intimé(e)">Intimé(e)</option>
+                        </select>
+                    </div>
+                    <label for="example-text-input" class="col-3 col-form-label" style="padding-top: 20px;margin-right:-90px;">en date du</label>
+                    <div class="">
+                        <input class="form-control" name="dateActeConclusion" type="date" value="" id="dateActeConclusion">
+                    </div>
+                    <label for="example-text-input" class="col-3 col-form-label" style="padding-top: 20px;margin-right:-80px;">reçues par la cour le</label>
+                    <div class="">
+                        <input class="form-control" name="dateReceptionConclusion" type="date" value="" id="dateReceptionConclusion">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                    </div>
-                                </div>
-                              
-                                <div class="row mrg-0" id="conclusion">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <label for="example-text-input" class="col-3 "
-                                                    style="padding-top: 20px;margin-right:-70px;">Conclusions de
-                                                    l'</label>
-                                                <div class="col-3">
-                                                    <select class="form-control select" data-placeholder=""
-                                                        style="width: 100%;margin-top:10px;" id="appelantIntimeConclusion"
-                                                        name="appelantIntimeConclusion">
-                                                        <option value="" selected disabled>-- Choisissez --</option>
-                                                        <option value="Appelant">Appelant</option>
-                                                        <option value="Intimé(e)">Intimé(e)
-                                                        </option>
+    <div class="row mrg-0" id="invitationAconclure" style="display: none;">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <div class="row">
+                    <label for="example-text-input" class="col-4" style="padding-top: 20px;margin-right:-90px;">Invitation à conclure du</label>
+                    <div class="col-3">
+                        <input class="form-control" name="dateActeInvitation" type="date" value="" id="dateActeInvitation">
+                    </div>
+                    <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-80px;">pour les ecritures de l'</label>
+                    <div class="">
+                        <select class="form-control select js-example-tags" data-placeholder="" style="width: 100%;margin-top:10px" id="appelantIntimeInvitation" name="appelantIntimeInvitation">
+                            <option value="" selected disabled>-- Choisissez --</option>
+                            <option value="Appelant">Appelant</option>
+                            <option value="Intimé(e)">Intimé(e)</option>
+                        </select>
+                    </div>
+                    <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-80px;">à deposer au plutard le</label>
+                    <div class="">
+                        <input class="form-control" name="dateLimiteInvitation" type="date" id="dateLimiteInvitation">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                                    </select>
-                                                </div>
-                                                <label for="example-text-input" class="col-3 col-form-label"
-                                                    style="padding-top: 20px;margin-right:-90px;">en date du</label>
-                                                <div class="">
-                                                    <input class="form-control" name="dateActeConclusion" type="date"
-                                                        value="" id="dateActeConclusion">
-                                                </div>
-                                                <label for="example-text-input" class="col-3 col-form-label"
-                                                    style="padding-top: 20px;margin-right:-80px;">reçues par la cour
-                                                    le</label>
-                                                <div class="">
-                                                    <input class="form-control" name="dateReceptionConclusion"
-                                                        type="date" value="" id="dateReceptionConclusion"> .
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mrg-0" id="invitationAconclure">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <label for="example-text-input" class="col-4"
-                                                    style="padding-top: 20px;margin-right:-90px;">Invitation à conclure
-                                                    du</label>
-                                                <div class="col-3">
-                                                    <input class="form-control" name="dateActeInvitation" type="date"
-                                                        value="" id="dateActeInvitation">
-                                                </div>
-                                                <label for="example-text-input" class="col-4 col-form-label"
-                                                    style="padding-top: 20px;margin-right:-80px;">pour les ecritures
-                                                    de l'</label>
-                                                <div class="">
-                                                    <select class="form-control select js-example-tags"
-                                                        data-placeholder="" style="width: 100%;margin-top:10px" id="appelantIntimeInvitation"
-                                                        name="appelantIntimeInvitation">
-                                                        <option value="" selected disabled>-- Choisissez --</option>
-                                                        <option value="Appelant">Appelant</option>
-                                                        <option value="Intimé(e)">Intimé(e)
-                                                        </option>
+    <div class="row mrg-0" id="injonctionAconclure" style="display: none;">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <div class="row">
+                    <label for="example-text-input" class="col-4" style="padding-top: 20px;margin-right:-80px;">Injonction à conclure du</label>
+                    <div class="col-3">
+                        <input class="form-control" name="dateActeInjonction" type="date" value="" id="dateActeInjonction">
+                    </div>
+                    <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-80px;">pour les ecritures de l'</label>
+                    <div class="">
+                        <select class="form-control select" data-placeholder="" style="width: 100%;margin-top:10px" id="appelantIntimeInjonction" name="appelantIntimeInjonction">
+                            <option value="" selected disabled>-- Choisissez --</option>
+                            <option value="Appelant">Appelant</option>
+                            <option value="Intimé(e)">Intimé(e)</option>
+                        </select>
+                    </div>
+                    <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-80px;">à deposer au plutard le</label>
+                    <div class="">
+                        <input class="form-control" name="dateLimiteInjonction" type="date" value="" id="dateLimiteInjonction">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                                    </select>
-                                                </div>
-                                                <label for="example-text-input" class="col-4 col-form-label"
-                                                    style="padding-top: 20px;margin-right:-80px;">à deposer au plutard
-                                                    le</label>
-                                                <div class="">
-                                                    <input class="form-control" name="dateLimiteInvitation" type="date"
-                                                        id="dateLimiteInvitation">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mrg-0" id="injonctionAconclure">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <label for="example-text-input" class="col-4"
-                                                    style="padding-top: 20px;margin-right:-80px;">Injonction à conclure
-                                                    du</label>
-                                                <div class="col-3">
-                                                    <input class="form-control" name="dateActeInjonction" type="date"
-                                                        value="" id="dateActeInjonction">
-                                                </div>
-                                                <label for="example-text-input" class="col-4 col-form-label"
-                                                    style="padding-top: 20px;margin-right:-80px;">pour les ecritures
-                                                    de l'</label>
-                                                <div class="">
-                                                    <select class="form-control select" data-placeholder=""
-                                                        style="width: 100%;margin-top:10px" id="appelantIntimeInjonction"
-                                                        name="appelantIntimeInjonction">
-                                                        <option value="" selected disabled>-- Choisissez --</option>
-                                                        <option value="Appelant">Appelant</option>
-                                                        <option value="Intimé(e)">Intimé(e)
-                                                        </option>
+    <div class="row mrg-0" id="pvConstat" style="display: none;">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <div class="row">
+                    <label for="example-text-input" class="col-5" style="padding-top: 20px;margin-right:-100px;">PV de constat de carence fait le</label>
+                    <div class="col-3">
+                        <input class="form-control" name="dateActeConstat" type="date" value="" id="dateActeConstat">
+                    </div>
+                    <div class="form-group mt-4">
+                        <label style="margin-left:16px">par l'huissier &nbsp;&nbsp;</label>
+                        <select class="form-control select2" name="huissierConstat" style="width: 50%;" id="huissierConstat">
+                            <option value="" selected disabled>-- Choisissez --</option>
+                            @foreach ($huissiers as $h )
+                            <option value="{{$h->prenomHss}} {{$h->nomHss}}">
+                                {{$h->prenomHss}} {{$h->nomHss}}
+                            </option>
+                            @endforeach
+                        </select>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                                    </select>
-                                                </div>
-                                                <label for="example-text-input" class="col-4 col-form-label"
-                                                    style="padding-top: 20px;margin-right:-80px;">à deposer au plutard
-                                                    le</label>
-                                                <div class="">
-                                                    <input class="form-control" name="dateLimiteInjonction" type="date"
-                                                        value="" id="dateLimiteInjonction">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+    <div class="row mrg-0" id="avenirConstat" style="display: none;">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <div class="row">
+                    <label for="example-text-input" class="col-4" style="padding-top: 20px;margin-right:-100px;">Avenir d'audience du</label>
+                    <div class="col-3">
+                        <input class="form-control" name="dateActeAvenir" type="date" value="" id="dateActeAvenir">
+                    </div>
+                    <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-170px;">servi par l'</label>
+                    <div class="col-5">
+                        <select class="form-control select" data-placeholder="" style="width: 100%;margin-top:10px" id="appelantIntimeAvenir" name="appelantIntimeAvenir">
+                            <option value="" selected disabled>-- Choisissez --</option>
+                            <option value="Appelant">Appelant</option>
+                            <option value="Intimé(e)">Intimé(e)</option>
+                        </select>
+                    </div>
+                    <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-110px;">pour l'audience du</label>
+                    <div class="">
+                        <input class="form-control" name="dateProchaineAudienceAvenir" type="date" value="" id="dateProchaineAudienceAvenir">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                <div class="row mrg-0" id="pvConstat">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <div class="row">
+    <div class="row mrg-0" id="conference" style="display: none;">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <div class="row">
+                    <label for="example-text-input" class="col-6" style="padding-top: 20px;margin-right:-50px;">Conférence de mise en état/cloture en date du</label>
+                    <div class="col-3">
+                        <input class="form-control" name="dateEtat" type="date" value="" id="dateEtat">
+                    </div>
+                    <label for="example-text-input" class="col-5" style="padding-top: 20px;margin-right:-100px;">Reçu le </label>
+                    <div class="col-3">
+                        <input class="form-control" name="dateConferenceRecu" type="date" value="" id="dateConferenceRecu">
+                    </div>
+                    <label for="example-text-input" class="col-5" style="padding-top: 20px;margin-right:-100px;">Devant se tenir au plus tard le </label>
+                    <div class="col-3">
+                        <input class="form-control" name="dateExpConference" type="date" value="" id="dateExpConference">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                                <label for="example-text-input" class="col-5"
-                                                    style="padding-top: 20px;margin-right:-100px;">PV de constat de
-                                                    carence fait le</label>
-                                                <div class="col-3">
-                                                    <input class="form-control" name="dateActeConstat" type="date"
-                                                        value="" id="dateActeConstat">
-                                                </div>
+    <div class="row mrg-0" id="miseDeliberer" style="display: none;">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <div class="row">
+                    <label for="example-text-input" class="col-6" style="padding-top: 20px;margin-right:-80px;">Mise en délibéré pour décision être rendue le</label>
+                    <div class="col-3">
+                        <input class="form-control dateRecep" name="dateDeliberer" type="date" value="" id="dateDeliberer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="row mrg-0" id="delibererProroger" style="display: none;">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <div class="row">
+                    <label for="example-text-input" class="col-4" style="padding-top: 20px;margin-right:-100px;">Date de l'acte</label>
+                    <div class="col-3">
+                        <input class="form-control" name="dateActeProrogé" type="date" value="" id="dateActeProrogé">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label for="example-text-input" class="col-4" style="padding-top: 20px;margin-right:-100px;">Délibéré prorogé au</label>
+                    <div class="col-3">
+                        <input class="form-control" name="dateProrogé" type="date" value="" id="dateProrogé">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                                <div class="form-group mt-4">
-                                                    <label style="margin-left:16px">par l'huissier &nbsp;&nbsp;</label>
-                                                    <select class="form-control select2" name="huissierConstat"
-                                                        style="width: 50%;" id="huissierConstat">
-                                                        <option value="" selected disabled>-- Choisissez --</option>
-                                                        @foreach ($huissiers as $h )
-                                                        <option value="{{$h->prenomHss}} {{$h->nomHss}}">
-                                                            {{$h->prenomHss}} {{$h->nomHss}}
-                                                        </option>
-                                                        @endforeach
-                                                    </select>
-                                                    <div class="help-block with-errors"></div>
-                                                </div>
+    <div class="row mrg-0" id="Renvoi" style="display: none;">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <div class="row">
+                    <label for="example-text-input" class="col-3" style="padding-top: 20px;margin-right:-100px;">Renvoi au</label>
+                    <div class="col-3">
+                        <input class="form-control" name="dateRenvoiAppel" type="date" value="" id="dateRenvoiAppel" required>
+                        <div class="error-message text-danger" id="dateRenvoiError" style="display: none; font-size: 12px; margin-top: 5px;">
+                            La date de renvoi doit être postérieure à la date de l'audience actuelle.
+                        </div>
+                    </div>
+                    <label for="example-text-input" class="col-2" style="padding-top: 20px;margin-right:-80px;">Pour</label>
+                    <div class="col-6">
+                        <input class="form-control" name="raisonRenvoi" type="text" value="" id="raisonRenvoi" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+    <div class="row mrg-0" id="autreActe" style="display: none;">
+        <div class="row mrg-0">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="form-group">
+                        <div class="flex-box align-items-center">
+                            <label for="PDate" class="control-label">Date de la prochaine audience</label>
+                            <span class="custom-checkbox">
+                                <input type="checkbox" id="NAAppel">
+                                <label for="NAAppel">Non Applicable (N/A)</label>
+                            </span>
+                        </div>
+                    </div>
+                    <input type="date" class="form-control dateProchaine" name="dateProchaineAudience" data-error="veillez entrer la date de la prochaine audience" id="PDateAppel">
+                </div>
+            </div>
+        </div>
 
-                                <div class="row mrg-0" id="avenirConstat">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <label for="example-text-input" class="col-4"
-                                                    style="padding-top: 20px;margin-right:-100px;">Avenir d'audience du
-                                                </label>
-                                                <div class="col-3">
-                                                    <input class="form-control" name="dateActeAvenir" type="date"
-                                                        value="" id="dateActeAvenir">
-                                                </div>
-                                                <label for="example-text-input" class="col-4 col-form-label"
-                                                    style="padding-top: 20px;margin-right:-170px;">servi par l'</label>
-                                                <div class="col-5">
-                                                    <select class="form-control select" data-placeholder=""
-                                                        style="width: 100%;margin-top:10px" id="appelantIntimeAvenir"
-                                                        name="appelantIntimeAvenir">
-                                                        <option value="" selected disabled>-- Choisissez --</option>
-                                                        <option value="Appelant">Appelant</option>
-                                                        <option value="Intimé(e)">Intimé(e)
-                                                        </option>
+        <div class="form-group">
+            <div class="">
+                <div class="col-9">
+                    <label for="" class="control-label">Mentionnez l'acte ici</label>
+                    <textarea class="form-control" name="autres" id="autres" cols="30" rows="5"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                                    </select>
-                                                </div>
-                                                <label for="example-text-input" class="col-4 col-form-label"
-                                                    style="padding-top: 20px;margin-right:-110px;">pour l'audience
-                                                    du</label>
-                                                <div class="">
-                                                    <input class="form-control" name="dateProchaineAudienceAvenir" type="date"
-                                                        value="" id="dateProchaineAudienceAvenir">
+    <div class="row mrg-0">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="header-title m-t-0">Pièces (Facultative)</h4>
+                </div>
+                <div class="card-body">
+                    <input type="file" accept="image/*,.pdf," class="fichiers form-control" name="fichiers[]" multiple>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mrg-0" id="conference">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <div class="row">
-
-                                                <label for="example-text-input" class="col-6"
-                                                    style="padding-top: 20px;margin-right:-50px;">Conférence de mise en
-                                                    état/cloture en date du</label>
-                                                <div class="col-3">
-                                                    <input class="form-control" name="dateEtat" type="date" value=""
-                                                        id="dateEtat">
-                                                </div>
-
-                                                <label for="example-text-input" class="col-5"
-                                                    style="padding-top: 20px;margin-right:-100px;">Reçu le </label>
-                                                <div class="col-3">
-                                                    <input class="form-control" name="dateConferenceRecu" type="date"
-                                                        value="" id="dateConferenceRecu">
-                                                </div>
-                                                <label for="example-text-input" class="col-5"
-                                                    style="padding-top: 20px;margin-right:-100px;">Devant se tenir au
-                                                    plus tard le </label>
-                                                <div class="col-3">
-                                                    <input class="form-control" name="dateExpConference" type="date"
-                                                        value="" id="dateExpConference">
-                                                </div>
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mrg-0" id="miseDeliberer">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <div class="row">
-
-                                                <label for="example-text-input" class="col-6"
-                                                    style="padding-top: 20px;margin-right:-80px;">Mise en délibéré pour
-                                                    décision être rendue le</label>
-                                                <div class="col-3">
-                                                    <input class="form-control dateRecep" name="dateDeliberer" type="date"
-                                                        value="" id="dateDeliberer">
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mrg-0" id="delibererProroger">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <div class="row">
-
-                                                <label for="example-text-input" class="col-4"
-                                                    style="padding-top: 20px;margin-right:-100px;">Date de l'acte</label>
-                                                <div class="col-3">
-                                                    <input class="form-control" name="dateActeProrogé" type="date" value=""
-                                                        id="dateActeProrogé">
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row">
-
-                                                <label for="example-text-input" class="col-4"
-                                                    style="padding-top: 20px;margin-right:-100px;">Délibéré prorogé
-                                                    au</label>
-                                                <div class="col-3">
-                                                    <input class="form-control" name="dateProrogé" type="date" value=""
-                                                        id="dateProrogé">
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mrg-0" id="Renvoi">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <div class="row">
-
-                                                <label for="example-text-input" class="col-3"
-                                                    style="padding-top: 20px;margin-right:-100px;">Renvoi au</label>
-                                                <div class="col-3">
-                                                    <input class="form-control" name="dateRenvoiAppel" type="date"
-                                                        value="" id="dateRenvoiAppel">
-                                                </div>
-
-                                                <label for="example-text-input" class="col-2"
-                                                    style="padding-top: 20px;margin-right:-80px;">Pour</label>
-                                                <div class="col-6">
-                                                    <input class="form-control" name="raisonRenvoi" type="text" value=""
-                                                        id="raisonRenvoi">
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mrg-0" id="autreActe">
-
-                                    <div class="row mrg-0">
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <div class="form-group">
-                                                    <div class="flex-box align-items-center">
-                                                        <label for="PDate" class="control-label">Date de la prochaine
-                                                            d'audience</label>
-                                                        <span class="custom-checkbox">
-                                                            <input type="checkbox" id="NA">
-                                                            <label for="NA">Non Applicable (N/A)</label>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <input type="date" class="form-control dateProchaine" name="dateProchaineAudience"
-                                                    data-error=" veillez entrer la date de la prochaine audience" required
-                                                    id="PDate">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="">
-
-                                            <div class="col-9">
-                                                <label for="" class="control-label">Mentionnez l'acte ici</label>
-                                                <textarea class="form-control" name="autres" id="autres" cols="30"
-                                                    rows="50"></textarea>
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mrg-0">
-                                    <div class="col-sm-12">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h4 class="header-title m-t-0">Pièces(Facultative)</h4>
-                                            </div>
-                                            <div class="card-body">
-                                                <input type="file" accept="image/*,.pdf," class="fichiers form-control"
-                                                    name="fichiers[]" multiple>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mrg-0">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <div class="text-center">
-                                                <button type="submit" class="theme-bg btn btn-rounded btn-block"
-                                                    style="width:50%;"> Enregistrer</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+    <div class="row mrg-0">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="text-center">
+                    <button type="submit" class="theme-bg btn btn-rounded btn-block" style="width:50%;">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
                             @else
                             <!-- form premiere instance -->
-                            <form class="padd-20" method="post" action="{{ route('suiviAudience') }}"
-                                accept-charset="utf-8" enctype="multipart/form-data">
+                            <form class="padd-20" method="post" action="{{ route('suiviAudience') }}" accept-charset="utf-8" enctype="multipart/form-data" id="audienceForm">
                                 <div class="text-center">
                                     @csrf
                                 </div>
                                 <div class="row mrg-0">
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label for="inputPName" class="control-label">Date audience </label>
-                                            <input type="number" name="idAudience"
-                                                value="{{ $audience[0]->idAudience }}" id="idAudienceAssign" hidden>
-                                            <input type="date" class="form-control" id="inputPName"
-                                                data-error=" entrer la date de l'audience" name="dateAudience" required>
+                                            <label for="inputPName" class="control-label">Date audience</label>
+                                            <input type="number" name="idAudience" value="{{ $audience[0]->idAudience }}" id="idAudienceAssign" hidden>
+                                            <input type="date" class="form-control" id="dateAudience" data-error="entrer la date de l'audience" name="dateAudience" required>
                                             <div class="help-block with-errors"></div>
+                                            <div class="error-message text-danger" id="dateError" style="display: none;"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -3319,17 +3222,14 @@
                                         <div class="form-group">
                                             <div class="form-group">
                                                 <div class="flex-box align-items-center">
-                                                    <label for="PDate" class="control-label">Date de la prochaine
-                                                        d'audience</label>
+                                                    <label for="PDate" class="control-label">Date de la prochaine audience</label>
                                                     <span class="custom-checkbox">
                                                         <input type="checkbox" id="NA">
                                                         <label for="NA">Non Applicable (N/A)</label>
                                                     </span>
                                                 </div>
                                             </div>
-                                            <input type="date" class="form-control dateProchaine" name="dateProchaineAudience"
-                                                data-error=" veillez entrer la date de la prochaine audience" required
-                                                id="PDate">
+                                            <input type="date" class="form-control dateProchaine" name="dateProchaineAudience" data-error="veillez entrer la date de la prochaine audience" required id="dateProchaine">
                                         </div>
                                     </div>
                                 </div>
@@ -3337,8 +3237,7 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="inputEm" class="control-label">Décision</label>
-                                            <select class="form-control select2 js-example-tags" data-placeholder=""
-                                                style="width: 100%;" id="decision" name="decision" required>
+                                            <select class="form-control select2 js-example-tags" data-placeholder="" style="width: 100%;" id="decision" name="decision" required>
                                                 <option value="" selected disabled>-- Choisissez --</option>
                                                 <option value="renvoi">Renvoi</option>
                                                 <option value="miseDeliberer">Mise en delibéré</option>
@@ -3348,22 +3247,18 @@
                                         </div>
                                     </div>
                                 </div>
-                              
+
                                 <div class="row mrg-0" id="renvoi" hidden>
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <div class="row">
-                                                <label for="example-text-input" class="col-2 col-form-label"
-                                                    style="padding-top: 20px;margin-right:-30px;">Renvoyée au</label>
+                                                <label for="example-text-input" class="col-2 col-form-label" style="padding-top: 20px;margin-right:-30px;">Renvoyée au</label>
                                                 <div class="col-3">
-                                                    <input class="form-control dateRecep" name="dateRenvoi" type="date" value=""
-                                                        id="dateRenvoi">
+                                                    <input class="form-control dateRecep" name="dateRenvoi" type="date" value="" id="dateRenvoi">
                                                 </div>
-                                                <label for="example-text-input" class="col-2 col-form-label"
-                                                    style="padding-top: 20px;margin-right:-80px;">pour</label>
+                                                <label for="example-text-input" class="col-2 col-form-label" style="padding-top: 20px;margin-right:-80px;">pour</label>
                                                 <div class="col-6">
-                                                    <input class="form-control" name="RenvoiPour" type="text" value=""
-                                                        id="example-text-input">
+                                                    <input class="form-control" name="RenvoiPour" type="text" value="" id="example-text-input">
                                                 </div>
                                             </div>
                                         </div>
@@ -3373,14 +3268,10 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <div class="row">
-                                                <label for="example-text-input" class="col-6 col-form-label"
-                                                    style="padding-top: 20px;margin-right:-70px;">Mise en délibéré pour
-                                                    décision être rendue le</label>
+                                                <label for="example-text-input" class="col-6 col-form-label" style="padding-top: 20px;margin-right:-70px;">Mise en délibéré pour décision être rendue le</label>
                                                 <div class="col-3">
-                                                    <input class="form-control dateRecep" type="date" name="dateMiseDeliberer"
-                                                        value="" id="example-text-input">
+                                                    <input class="form-control dateRecep" type="date" name="dateMiseDeliberer" value="" id="example-text-input">
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -3389,15 +3280,10 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <div class="row">
-                                                <label for="example-text-input" class="col-5 col-form-label"
-                                                    style="padding-top: 20px;margin-right:-110px;">Vidé du delibéré en
-                                                    faveur de</label>
+                                                <label for="example-text-input" class="col-5 col-form-label" style="padding-top: 20px;margin-right:-110px;">Vidé du delibéré en faveur de</label>
                                                 <div class="col-6">
-                                                    <input class="form-control" type="text" name="viderDeliberer"
-                                                        value="" id="example-text-input">
-                                                   
+                                                    <input class="form-control" type="text" name="viderDeliberer" value="" id="example-text-input">
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -3405,7 +3291,6 @@
                                         <div class="form-group">
                                             <label for="example-text-input" class="">Extrait</label>
                                             <textarea name="extrait" id="" class="form-control" cols="30" rows="5"></textarea>
-                                                 
                                         </div>
                                     </div>
                                 </div>
@@ -3414,11 +3299,8 @@
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <input class="form-control" type="text" name="autreDecision"
-                                                        value="" placeholder="Saisissez la decision."
-                                                        id="example-text-input">
+                                                    <input class="form-control" type="text" name="autreDecision" value="" placeholder="Saisissez la decision." id="example-text-input">
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -3426,19 +3308,15 @@
                                 <div class="row mrg-0">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="heureDebut" class="control-label">Heure de début de
-                                                l'audience</label>
-                                            <input type="time" class="form-control" id="heureDebut" name="heureDebut"
-                                                data-error=" veillez entrer l'heure de début de l'audience" required>
+                                            <label for="heureDebut" class="control-label">Heure de début de l'audience</label>
+                                            <input type="time" class="form-control" id="heureDebut" name="heureDebut" data-error="veillez entrer l'heure de début de l'audience" required>
                                             <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="heureFin" class="control-label">Heure de fin de
-                                                l'audience</label>
-                                            <input type="time" class="form-control" id="inputEm" name="heureFin"
-                                                data-error=" veillez entrer l'heure de fin de l'audience" required>
+                                            <label for="heureFin" class="control-label">Heure de fin de l'audience</label>
+                                            <input type="time" class="form-control" id="inputEm" name="heureFin" data-error="veillez entrer l'heure de fin de l'audience" required>
                                             <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
@@ -3447,8 +3325,7 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="inputPr" class="control-label">Président</label>
-                                            <input type="text" class="form-control" id="inputPr" name="president"
-                                                data-error=" veillez entrer le complet du président" required>
+                                            <input type="text" class="form-control" id="inputPr" name="president" data-error="veillez entrer le complet du président" required>
                                             <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
@@ -3457,8 +3334,7 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="inputGr" class="control-label">Gréffier(ère)</label>
-                                            <input type="text" class="form-control" id="inputGr" name="greffier"
-                                                data-error="veillez saisir le nom complet du gréffier" required>
+                                            <input type="text" class="form-control" id="inputGr" name="greffier" data-error="veillez saisir le nom complet du gréffier" required>
                                             <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
@@ -3467,28 +3343,25 @@
                                     <div class="col-sm-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h4 class="header-title m-t-0">Pièces(Facultative)</h4>
+                                                <h4 class="header-title m-t-0">Pièces (Facultative)</h4>
                                             </div>
                                             <div class="card-body">
-                                                <input type="file" accept="image/*,.pdf," class="fichiers form-control"
-                                                    name="fichiers[]" multiple>
+                                                <input type="file" accept="image/*,.pdf," class="fichiers form-control" name="fichiers[]" multiple>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row mrg-0">
-
                                     <div class="col-12">
                                         <div class="form-group">
                                             <div class="text-center">
-                                                <button type="submit" class="theme-bg btn btn-rounded btn-block "
-                                                    style="width:50%;"> Enregistrer</button>
+                                                <button type="submit" class="theme-bg btn btn-rounded btn-block" style="width:50%;">Enregistrer</button>
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </form>
+
                             @endif
                         </div>
                     </div>
@@ -3654,7 +3527,7 @@
                                                             <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }} c/</span>
                                                             @break <!-- Sortir de la boucle une fois que le match est trouvé -->
                                                         @endif
-                                                        
+
                                                     @endforeach
 
                                                     <!-- Affichage de l'entreprise adverse -->
@@ -3730,43 +3603,43 @@
                                                                 @if($r->autreRole === 'mp')
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                                         <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break 
+                                                                        @break
                                                                     @endif
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                                         <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break 
+                                                                        @break
                                                                     @endif
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                                         <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break 
+                                                                        @break
                                                                     @endif
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                                         <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break 
+                                                                        @break
                                                                     @endif
                                                                 @else
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                                         <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break 
+                                                                        @break
                                                                     @endif
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                                         <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break 
+                                                                        @break
                                                                     @endif
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                                         <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break 
+                                                                        @break
                                                                     @endif
                                                                     @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                                         <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                        @break 
+                                                                        @break
                                                                     @endif
                                                                 @endif
-                                                                @break 
+                                                                @break
                                                             @endif
                                                         @endforeach
 
-                                                    @endforeach 
+                                                    @endforeach
 
                                                     <!-- Affichage partie civile-->
                                                     @php
@@ -3965,7 +3838,7 @@ function emailModal(id) {
                             <p>{{$cabinetInfo->nomCourt}} vous informe :</p>
                             @endforeach
                             @endif
-                           
+
                             <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Juridiction :</b> {{ $audience[0]->nom }}</p>
                             <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Audience du :</b> ${value.dateAudience}</p>
                             <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Parties :</b> @foreach($audience as $w)
@@ -4003,7 +3876,7 @@ function emailModal(id) {
                                         <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }} c/</span>
                                         @break <!-- Sortir de la boucle une fois que le match est trouvé -->
                                     @endif
-                                    
+
                                 @endforeach
 
                                 <!-- Affichage de l'entreprise adverse -->
@@ -4079,43 +3952,43 @@ function emailModal(id) {
                                             @if($r->autreRole === 'mp')
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                             @else
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                             @endif
-                                            @break 
+                                            @break
                                         @endif
                                     @endforeach
 
-                                @endforeach 
+                                @endforeach
 
                                 <!-- Affichage partie civile-->
                                 @php
@@ -4204,14 +4077,14 @@ function emailModal(id) {
                             </p>
                             <p>N'hesitez pas à nous contacter pour toute précision complémentaire.</p>
                             @if($paramCabinet[0]->nomCabinet=='ASK AVOCATS')
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Maître Jonas KOUROUMA </b> Tel: +224 623 20 70 63 / Email: jkourouma@ask-avocats.com </p>                        
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Amara CISSE </b> Tel: +224 612 12 50 02 / Email: acisse@ask-avocats.com </p>                        
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Sayon OULARE </b> Tel: +224 612 12 50 01 / Email: sayonoulare@ask-avocats.com </p>                        
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Karamo Oulen TOURE </b> Tel: +224 612 12 50 07 / Email: ktoure@ask-avocats.com </p> 
-                            @endif   
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Maître Jonas KOUROUMA </b> Tel: +224 623 20 70 63 / Email: jkourouma@ask-avocats.com </p>
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Amara CISSE </b> Tel: +224 612 12 50 02 / Email: acisse@ask-avocats.com </p>
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Sayon OULARE </b> Tel: +224 612 12 50 01 / Email: sayonoulare@ask-avocats.com </p>
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Karamo Oulen TOURE </b> Tel: +224 612 12 50 07 / Email: ktoure@ask-avocats.com </p>
+                            @endif
                             <br><br>
                             <p>Cordialement</p><br>
-                    
+
                             <?php echo $paramCabinet[0]->signature; ?>
                         </div>
                         `
@@ -4262,7 +4135,7 @@ function emailModalAppel(id) {
                             <p>{{$cabinetInfo->nomCourt}} vous informe :</p>
                             @endforeach
                             @endif
-                           
+
                             <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Juridiction :</b> {{ $audience[0]->nom }}</p>
                             <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Audience du :</b> ${value.dateActe}</p>
                             <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Parties :</b> @foreach($audience as $w)
@@ -4300,7 +4173,7 @@ function emailModalAppel(id) {
                                         <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }} c/</span>
                                         @break <!-- Sortir de la boucle une fois que le match est trouvé -->
                                     @endif
-                                    
+
                                 @endforeach
 
                                 <!-- Affichage de l'entreprise adverse -->
@@ -4376,43 +4249,43 @@ function emailModalAppel(id) {
                                             @if($r->autreRole === 'mp')
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                             @else
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Intimé(e)')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Defendeur au pourvoi')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                                 @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                    @break 
+                                                    @break
                                                 @endif
                                             @endif
-                                            @break 
+                                            @break
                                         @endif
                                     @endforeach
 
-                                @endforeach 
+                                @endforeach
 
                                 <!-- Affichage partie civile-->
                                 @php
@@ -4501,14 +4374,14 @@ function emailModalAppel(id) {
                             </p>
                             <p>N'hesitez pas à nous contacter pour toute précision complémentaire.</p>
                             @if($paramCabinet[0]->nomCabinet=='ASK AVOCATS')
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Maître Jonas KOUROUMA </b> Tel: +224 623 20 70 63 / Email: jkourouma@ask-avocats.com </p>                        
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Amara CISSE </b> Tel: +224 612 12 50 02 / Email: acisse@ask-avocats.com </p>                        
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Sayon OULARE </b> Tel: +224 612 12 50 01 / Email: sayonoulare@ask-avocats.com </p>                        
-                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Karamo Oulen TOURE </b> Tel: +224 612 12 50 07 / Email: ktoure@ask-avocats.com </p> 
-                            @endif   
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Maître Jonas KOUROUMA </b> Tel: +224 623 20 70 63 / Email: jkourouma@ask-avocats.com </p>
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Amara CISSE </b> Tel: +224 612 12 50 02 / Email: acisse@ask-avocats.com </p>
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Sayon OULARE </b> Tel: +224 612 12 50 01 / Email: sayonoulare@ask-avocats.com </p>
+                            <p><i class="fa fa-circle"></i>&nbsp;&nbsp;<b>Karamo Oulen TOURE </b> Tel: +224 612 12 50 07 / Email: ktoure@ask-avocats.com </p>
+                            @endif
                             <br><br>
                             <p>Cordialement</p><br>
-                    
+
                             <?php echo $paramCabinet[0]->signature; ?>
                         </div>
                         `
@@ -4544,4 +4417,210 @@ document.getElementById('aud').classList.add('active');
     }
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('audienceForm');
+    const dateAudience = document.getElementById('dateAudience');
+    const dateProchaine = document.getElementById('dateProchaine');
+    const naCheckbox = document.getElementById('NA');
+    const dateError = document.getElementById('dateError');
+    const decisionSelect = document.getElementById('decision');
+
+    // Gestion de la checkbox N/A
+    naCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            dateProchaine.disabled = true;
+            dateProchaine.val('');
+            dateProchaine.removeAttribute('required');
+        } else {
+            dateProchaine.disabled = false;
+            dateProchaine.setAttribute('required', 'required');
+        }
+    });
+
+    // Gestion de l'affichage des champs en fonction de la décision
+    decisionSelect.addEventListener('change', function() {
+        // Masquer tous les champs spécifiques
+        document.getElementById('renvoi').hidden = true;
+        document.getElementById('miseDeliberer').hidden = true;
+        document.getElementById('viderDeliberer').hidden = true;
+        document.getElementById('autreDecision').hidden = true;
+
+        // Afficher le champ correspondant à la décision
+        if (this.value === 'renvoi') {
+            document.getElementById('renvoi').hidden = false;
+        } else if (this.value === 'miseDeliberer') {
+            document.getElementById('miseDeliberer').hidden = false;
+        } else if (this.value === 'viderDeliberer') {
+            document.getElementById('viderDeliberer').hidden = false;
+        } else if (this.value === 'autre') {
+            document.getElementById('autreDecision').hidden = false;
+        }
+    });
+
+    // Validation des dates
+    function validateDates() {
+        const dateAudienceValue = new Date(dateAudience.value);
+        const dateProchaineValue = new Date(dateProchaine.value);
+
+        // Réinitialiser le message d'erreur
+        dateError.style.display = 'none';
+        dateError.textContent = '';
+
+        // Si la case N/A est cochée, pas de validation de date prochaine
+        if (naCheckbox.checked) {
+            return true;
+        }
+
+        // Vérifier si les deux dates sont renseignées
+        if (dateAudience.value && dateProchaine.value) {
+            if (dateAudienceValue >= dateProchaineValue) {
+                dateError.textContent = 'La date de l\'audience doit être antérieure à la date de la prochaine audience.';
+                dateError.style.display = 'block';
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Validation lors du changement des dates
+    dateAudience.addEventListener('change', validateDates);
+    dateProchaine.addEventListener('change', validateDates);
+
+    // Validation à la soumission du formulaire
+    form.addEventListener('submit', function(e) {
+        if (!validateDates()) {
+            e.preventDefault();
+            // Scroll vers le message d'erreur
+            dateError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    });
+});
+
+
+const formAppel = document.getElementById('audienceAppelForm');
+    const acteSelect = document.getElementById('acteDecision');
+    const dateRenvoiInput = document.getElementById('dateRenvoiAppel');
+    const dateRenvoiError = document.getElementById('dateRenvoiError');
+    const dateAudienceActuelle = document.getElementById('dateAudienceActuelle').value;
+    const naCheckboxAppel = document.getElementById('NAAppel');
+    const dateProchaineAppel = document.getElementById('PDateAppel');
+
+    // Cacher toutes les sections au chargement
+    const sections = [
+        'conclusion', 'invitationAconclure', 'injonctionAconclure',
+        'pvConstat', 'avenirConstat', 'conference', 'miseDeliberer',
+        'delibererProroger', 'Renvoi', 'autreActe'
+    ];
+
+    sections.forEach(section => {
+        const el = document.getElementById(section);
+        if (el) el.style.display = 'none';
+    });
+
+    // Gestion de l'affichage des sections selon l'acte sélectionné
+    acteSelect.addEventListener('change', function() {
+        // Cacher toutes les sections
+        sections.forEach(section => {
+            const el = document.getElementById(section);
+            if (el) el.style.display = 'none';
+        });
+
+        // Afficher la section correspondante
+        const selectedActe = this.value;
+        let sectionToShow = null;
+
+        switch(selectedActe) {
+            case 'Conclusions':
+                sectionToShow = 'conclusion';
+                break;
+            case 'Invitation à conclure':
+                sectionToShow = 'invitationAconclure';
+                break;
+            case 'Injonction à conclure':
+                sectionToShow = 'injonctionAconclure';
+                break;
+            case 'PV de constat de carence':
+                sectionToShow = 'pvConstat';
+                break;
+            case 'Avenir d\'audience':
+                sectionToShow = 'avenirConstat';
+                break;
+            case 'Conférence de mise en état/cloture':
+                sectionToShow = 'conference';
+                break;
+            case 'Mise en délibéré':
+                sectionToShow = 'miseDeliberer';
+                break;
+            case 'Délibéré prorogé':
+                sectionToShow = 'delibererProroger';
+                break;
+            case 'Renvoi':
+                sectionToShow = 'Renvoi';
+                break;
+            case 'Autre':
+                sectionToShow = 'autreActe';
+                break;
+        }
+
+        if (sectionToShow) {
+            const el = document.getElementById(sectionToShow);
+            if (el) el.style.display = 'block';
+        }
+    });
+
+    // Gestion de la checkbox N/A pour la section autreActe
+    naCheckboxAppel.addEventListener('change', function() {
+        if (this.checked) {
+            dateProchaineAppel.disabled = true;
+            dateProchaineAppel.value = '';
+            dateProchaineAppel.removeAttribute('required');
+        } else {
+            dateProchaineAppel.disabled = false;
+            dateProchaineAppel.setAttribute('required', 'required');
+        }
+    });
+
+    // Validation de la date de renvoi
+    function validateDateRenvoi() {
+        if (!dateRenvoiInput.value || !dateAudienceActuelle) {
+            dateRenvoiError.style.display = 'none';
+            return true;
+        }
+
+        const dateRenvoi = new Date(dateRenvoiInput.value);
+        const dateAudience = new Date(dateAudienceActuelle);
+
+        if (dateRenvoi <= dateAudience) {
+            dateRenvoiError.style.display = 'block';
+            return false;
+        } else {
+            dateRenvoiError.style.display = 'none';
+            return true;
+        }
+    }
+
+    // Événements de validation
+    dateRenvoiInput.addEventListener('change', validateDateRenvoi);
+
+    // Validation à la soumission
+    formAppel.addEventListener('submit', function(e) {
+        // Si la section Renvoi est visible, valider la date
+        const renvoiSection = document.getElementById('Renvoi');
+        if (renvoiSection.style.display === 'block') {
+            if (!validateDateRenvoi()) {
+                e.preventDefault();
+                dateRenvoiError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    });
+
+    // Empêcher la saisie manuelle dans les champs date
+    const dateInputs = formAppel.querySelectorAll('input[type="date"]');
+    dateInputs.forEach(input => {
+        input.addEventListener('keydown', function(e) {
+            e.preventDefault();
+        });
+    });
+</script>
 @endsection
