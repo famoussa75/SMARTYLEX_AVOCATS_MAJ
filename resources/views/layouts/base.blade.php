@@ -836,18 +836,24 @@ function horloge() {
         <style>
             /* Loader Modal */
             #pageLoader {
-                backdrop-filter: blur(3px);
+                position: fixed;
+                inset: 0;
+                display: flex;
                 align-items: center;
                 justify-content: center;
+                backdrop-filter: blur(3px);
+                background: rgba(0, 0, 0, 0.2); /* optionnel */
+                z-index: 9999;
             }
-            
 
             /* Content */
             .loader-content {
                 background: transparent;
-                margin-top:100%;
                 border: none;
                 box-shadow: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             /* Spinner animé */
@@ -858,16 +864,15 @@ function horloge() {
                 border-top: 5px solid #28a745;
                 border-radius: 50%;
                 animation: spin 0.9s linear infinite;
-                margin: auto;
             }
 
             @keyframes spin {
-                100% {
+                to {
                     transform: rotate(360deg);
                 }
             }
-
         </style>
+
 
         <!-- End modal-loading -->
         <div hidden>
