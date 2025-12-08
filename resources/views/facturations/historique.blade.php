@@ -1,39 +1,63 @@
 @extends('layouts.base')
 @section('title','Historique des factures')
 @section('content')
+
+<style>
+.badge-proforma {
+    background-color: rgba(245,158,11,0.7);
+    color: #fff;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    letter-spacing: .4px;
+}
+
+.badge-finale {
+    background-color: rgba(22,163,74,0.75); /* vert */
+    color: #fff;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    letter-spacing: .4px;
+}
+
+</style>
 <div class="container-fluid">
 
     <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-7 align-self-center">
-            <h4 class="theme-cl"><i class="fa fa-money"></i> Facturation > <span class="label bg-info"><b>Historique</b></span></h4>
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+        <!-- Bloc gauche : icône + titre -->
+        <div class="d-flex align-items-center mb-2 mb-md-0">
+            <div class="icon-wrapper theme-bg">
+                <i class="fa fa-money"></i>
+            </div>
+            <div class="ms-2">
+                <h4 class="page-title mb-1">
+                    Facturation
+                    <span class="page-subtitle text-muted">› Historique</span>
+                </h4>
+                <small class="page-description text-secondary">
+                    Consultez l’historique des factures générées.
+                </small>
+            </div>
         </div>
 
-
-
-        <div class="col-md-5 text-right">
+        <!-- Bloc droit : bouton d’action -->
+        <div class="d-flex align-items-center">
             @if(Auth::user()->role=='Administrateur' || Auth::user()->role=='Assistant')
-            <div class="btn-group">
-                <a href="{{ route('factureForm') }}" class="cl-white theme-bg btn  btn-rounded"
-                    title="Creer une facture">
-                    <i class="ti-wand"></i>
-                    Creer une facture
+                <a href="{{ route('factureForm') }}" 
+                class="btn btn-gradient-custom shadow-sm"
+                title="Créer une facture">
+                <i class="ti ti-plus me-1"></i> Créer une facture
                 </a>
-            </div>
-            @else
             @endif
         </div>
 
     </div>
-    @if($plan=='standard')
-    <div class="card text-center" style="padding:30px">
-        <h2 class="bg-warning"><i class="fa fa-exclamation-triangle"></i> Module Premium</h2>
-        <p style="font-size:18px">Chèr(e) utilisateur ce module ne figure pas sur le plan <b>standard</b> auquel vous avez souscri. Veuillez contacter notre équipe pour passer au <b>premium</b> si vous voulez obtenir ce module. <br>
-        visitez notre site web pour voir les différents plans  <a href="https://www.smartylex.com#prix" target="_blank" style="color:blue"><i class="fa fa-arrow-right"></i> www.smartylex.com</a>
-        </p>
-       
-    </div>
-    @else
+
     <div class="col-md-12 align-self-center mb-4">
         <form method="post" action="{{route('factureFilter')}}" accept-charset="utf-8" enctype="multipart/form-data">
             @csrf
@@ -65,7 +89,7 @@
 
             <div class="btn-group mr-lg-2">
                 <a href="{{ route('histoFacture') }}" title="Tous afficher" class="btn btn-default tooltips">
-                    <i class="ti-flix ti-layout-grid2"></i>
+                  Tous  <i class="ti-flix ti-layout-grid2"></i>
                 </a>
             </div>
         </form>
@@ -78,7 +102,6 @@
     @endif
 
     <div class="row mb-4">
-
         <div class="col-md-3 col-sm-6">
             <div class="contact-grid-box">
                 <div class="card-body">
@@ -93,6 +116,9 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="row mb-4">
 
         <div class="col-md-3 col-sm-6">
             <div class="contact-grid-box">
@@ -139,6 +165,21 @@
             </div>
         </div>
 
+        <div class="col-md-3 col-sm-6">
+            <div class="contact-grid-box">
+                <div class="card-body">
+                    <div class="float-right">
+                        <i class="fa fa-history default-cl font-30"></i>
+                    </div>
+                    <div class="widget-detail ">
+                        <h4 class="mb-1 infoPrive">{{number_format($TFacturesRembourser[0]->TFacturesRembourser, 0, ' ', ' ')}}
+                            {{$monnaieParDefaut[0]->monnaieParDefaut}}</h4>
+                        <span>Total Remboursé</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     
@@ -162,32 +203,37 @@
                     style="width:100%">
                     <thead>
                         <tr>
-                            <th style="width: 50px">N°</th>
+                            <th style="width:30px">N°</th>
+                            <th>Type facture</th>
                             <th>Date facture</th>
                             <th>Client</th>
                             <th>Affaire</th>
-                            <th>Montant Total</th>
+                            <th>Montant</th>
                             <th>À payer</th>
                             <th>Statut</th>
-                            <th style="width: 50px">Details</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         @foreach($factures as $f)
-                        <tr>
+                        <tr onclick="window.location='{{route('facture',$f->slug)}}'" style="cursor:pointer;">
                             <td>{{$f->idFacture}}</td>
-                            <td>
-                                @if(empty($f->dateFacture))
-                                    <small>N/A</small>
+                            <td style="text-align:center">
+                                @if($f->typeFacture == 'Pro forma')
+                                    <span class="badge badge-proforma">
+                                        <i class="fa fa-file-text-o me-1"></i> Pro forma
+                                    </span>
                                 @else
-                                    {{date('d-m-Y', strtotime($f->dateFacture))}}
+                                    <span class="badge badge-finale">
+                                        <i class="fa fa-check-circle me-1"></i> Facture finale
+                                    </span>
                                 @endif
-                               
                             </td>
+
+                            <td>{{date('d-m-Y', strtotime($f->dateFacture))}}</td>
                             <td>{{$f->prenom}} {{$f->nom}} {{$f->denomination}}</td>
                             <td>{{$f->nomAffaire}}</td>
-                            <td> <span class="infoPrive" >  {{$f->montantTTC}}</span></td>
+                            <td class="infoPrive" > {{$f->montantTTC}} {{$f->monnaie}}</td>
                             <td>
                             @php
                                 $facturesPaiements = DB::select("select * from paiement_factures,factures where
@@ -226,10 +272,7 @@
                                 <span>{{$f->statut}}</span>
                             </td>
                             @endif
-                            <td style="text-align:center;">
-                                <a class="" href="{{route('facture',$f->slug)}}" title="Voir la facture"
-                                    data-toggle="tooltip"><i class="fa fa-arrow-right"></i></a>
-                            </td>
+                          
                         </tr>
                         @endforeach
 
@@ -238,7 +281,6 @@
             </div>
         </div>
     </div>
-    @endif
 </div>
 </div>
 <!-- /.row -->

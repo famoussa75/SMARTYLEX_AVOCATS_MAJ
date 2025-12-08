@@ -22,7 +22,7 @@ class CourierArriver extends Model
         'confidentialite',
         'slug',
         'signifie',
-        'statutCourierTrasmise',
+        'statutCourierTrasmise',  //nouveau 
     ];
     use HasFactory;
 }

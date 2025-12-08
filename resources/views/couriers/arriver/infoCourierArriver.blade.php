@@ -1,10 +1,6 @@
 @extends('layouts.base')
 @section('title','Courriers - Arrivée')
 @section('content')
-<div class="container-fluid">
-@php
-setlocale(LC_TIME, 'fr_FR');
-@endphp
 
 <style>
 .radio-sm {
@@ -26,53 +22,98 @@ setlocale(LC_TIME, 'fr_FR');
 }
 </style>
 
+<div class="container-fluid">
+@php
+setlocale(LC_TIME, 'fr_FR');
+@endphp
    
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        @if(empty($clientAffaire))
-        <div class="col-md-6 align-self-center">
-            <h5 class="theme-cl">Courrier cabinet > <span class="label bg-info-light"><b><i class="fa fa-envelope"></i> Courriers - Arrivée</b></span></h5>
-        </div>
-        @else
-        <div class="col-md-6 align-self-center">
-            <h5 class="theme-cl">
-            <a class="" href="{{route('clientInfos', [$clientAffaire[0]->idClient,$clientAffaire[0]->slugClient])}}">{{ $clientAffaire[0]->idClient }} > {{ $clientAffaire[0]->prenom }} {{ $clientAffaire[0]->nom }}{{ $clientAffaire[0]->denomination }} </a> > <a class="" href="{{ route('showAffaire', [$clientAffaire[0]->idAffaire,$clientAffaire[0]->slugAffaire]) }}">{{ $clientAffaire[0]->idAffaire }} {{ $clientAffaire[0]->nomAffaire }}</a> > <span class="label bg-info-light"><b><i class="fa fa-envelope"></i> Courriers - Arrivée</b></span></h5>
-        </div>
-    
-        @endif
-      
-        <div class="col-md-6 text-right">
+ <!-- Page Header -->
+<div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
 
-           @if(Auth::user()->role=="Administrateur" && $courierArriver[0]->statut != 'Classé')
-            <div class="btn-group">
-                <a  href="{{ route('taskForm',[$courierArriver[0]->idCourierArr,'courier'])}}" type="button" class="cl-white theme-bg btn  btn-rounded"
-                    title="Créer une tâche">
-                    <i class="fa fa-plus"></i>
-                    Créer une tâche
-                </a>
-            </div>
-                @if($courierArriver[0]->statut == 'Annulé')
-                @else
-                <div class="btn-group">
-                    <a  href="{{ route('classerCourrier',$courierArriver[0]->slug) }}" class="cl-white theme-bg btn  btn-rounded"
-                        title="Classer le courier">
-                        <i class="fa fa-arrow-down"></i>
-                        Classer
-                    </a>
-                </div>
-                @endif
-            @else
-            @endif
-            
-            <div class="btn-group">
-                <a  href="{{ route('listCourierArriver') }}" class="cl-white theme-bg btn  btn-rounded"
-                    title="Afficher la liste des couriers">
-                    <i class="fa fa-navicon"></i>
-                    Liste des couriers
-                </a>
-            </div>
-        </div>
+<div class="d-flex align-items-center mb-2 mb-md-0">
+    <div class="icon-wrapper me-2">
+        <i class="fa fa-envelope fs-4"></i>
     </div>
+
+    <div>
+        @if(empty($clientAffaire))
+            <h4 class="page-title mb-0">
+                Courrier Cabinet
+                <span class="page-subtitle">› Courriers - Arrivée</span>
+            </h4>
+            <small class="text-muted">Gérez les courriers entrants du cabinet.</small>
+
+        @else
+            <h4 class="page-title mb-0 d-flex flex-wrap align-items-center">
+            Courriers - Arrivée
+                <a class="page-subtitle text-decoration-none fw-semibold"
+                    href="{{ route('clientInfos', [$clientAffaire[0]->idClient, $clientAffaire[0]->slugClient]) }}">
+                    &nbsp;› {{ $clientAffaire[0]->idClient }}
+                </a>
+                <span class="mx-2 text-muted">›</span>
+
+                <a class="page-subtitle text-decoration-none fw-semibold"
+                    href="{{ route('clientInfos', [$clientAffaire[0]->idClient, $clientAffaire[0]->slugClient]) }}">
+                    {{ $clientAffaire[0]->prenom }} {{ $clientAffaire[0]->nom }} {{ $clientAffaire[0]->denomination }}
+                </a>
+                <span class="mx-2 text-muted">›</span>
+
+                <a class="page-subtitle text-decoration-none fw-semibold"
+                    href="{{ route('showAffaire', [$clientAffaire[0]->idAffaire, $clientAffaire[0]->slugAffaire]) }}">
+                    {{ $clientAffaire[0]->idAffaire }} {{ $clientAffaire[0]->nomAffaire }}
+                </a>
+
+            </h4>
+            <small class="text-muted">Courriers reçus liés à cette affaire.</small>
+        @endif
+    </div>
+</div>
+
+<div class="d-flex flex-wrap gap-2 justify-content-end align-items-center">
+
+    @if(Auth::user()->role == "Administrateur" && $courierArriver[0]->statut != 'Classé')
+    <div class="dropdown d-inline-block">
+        <button class="btn btn-gradient-custom cl-white btn-rounded shadow-sm dropdown-toggle d-flex align-items-center"
+                type="button" id="actionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                style="padding: 8px 18px; font-weight: 500;">
+            <i class="fa fa-cogs me-2"></i> &nbsp;
+            <span>Actions</span>
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-right border-0 shadow-sm rounded-3 mt-2"
+            aria-labelledby="actionsDropdown" style="min-width: 220px;">
+            <li>
+                <a class="dropdown-item d-flex align-items-center py-2"
+                href="{{ route('taskForm', [$courierArriver[0]->idCourierArr, 'courier']) }}">
+                    <i class="fa fa-plus-circle text-success me-2"></i>&nbsp;
+                    <span>Créer une tâche</span>
+                </a>
+            </li>
+            @if($courierArriver[0]->statut != 'Annulé')
+            <li>
+                <a class="dropdown-item d-flex align-items-center py-2"
+                href="{{ route('classerCourrier', $courierArriver[0]->slug) }}">
+                    <i class="fa fa-archive text-primary me-2"></i>&nbsp;
+                    <span>Classer le courrier</span>
+                </a>
+            </li>
+            @endif
+        </ul>
+    </div> &nbsp;
+
+    @endif
+
+    <a href="{{ route('listCourierArriver') }}"
+       class="btn btn-outline-primary-custom btn-rounded shadow-sm d-flex align-items-center"
+       style="padding: 8px 18px; font-weight: 500;">
+        <i class="fa fa-navicon me-2"></i>&nbsp;
+        <span>Liste des courriers</span>
+    </a>
+</div>
+
+
+</div>
+
     <!-- Title & Breadcrumbs-->
     <div class="row">
         <div class="card col-md-8">
@@ -122,24 +163,15 @@ setlocale(LC_TIME, 'fr_FR');
                                         <tr>
                                             <td>Date du courrier</td>
                                             <td>
-                                                @if(empty($courier->dateCourier))
-                                                    <small>N/A</small>
-                                                @else
-                                                    <small
-                                                         class="label bg-info">{{ date('d-m-Y', strtotime( $courier->dateCourier))}}</small>
-                                                @endif
+                                                <small
+                                                    class="label bg-info">{{ $courier->dateCourier? date('d-m-Y', strtotime( $courier->dateCourier)) :'N/A'}}</small>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>Date d'arrivée</td>
                                             <td>
-                                                @if(empty($courier->dateArriver))
-                                                    <small>N/A</small>
-                                                @else
-
-                                                    <small
-                                                        class="label bg-warning">{{ date('d-m-Y', strtotime( $courier->dateArriver))}}</small>
-                                                @endif
+                                                <small
+                                                    class="label bg-warning">{{$courier->dateArriver? date('d-m-Y', strtotime( $courier->dateArriver)) :'N/A'}}</small>
                                             </td>
                                         </tr>
                                        
@@ -147,10 +179,12 @@ setlocale(LC_TIME, 'fr_FR');
                                             <td>Statut </td>
                                             <td> {{ $courier->statut }}</td>
                                         </tr>
-                                        @if (!empty($couriersHuissier))
-                                            <p>Huissier : {{ $couriersHuissier[0]->prenomHss }}  {{ $couriersHuissier[0]->nomHss }}</p>
+                                        @if($courier->signifie)
+                                        <tr>
+                                            <td>Signifié par </td>
+                                            <td> {{ $courier->signifie }}</td>
+                                        </tr>
                                         @endif
-
                                         @if(Auth::user()->role=='Administrateur')
                                         <tr>
                                             <td>Confidentialité</td>
@@ -278,29 +312,23 @@ setlocale(LC_TIME, 'fr_FR');
                 <!-- END timeline item -->
                 <li class="time-label">
                     <span class="bg-info">Courriers liés </span>&nbsp;
-
-                    @if($courier->statut=='Annulé')
-                        
-                        @else
-                            <a href="#" title="Lier un courrier" data-toggle="modal" data-target="#modal-2"
-                                    class="cl-white bg-info btn  btn-rounded">
-                                    <i class="fa fa-plus"></i>
-                                </a>
-                        @endif
-                   
+                    <a href="#" title="Lier un courrier" data-toggle="modal" data-target="#modal-2"
+                        class="cl-white bg-info btn  btn-rounded">
+                        <i class="fa fa-plus"></i>
+                    </a>
                    
                 </li>
                 <li>
                     <div class="timeline-item">
                         <div class="timeline-body">
-                           
+
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
                                         <div class="row text text-center ">
-                                           
+
                                             @foreach ($courierArriverLiers as $c )
-                                        
+
                                                 @if($c->slugArriver!=$courierArriver[0]->slug)
                                                 <tr>
 
@@ -308,7 +336,7 @@ setlocale(LC_TIME, 'fr_FR');
                                                     Courrier Arrivé - N° {{$c->numero}} <br> <a class="load"
                                                             href="{{ route('detailCourierArriver', [$c->slugArriver]) }}"
                                                             style="color:blue" class="toggle"
-                                                            title="Cliquer pour afficher le courrier"> 
+                                                            title="Cliquer pour afficher le courrier">
                                                             @if(empty($infoCourier))
                                                                 {{$c->objet}}  > Courrier cabinet
                                                             @else
@@ -317,7 +345,7 @@ setlocale(LC_TIME, 'fr_FR');
                                                                 @endphp
                                                                 @foreach($infoCourier as $info)
                                                                     @if($info->slugCourierLier == $c->slugArriver)
-                                                                        {{$info->idClient}} > {{$info->prenom}} {{$info->nom}} > {{$info->idAffaire}} {{$info->nomAffaire}}
+                                                                        {{$info->idClient}} > {{$info->prenom}} {{$info->nom}} {{$info->denomination}}  > {{$info->idAffaire}} {{$info->nomAffaire}}
                                                                         @php $found = true; @endphp
                                                                         @break
                                                                     @endif
@@ -328,7 +356,7 @@ setlocale(LC_TIME, 'fr_FR');
                                                                 @endif
                                                             @endif
 
-                                                            
+
                                                     </td>
                                                     <td>
                                                         <a href="{{route('deleteLiaisonCourier',[$c->slugTCourierLier])}}"  onclick="event.preventDefault(); confirmDelete(this.href)" class="toggle" title="Supprimer"><i class="fa fa-trash" style="color:red"></i></a>
@@ -338,9 +366,9 @@ setlocale(LC_TIME, 'fr_FR');
 
                                             @endforeach
                                         </div>
-                                      
+
                                         <div class="row text text-center ">
-                                           
+
 
                                             @foreach ($courierDepartLiers as $c )
                                         <tr>
@@ -349,8 +377,8 @@ setlocale(LC_TIME, 'fr_FR');
                                                 Courrier Départ - N° {{$c->numCourier}}<br> <a class="load"
                                                     href="{{ route('infoCourierDepart', [$c->slugDepart]) }}"
                                                     style="color:blue" class="toggle"
-                                                    title="Cliquer pour afficher le courrier"> 
-                                                    
+                                                    title="Cliquer pour afficher le courrier">
+
                                                     @if(empty($infoCourierDepart))
                                                         {{$c->objet}} >  Courrier cabinet
 
@@ -359,9 +387,9 @@ setlocale(LC_TIME, 'fr_FR');
                                                             $found = false;
                                                         @endphp
                                                         @foreach($infoCourierDepart as $info)
-                                                       
+
                                                             @if($info->slugCourierLier == $c->slugDepart)
-                                                                {{$info->idClient}} > {{$info->prenom}} {{$info->nom}} > {{$info->idAffaire}} {{$info->nomAffaire}}
+                                                                {{$info->idClient}} > {{$info->prenom}} {{$info->nom}} {{$info->denomination}}  > {{$info->idAffaire}} {{$info->nomAffaire}}
                                                                 @php $found = true; @endphp
                                                                 @break
                                                             @endif
@@ -380,7 +408,7 @@ setlocale(LC_TIME, 'fr_FR');
                                         </tr>
                                         @endforeach
                                         </div>
-                                       
+
 
                                         @if(empty($courierArriverLiers) && empty($courierDepartLiers))
                                             Aucun courrier trouvé.
@@ -427,7 +455,7 @@ setlocale(LC_TIME, 'fr_FR');
                                     <label>
                                         <input type="radio" name="categorie" id="client" value="depart" class="radio-sm"> Courrier client
                                     </label>
-                                
+
                                     <label>
                                         <input type="radio" name="categorie" id="cabinet" value="arrive" class="radio-sm"> Courrier  cabinet
                                     </label>
@@ -443,10 +471,12 @@ setlocale(LC_TIME, 'fr_FR');
 
                                         <select id=""  class="form-control select2" style="width:100%" name="idCourierLier[]" >
                                             <option value=""></option>
-                                            
+
                                             @foreach ($suggeCourierDepart as $c)
-                                               
-                                                <option value="{{ $c->slugDepart }}">{{$c->idClient }}>  {{ $c->prenom }} {{ $c->nom }} >{{ $c->idAffaire }} {{ $c->nomAffaire }} 
+
+                                              <!--  <option value="{{ $c->slugDepart }}">{{$c->idClient }}>  {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }} >{{ $c->idAffaire }} {{ $c->nomAffaire }} -->
+                                                 <option value="{{ $c->slugDepart }}">N° {{$c->numCourier}} - {{$c->objet}}
+                                                 
                                                 </option>
                                             @endforeach
                                         </select>
@@ -454,7 +484,7 @@ setlocale(LC_TIME, 'fr_FR');
                                 </div>
 
                                 <br><br>
-                               
+
                                 <div class="container" id="clientCourrier">
                                     <div class="row">
                                         <div class="col-md-4" id="clientContent-req">
@@ -475,22 +505,22 @@ setlocale(LC_TIME, 'fr_FR');
                                                 <select id="affaireClient-req"  class="form-control select2 my-2" style="width:100%" >
                                                 </select>
 
-                                               
+
                                             </div>
                                         </div>
 
-                                       
+
 
                                     </div>
                                     <div class="row">
 
                                         <div class="form-group">
-                                            
+
                                             <option value=""><span>courrier départ </span></option>
                                             <select class="form-control select2"  id="courrierDepartSelect" name="idCourierLier[]" style="width:100%">
                                                 <!-- Dynamique -->
                                             </select>
-                                            
+
                                         </div>
 
                                         <div class="form-group">
@@ -498,42 +528,42 @@ setlocale(LC_TIME, 'fr_FR');
                                             <select class="form-control select2"  id="courrierArriverSelect" name="idCourierLier[]" style="width:100%">
                                                 <!-- Dynamique -->
                                             </select>
-                                            
+
                                         </div>
 
-                                      
+
                                     </div>
                                 </div>
 
-                             
+
                                 <div class="container" id="courrierCabinet">
                                     <div class="form-group">
-                                        <label>Courriers Arrivés Cabinet</label>  
+                                        <label>Courriers Arrivés Cabinet</label>
                                         <select class="form-control select2"  id="courrierArriverCabinetSelect" name="idCourierLier[]" style="width:100%">
                                             <option value=""></option>
                                             @foreach($courriersArriverCabinet as $cabinet)
                                                 @if($cabinet->slug)
-                                                    <option value="{{ $cabinet->slug }}">{{ $cabinet->numero }} {{ $cabinet->objet }}</option>
+                                                    <option value="{{ $cabinet->slug }}">N° {{ $cabinet->numero }} - {{ $cabinet->objet }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
                                     </div>
 
-                                    
+
                                     <div class="form-group">
                                         <label>Courriers Départs Cabinet</label>
                                         <select class="form-control select2"  id="courrierDepartCabinetSelect" name="idCourierLier[]" style="width:100%">
                                             <option value=""></option>
                                             @foreach($courriersDepartCabinet as $cabinet)
                                                 @if($cabinet->slug)
-                                            
-                                                    <option value="{{ $cabinet->slug }}">{{ $cabinet->numCourier }} {{ $cabinet->objet }}</option>
+
+                                                    <option value="{{ $cabinet->slug }}">N° {{ $cabinet->numCourier }} - {{ $cabinet->objet }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                               
+
 
                                 @if(empty($courierArriverLiers) && !empty($courierDepartLiers))
                                    <input type="hidden" name="cleCommune" value="{{$courierDepartLiers[0]->cleCommune}}">
@@ -546,7 +576,7 @@ setlocale(LC_TIME, 'fr_FR');
                                 @endif
 
                                 <input type="hidden" name="slugCourier"  id="slugCourier"   value="{{$courier->slug}}">
-                           
+
                                 <div class="row mrg-0">
 
                                     <div class="col-12">
@@ -560,7 +590,7 @@ setlocale(LC_TIME, 'fr_FR');
 
                                 </div>
                             </form>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -569,11 +599,11 @@ setlocale(LC_TIME, 'fr_FR');
     </div>
 </div>
 <!-- End modal-courier lier -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     document.getElementById('cr').classList.add('active');
 </script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -604,7 +634,7 @@ setlocale(LC_TIME, 'fr_FR');
                 $('#clientCourrier').show();
                 $('#courrierCabinet').hide();
                 $('#suggererClient').hide();
-                
+
                 resetClientSection();
             } else if ($(this).attr('id') === 'cabinet') {
                 $('#clientCourrier').hide();
@@ -616,18 +646,16 @@ setlocale(LC_TIME, 'fr_FR');
                 $('#courrierCabinet').hide();
                 $('#suggererClient').show();
 
-                
+
                 resetCabinetSelection(); // Ne pas vider les options !
             }
 
-            
+
         });
 
     });
 
 </script>
-
-
 
 
 @endsection

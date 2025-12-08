@@ -20,21 +20,32 @@
 
 <div class="container-fluid">
 
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"><i class="fa fa-balance-scale"></i> Procédures >  <span class="label bg-info"><b>Création</b></span></h4>
+<div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+    <!-- Bloc gauche : icône + titre -->
+    <div class="d-flex align-items-center mb-2 mb-md-0">
+        <div class="icon-wrapper theme-bg">
+            <i class="fa fa-balance-scale text-white"></i>
         </div>
-
-        <div class="col-md-7 text-right">
-
-            <div class="btn-group">
-                <a href="{{ route('listAudience', 'generale') }}" class="cl-white theme-bg btn btn-default btn-rounded" title="Voir la liste des audiences">
-                    <i class="fa fa-navicon"></i> Liste des audiences
-                </a>
-            </div>
+        <div class="ms-3">
+            <h4 class="page-title mb-1 fw-bold">
+                Procédures
+                <span class="page-subtitle">› Création</span>
+            </h4>
         </div>
     </div>
+
+    <!-- Bloc droit : bouton d’action -->
+    <div class="d-flex align-items-center mt-2 mt-md-0">
+        <a href="{{ route('listAudience', 'generale') }}" 
+        class="btn btn-gradient-custom shadow-sm" 
+        title="Voir la liste des audiences">
+            <i class="fa fa-navicon me-1"></i> Liste des audiences
+        </a>
+    </div>
+
+</div>
+
     <!-- Title & Breadcrumbs-->
 
 
@@ -44,8 +55,8 @@
             @csrf
                 <div class="card padd-10">
                     <div class="panel-group accordion-stylist" id="accordion" role="tablist" aria-multiselectable="true">
-
-
+                   
+                   
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="headingOne">
                                 <h4 class="panel-title">
@@ -104,7 +115,7 @@
                                                     <option value="contentieux">Contentieuse / Contradictoire</option>
                                                     <option value="requete">Procédure sur requête</option>
                                                 </select>
-
+                                               
                                             </div>
                                         </div>
                                         <div class="col-md-12 col-sm-12" id="orientationProcedurale">
@@ -140,7 +151,7 @@
                                                         <option value="Requête conjointe">Requête conjointe</option>
                                                         <option value="Autres">Autres</option>
                                                     </select>
-
+                                                
                                                 </div>
                                             <!-- <div class="col-md-12" id="divRequerent" hidden>
                                                 <div class="row mrg-0">
@@ -152,13 +163,13 @@
                                                             <th>Forme sociale (personne morale)</th>
                                                             <th></th>
                                                         </tr>
-
+                                                        
                                                         <tr>
                                                             <td><input type="text" name="formsetMentionRequete[0][nomRequerent]" placeholder="" class="form-control" id="" required/></td>
                                                             <td><input type="text" name="formsetMentionRequete[0][adresseRequerent]" placeholder="" class="form-control" id="" required/></td>
                                                             <td><input type="text" name="formsetMentionRequete[0][formeSocialeRequerent]" placeholder="" class="form-control" id="" required/></td>
-
-
+                                                            
+            
                                                             <td>
                                                                 <button type="button" name="add" id="dynamic-requeteMention" onclick=""
                                                                     class="btn btn-sm btn-outline-default bg-primary cl-white btn-circle">
@@ -170,7 +181,7 @@
                                                     </table>
                                                 </div>
                                             </div> -->
-
+                                                                              
                                         </div>
                                         <div class="col-md-4 col-sm-12">
                                             <div class="form-group">
@@ -180,7 +191,7 @@
                                                     <option value="oui">-- OUI --</option>
                                                     <option value="non">-- NON --</option>
                                                 </select>
-
+                                               
                                             </div>
                                         </div>
                                         <div class="col-md-4 cacher" id="clientContent-req" hidden>
@@ -208,7 +219,7 @@
                                                 <label for="affaire" class="control-label">Affaire du client
                                                     concerné*
                                                     :</label>
-                                                <select data-placeholder="Affaire du client concerné" style="width: 100%;height:28px" name="" id="affaireClient-req" >
+                                                <select data-placeholder="Affaire du client concerné" style="width: 100%;height:28px" name="" id="affaireClient-req" class="form-select select2">
 
                                                 </select>
                                                 <div class="help-block with-errors"></div>
@@ -276,29 +287,17 @@
                                         </div>
                                     </div>
                                     <div class="row mrg-0" id="formInstruction" hidden>
-                                        <!--
                                         <div class="col-md-12" style="text-align:center ;">
                                             <h2>Instruction ( Facultatif )</h2>
                                             <hr>
-                                        </div> -->
-                                        {{-- <div class="col-md-6">
+                                        </div>
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="inputPr" class="control-label">importer un fichier :</label>
                                                 <input type="file" class="fichiers form-control" id="" placeholder="pièce jointe" data-error=" veillez joindre la pièce de l'assignation" name="pieceInstruction" accept="image/*,.pdf, .doc, docx">
                                                 <div class="help-block with-errors"></div>
                                             </div>
-                                        </div> --}}
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="" class="control-label">Nature :</label>
-                                                <select name="pieceInstruction" class="form-select select2" style="width:100%">
-                                                    <option value="" selected disabled>-- Choisissez une option --</option>
-                                                    <option value="Enquête">1.Enquête</option>
-                                                    <option value="Information">2.Information</option>
-                                                    <option value="Jugement">3.Jugement</option>
-
-                                                </select>
-                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -332,11 +331,11 @@
                                         <th>Importez les pièces ici</th>
                                         <th></th>
                                     </tr>
-
+                                    
                                     <tr>
                                         <td><input type="file" name="formsetPiece[0][autrePieces]" accept=".pdf"
                                                 placeholder="" class="form-control" id="piece" required/>
-
+                                
 
                                         <td><button type="button" name="add" id="dynamic-piece" onclick="formsetPiece()"
                                                 class="cl-white theme-bg btn btn-outline-default"><i
@@ -349,10 +348,10 @@
                     </div>
                     <div class="form-group">
                         <div class="text-center">
-                            <button type="submit" id="submitButton" class="theme-bg btn btn-rounded btn-block" style="width:50%;">Enregistrer</button>
+                            <button type="submit" id="submitButton" class="theme-bg btn btn-rounded btn-block"><i class="fa fa-save"></i> Enregistrer</button>
                         </div>
                     </div>
-
+                   
                 </div>
             </form>
         </div>
@@ -416,16 +415,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (typeProcedure === 'contentieux' && parties.length < 2) {
             Swal.fire({
                 title: 'Attention !',
-                text: "Il faut obligatoirement au moins deux parties?",
+                text: "Il faut obligatoirement au moins deux parties",
                 icon: 'warning',
-                showCancelButton: true,
                 confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                cancelButtonText: 'Annuler'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                }
+                confirmButtonText: 'OK'
             });
+
         } else if (typeProcedure === 'requete' && parties.length < 2) {
             Swal.fire({
                 title: 'Attention !',
@@ -452,10 +447,10 @@ document.addEventListener('DOMContentLoaded', function () {
 // Controle de la taille des fichiers
 document.addEventListener("DOMContentLoaded", function() {
     var forms = document.querySelectorAll("form");
-
+   
     for (var i = 0; i < forms.length; i++) {
         forms[i].addEventListener("submit", function (e) {
-
+           
             var fichiersInput = this.querySelectorAll(".fichiers"); // Sélectionne tous les éléments avec la classe "fichier" à l'intérieur du formulaire courant
 
             var tailleMaxAutorisée = 104857600; // Taille maximale autorisée en octets (1 Mo ici)
@@ -578,7 +573,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 data-placeholder="Choisissez..." >
                                  <option value="" selected disabled>-- Choisissez --</option>
                                 <option value='in'>Intervenant</option>
-                                <option value='pc'>Partie civile</option>
+                               
                                 <option value='mp'>Ministère public</option>
                             </select>
                         </div>
@@ -591,7 +586,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 class="form-select select2" style="width:100%"
                                 data-placeholder="Choisissez..."  required>
                                  <option value="" selected disabled>-- Choisissez --</option>
-                                 <option value='1'>
+                                 <option value='1'> 
                                             @if(Session::has('cabinetSession'))
                                                 @foreach (Session::get('cabinetSession') as $cabinet)
                                                     {{$cabinet->nomCourt}}
@@ -632,7 +627,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <label for="affaire" class="control-label">Affaire du client
                                 concerné*
                                 :</label>
-                            <select class="" data-placeholder="Affaire du client concerné"
+                            <select class="form-select select2" data-placeholder="Affaire du client concerné"
                                 style="width: 100%;height:28px" name="formset[` + i + `][idAffaire]"
                                 id="affaireClient-` + i + `" >
 
@@ -641,7 +636,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         </div>
 
                     </div>
-
+                   
                     <div class="col-md-6 cacher" id="otherAvocats-` + i + `" hidden>
                         <div class="form-group">
                             <label for="personne" class="control-label">Ajouter des
@@ -899,9 +894,9 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <label class="custom-control custom-radio">
                                     <input id="roleASKa-` + i + `" name="formset[` + i + `][role]"
                                         type="radio" class="custom-control-input" onclick="var id=` + i + `; roleASKa(id)"
-                                        value="Prevenu / Accusé" required>
+                                        value="Prévenu(e) / Accusé(e)" required>
                                     <span class="custom-control-indicator"></span>
-                                    <span class="custom-control-description">Prevenu / Accusé</span>
+                                    <span class="custom-control-description">Prévenu(e) / Accusé(e)</span>
                                 </label>
                             </div>
                         </div>
@@ -940,7 +935,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                     data-placeholder="Choisissez..." >
                                      <option value="" selected disabled>-- Choisissez --</option>
                                     <option value='in'>Intervenant</option>
-                                    <option value='pc'>Partie civile</option>
+                                   
                                     <option value='mp'>Ministère public</option>
                                 </select>
                             </div>
@@ -953,7 +948,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                     class="form-select select2" style="width:100%"
                                     data-placeholder="Choisissez..."  required>
                                      <option value="" selected disabled>-- Choisissez --</option>
-                                     <option value='1'>
+                                     <option value='1'> 
                                             @if(Session::has('cabinetSession'))
                                                 @foreach (Session::get('cabinetSession') as $cabinet)
                                                     {{$cabinet->nomCourt}}
@@ -994,7 +989,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <label for="affaire" class="control-label">Affaire du client
                                     concerné*
                                     :</label>
-                                <select class="" data-placeholder="Affaire du client concerné"
+                                <select class="form-select select2" data-placeholder="Affaire du client concerné"
                                     style="width: 100%;height:28px" name="formset[` + i + `][idAffaire]"
                                     id="affaireClient-` + i + `" >
 
@@ -1301,7 +1296,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                         data-placeholder="Choisissez..." >
                                          <option value="" selected disabled>-- Choisissez --</option>
                                         <option value='in'>Intervenant</option>
-                                        <option value='pc'>Partie civile</option>
+                                       
                                         <option value='mp'>Ministère public</option>
                                     </select>
                                 </div>
@@ -1314,7 +1309,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                         class="form-select select2" style="width:100%"
                                         data-placeholder="Choisissez..." required>
                                          <option value="" selected disabled>-- Choisissez --</option>
-                                         <option value='1'>
+                                         <option value='1'> 
                                             @if(Session::has('cabinetSession'))
                                                 @foreach (Session::get('cabinetSession') as $cabinet)
                                                     {{$cabinet->nomCourt}}
@@ -1355,7 +1350,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                     <label for="affaire" class="control-label">Affaire du client
                                         concerné*
                                         :</label>
-                                    <select class="" data-placeholder="Affaire du client concerné"
+                                    <select class="form-select select2" data-placeholder="Affaire du client concerné"
                                         style="width: 100%;height:28px" name="formset[` + i + `][idAffaire]"
                                         id="affaireClient-` + i + `" >
 
@@ -1663,7 +1658,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 data-placeholder="Choisissez..." >
                                  <option value="" selected disabled>-- Choisissez --</option>
                                 <option value='in'>Intervenant</option>
-                                <option value='pc'>Partie civile</option>
+                               
                                 <option value='mp'>Ministère public</option>
                             </select>
                         </div>
@@ -1676,7 +1671,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 class="form-select select2" style="width:100%"
                                 data-placeholder="Choisissez..."  required>
                                  <option value="" selected disabled>-- Choisissez --</option>
-                                 <option value='1'>
+                                 <option value='1'> 
                                             @if(Session::has('cabinetSession'))
                                                 @foreach (Session::get('cabinetSession') as $cabinet)
                                                     {{$cabinet->nomCourt}}
@@ -1717,7 +1712,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <label for="affaire" class="control-label">Affaire du client
                                 concerné*
                                 :</label>
-                            <select class="" data-placeholder="Affaire du client concerné"
+                            <select class="form-select select2" data-placeholder="Affaire du client concerné"
                                 style="width: 100%;height:28px" name="formset[` + i + `][idAffaire]"
                                 id="affaireClient-` + i + `" >
 
@@ -2025,7 +2020,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 data-placeholder="Choisissez..." >
                                 <option value="" selected disabled>-- Choisissez --</option>
                                 <option value='in'>Intervenant</option>
-                                <option value='pc'>Partie civile</option>
+                               
                                 <option value='mp'>Ministère public</option>
                             </select>
                         </div>
@@ -2038,7 +2033,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 class="form-select select2" style="width:100%"
                                 data-placeholder="Choisissez..."  required>
                                 <option value="" selected disabled>-- Choisissez --</option>
-                                <option value='1'>
+                                <option value='1'> 
                                             @if(Session::has('cabinetSession'))
                                                 @foreach (Session::get('cabinetSession') as $cabinet)
                                                     {{$cabinet->nomCourt}}
@@ -2079,7 +2074,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <label for="affaire" class="control-label">Affaire du client
                                 concerné*
                                 :</label>
-                            <select class="" data-placeholder="Affaire du client concerné"
+                            <select class="form-select select2" data-placeholder="Affaire du client concerné"
                                 style="width: 100%;height:28px" name="formset[` + i + `][idAffaire]"
                                 id="affaireClient-` + i + `" >
 
@@ -2088,7 +2083,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         </div>
 
                     </div>
-
+                
                     <div class="col-md-6 cacher" id="otherAvocats-` + i + `" hidden>
                         <div class="form-group">
                             <label for="personne" class="control-label">Ajouter des
@@ -2342,7 +2337,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const domicil = "#domicil-" + id;
         const personneOption = "#domicil-" + id;
 
-
+       
 
         $(representantLegal).removeAttr('required');
         $(formeLegal).removeAttr('required');
@@ -2359,12 +2354,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         $(prenom).attr('required', true);
         $(nom).attr('required', true);
-        $(profession).attr('required', true);
-        $(nationalite).attr('required', true);
-        $(dateNaissance).attr('required', true);
-        $(lNaissance).attr('required', true);
-        $(pays).attr('required', true);
-        $(domicil).attr('required', true);
+       
     }
 
     // Si le choix du type est personne morale
@@ -2416,7 +2406,7 @@ document.addEventListener("DOMContentLoaded", function() {
         $(domicil).val('');
     }
 
-
+    
     // Function to validate dates on change
     function validateDatesAss() {
                 const dateAssignation = new Date(document.getElementById('dateAssignation').value);
@@ -2435,7 +2425,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 $('#submitButton').removeClass('btn-default');
                 $('#submitButton').addClass('theme-bg');
             }
-
+            
     }
 
     // Function to validate dates on change
@@ -2463,7 +2453,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-
+           
 </script>
 
 <script>

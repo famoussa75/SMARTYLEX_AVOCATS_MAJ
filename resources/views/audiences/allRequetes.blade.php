@@ -2,29 +2,30 @@
 @section('title','Liste des audiences')
 @section('content')
 <div class="container-fluid">
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-           
-            <h4 class="theme-cl"><i class="fa fa-balance-scale"></i> Procédures > <span class="label bg-info"><b>Non contradictoires</b></span> </label></h4>
-        </div>
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
 
-        <div class="col-md-7 text-right">
-
-            <div class="btn-group">
-                <a href="{{ route('addAudience') }}" title="Créer une audience"
-                    class="cl-white theme-bg btn  btn-rounded">
-                    <i class="fa fa-plus"></i> Créer une nouvelle procédure
-                </a>
+        <!-- Bloc gauche : icône + titre -->
+        <div class="d-flex align-items-center mb-2 mb-md-0">
+            <div class="icon-wrapper theme-bg">
+                <i class="fa fa-balance-scale text-white"></i>
             </div>
-           
-            <!-- <div class="btn-group">
-                <a href="{{ route('createJonctionEtape1') }}" title="Créer une audience"
-                    class="cl-white theme-bg btn  btn-rounded">
-                    <i class="fa fa-plus"></i> Créer une jonction
-                </a>
-            </div> -->
+            <div class="ms-3">
+                <h4 class="page-title mb-1 fw-bold">
+                    Procédures
+                    <span class="page-subtitle">› Non contradictoires</span>
+                </h4>
+            </div>
         </div>
+
+        <!-- Bloc droit : bouton d’action -->
+        <div class="d-flex align-items-center mt-2 mt-md-0">
+            <a href="{{ route('addAudience') }}" 
+            class="btn btn-gradient-custom shadow-sm" 
+            title="Créer une audience">
+                <i class="fa fa-plus me-1"></i> Créer une nouvelle procédure
+            </a>
+        </div>
+
     </div>
 
 
@@ -97,7 +98,7 @@
                         <th>Objet</th>
                         <th>Type de requête</th>
                         <!--<th>Juridiction présidentielle</th>-->
-                        <th>demande</th>
+                        <th>Demande</th>
                         <th>Parties</th>
                         <th>Date requête</th>
                         <th>Statut</th>
@@ -105,10 +106,10 @@
                 </thead>
                 <tbody>
                     @foreach ($requetes as $row)
-                    <tr>
+                    <tr onclick="window.location='{{ route('detailRequete', $row->slug) }}'" style="cursor:pointer;">
                         
                         <td>{{ $loop->iteration }}</td>
-                        <td><a href="{{ route('detailRequete', $row->slug) }}">{{ $row->objet }}</a></td>
+                        <td>{{ $row->objet }}</td>
                         <td>{{ $row->typeRequete }}</td>
                        <!-- <td>{{ $row->juridictionPresidentielle }}</td> -->
                         <td>{{ $row->demandeRequete }}</td> 
@@ -149,15 +150,13 @@
                                 @endforeach
 
                         </td>
-                       
-                            @if(empty($row->dateRequete))
-                            <td>
-                                <span>N/A</span>
-                            </td>
+                        <td> 
+                            @if (empty($row->dateRequete) || $row->dateRequete == 'N/A')
+                                N/A
                             @else
-                            <td>{{ date('d/m/Y', strtotime($row->dateRequete)) }} </td>
-                             
+                                {{ date('d/m/Y', strtotime($row->dateRequete)) }}
                             @endif
+                        </td>
                         <td>
                             <!--
                                 <span>

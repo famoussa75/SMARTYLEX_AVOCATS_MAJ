@@ -24,6 +24,20 @@
     .clignotante {
         animation: clignotement 1s infinite;
     }
+
+   .break-text {
+        flex: 1;                 /* prend toute la largeur disponible */
+        min-width: 0;            /* IMPORTANT: autorise le texte à se couper */
+    }
+
+    .break-text h4, 
+    .break-text span, 
+    .break-text a {
+        white-space: normal;     /* autorise les retours à la ligne */
+        word-wrap: break-word;   /* coupe les mots trop longs */
+    }
+
+
 </style>
 
 @if(empty($audience))
@@ -330,95 +344,90 @@
 @else
 <div class="container-fluid @if (Auth::user()->role=='Client') bg-secondary @else  @endif ">
 
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="row col-md-12 align-self-center">
-            <div class="col-md-8">
-                @empty($cabinet)
-                @else
-                <h5 class="theme-cl">
-                    <b> {{ $cabinet[0]->idClient }}</b>
-                    >
-                     @if($is_client==true || Auth::user()->role=='Administrateur')
-                    <a class="load theme-cl"
-                        href="{{route('clientInfos', [$cabinet[0]->idClient, $cabinet[0]->clientslug])}}">
-                        {{ $cabinet[0]->prenom }} {{ $cabinet[0]->nom }} {{ $cabinet[0]->denomination }}
-                    </a>
+<div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+    {{-- Breadcrumb & Titre --}}
+    <div class="d-flex align-items-center mb-2 mb-md-0 break-text">
+        <div class="icon-wrapper me-3">
+            <i class="fa fa-gavel"></i>
+        </div>
+        <div class="ms-2 d-flex flex-column">
+            @empty($cabinet)
+                <h5 class="page-title mb-1">Audience</h5>
+            @else
+            <h4 class="page-title ">
+                    Audience
+                    <span class="me-1 fw-bold">&nbsp;› {{ $cabinet[0]->idClient }}</span>
+
+                    @if($is_client || Auth::user()->role=='Administrateur')
+                        <a class="load page-subtitle text-decoration-none me-1"
+                            href="{{ route('clientInfos', [$cabinet[0]->idClient, $cabinet[0]->clientslug]) }}">
+                            &nbsp;› {{ $cabinet[0]->prenom }} {{ $cabinet[0]->nom }} {{ $cabinet[0]->denomination }}
+                        </a>
                     @else
-                    <a class="load theme-cl"
-                        href="#">
-                        {{ $cabinet[0]->prenom }} {{ $cabinet[0]->nom }} {{ $cabinet[0]->denomination }}
-                    </a>
+                        <span class="page-subtitle me-1">&nbsp;› {{ $cabinet[0]->prenom }} {{ $cabinet[0]->nom }} {{ $cabinet[0]->denomination }}</span>
                     @endif
-                    >
-                    @if (Auth::user()->role=='Client')
-                    <a class="load theme-cl" href="#">
-                        {{ $cabinet[0]->idAffaire }} {{ $cabinet[0]->nomAffaire }}
-                    </a>
+
+                    @if(Auth::user()->role=='Client')
+                        <span class="page-subtitle me-1">&nbsp;› {{ $cabinet[0]->idAffaire }} {{ $cabinet[0]->nomAffaire }}</span>
                     @else
-                         @if($is_client==true || Auth::user()->role=='Administrateur')
-                            <a class="load theme-cl"
+                        @if($is_client || Auth::user()->role=='Administrateur')
+                            <a class="load page-subtitle text-decoration-none me-1"
                                 href="{{ route('showAffaire', [$cabinet[0]->idAffaire,$cabinet[0]->affaireslug]) }}">
-                                {{ $cabinet[0]->idAffaire }} {{ $cabinet[0]->nomAffaire }}
+                                &nbsp;› {{ $cabinet[0]->idAffaire }} {{ $cabinet[0]->nomAffaire }}
                             </a>
                         @else
-                        <a class="load theme-cl"
-                                href="#">
-                                {{ $cabinet[0]->idAffaire }} {{ $cabinet[0]->nomAffaire }}
-                            </a>
+                            <span class="page-subtitle me-1">&nbsp;› {{ $cabinet[0]->idAffaire }} {{ $cabinet[0]->nomAffaire }}</span>
                         @endif
                     @endif
+                
+                </h4>
+            @endempty
 
-                    >
-                    <span class="label bg-info"><b>Audience</b></span>
+            {{-- Date / Statut --}}
+            <small class="text-muted mt-1">
+                @if(!empty($audience))
+                    Ouvert le : <span class="label bg-danger-light">{{ date('d-m-Y', strtotime($audience[0]->dateOuverture ?? now())) }}</span>
+                @endif
+            </small>
+        </div>
+    </div>
 
-                </h5>
+    <div class="d-flex align-items-center mt-2 mt-md-0">
+        <a href="{{ route('listAudience', 'generale') }}" class="btn btn-outline-primary-custom me-2">
+            <i class="fa fa-eye me-1"></i> Voir les audiences
+        </a>
+
+        &nbsp;
+
+        <div class="dropdown">
+            <button class="btn btn-gradient-custom dropdown-toggle @if(!empty($audience) && $audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" 
+                type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Options
+            </button>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                <a class="dropdown-item" href="{{ route('addAudience') }}">
+                    <i class="ti-plus me-2"></i>Créer une audience
+                </a>
+                @if(!empty($audience))
+                    <a class="dropdown-item" href="{{ route('editAudience',[$audience[0]->slug,$audience[0]->idAudience]) }}">
+                        <i class="ti-pencil me-2"></i>Editer
+                    </a>
+                    <a class="dropdown-item" href="{{ route('newLevel',[$audience[0]->slug,$audience[0]->idAudience]) }}">
+                        <i class="ti-shift-right-alt me-2"></i>Changer de niveau
+                    </a>
+                    <a class="dropdown-item" href="{{ route('terminerAudience',[$audience[0]->slug]) }}">
+                        <i class="fa fa-check me-2"></i>Terminer l'audience
+                    </a>
+                    <a class="dropdown-item text-danger" href="{{ route('deleteAud',[$audience[0]->idAudience]) }}">
+                        <i class="ti-trash me-2"></i>Supprimer & Reprendre
+                    </a>
                 @endif
             </div>
-            <div class="col-md-4 text-right" style="float:right">
-                <div class=" btn-group">
-                    <a href="{{ route('listAudience', 'generale') }}" class="load btn btn-secondary">
-                        <i class="fa fa-eye"></i> Voir les audiences
-                    </a>
-                </div>
-
-                &nbsp;&nbsp;
-                <div class="dropdown" style="float: right ;">
-                    <button class="btn btn-rounded theme-bg dropdown-toggle @if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" type="button" id="dropdownMenuButton1"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Options
-                    </button>
-
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1" x-placement="top-start"
-                        style="position: absolute; transform: translate3d(0px, -18px, 0px); top: 0px; left: 0px; will-change: transform;">
-                        <a class=" dropdown-item " href="{{ route('addAudience') }}" title="Nouvelle audience"><i
-                                class="ti-plus mr-2"></i>Créer une audience</a>
-                        <a class=" dropdown-item " href="{{route('editAudience',[$audience[0]->slug,$audience[0]->idAudience])}}" title="Modifier cette audience"><i
-                                class="ti-pencil mr-2"></i>Editer</a>
-                        <a class=" dropdown-item "
-                            href="{{route('newLevel',[$audience[0]->slug,$audience[0]->idAudience])}}"
-                            title="Passer d'un niveau procedural à un autre"><i class="ti-shift-right-alt"></i> Changer
-                            de niveau</a>
-                        <a class=" dropdown-item " href="{{route('terminerAudience',[$audience[0]->slug])}}"
-                            title="Terminé l'audience"><i class="fa fa-check"></i> Terminé l'audience</a>
-                        <a class=" dropdown-item " href="{{route('deleteAud',[$audience[0]->idAudience])}}"
-                            title="Reprendre cet audience"><i class="ti-trash mr-2"></i>Supp & Reprendre</a>
-
-                            <div class="dropdown-item text-center">
-                                <button class="btn btn-sm btn-primary hidden-print" onclick="exportDivToPDF()">
-                                    <i class="ti-download mr-1"></i> Télécharger PDF
-                                </button>
-                            </div>
-
-
-                    </div>
-                </div>
-            </div>
-
-
         </div>
-
     </div>
+
+</div>
 
     <div class="row" id="pdfContent1">
         <div class="col-md-12">
@@ -767,12 +776,12 @@
                         <i class="fa fa-warning"></i>&nbsp;<b style="font-size:16px">Signification :</b> Le délibéré a été vidé. Voulez-vous signifier ?&nbsp;
                          <div style="float:right;">
                             <a href="#" type="button" class="btn btn-primary alert-link" style="color:white" data-toggle="modal" data-target="#modal-signifier">
-                                <i class="fa fa-arrow-right"></i>&nbsp;Oui, signifier
+                                <i class="fa fa-arrow-right"></i>&nbsp;Oui
                             </a>
                             &nbsp;&nbsp;
                             @if (Auth::user()->role=='Administrateur')
                             <a href="{{ route('annulerSignification',$s->slug) }}" type="button" class="btn btn-danger alert-link" style="color:white">
-                                <i class="fa fa-close"></i>&nbsp;Non, ne pas signifier
+                                <i class="fa fa-close"></i>&nbsp;Non
                             </a>
                             @endif
                          </div>
@@ -781,7 +790,7 @@
                 @endif
 
             @endforeach
-<!--id="audienceInfos" -->
+
             <div class="card" >
                 <div class="row col-md-12 mt-4 mb-4">
                     <div class="col-md-6 input-group">
@@ -790,7 +799,7 @@
                                 aria-haspopup="true" aria-expanded="true">
                                 Filtrer par niveau
                             </button>
-                            <div class="dropdown-menu show" x-placement="top-start"
+                            <div class="dropdown-menu" x-placement="top-start"
                                 style="position: absolute; transform: translate3d(0px, -213px, 0px); top: 0px; left: 0px; will-change: transform;">
                                 <a class="load dropdown-item"
                                     href="{{ route('detailAudience', ['id' => $idAudience, 'slug' => $audience[0]->slug,'1ère instance'])}}">1ère
@@ -894,7 +903,7 @@
                                                             <small class="">N/A</small>
                                                             @else
                                                             <small
-                                                                class="label bg-danger">{{ date('d/m/Y', strtotime($suivi->dateLimite))}}</small>
+                                                                class="label bg-danger">{{ $suivi->dateLimite? date('d/m/Y', strtotime($suivi->dateLimite)) :'N/A' }}</small>
                                                             @endif
                                                         </td>
                                                         @if($suivi->email=="envoyer")
@@ -924,7 +933,7 @@
                                                             @if($suivi->suiviPar==Auth::user()->name)
                                                             <small>
                                                                 <a href="{{route('deleteSuiviAppel',$suivi->slug)}}"
-                                                                    type="" class="@if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" title="supprimer"
+                                                                    type="" class="@if($audience[0]->statut=='Jonction') non-cliquable bg-secondary @endif" onclick="event.preventDefault(); confirmDelete(this.href)" title="supprimer"
                                                                     style="font-size:5px;color:red"><i
                                                                         class="ti-trash"></i></a>
                                                             </small>
@@ -1037,7 +1046,7 @@
                                                                 class="label bg-info">N/A</small>
                                                             @else
                                                                 <small
-                                                                    class="label bg-info">{{ date('d/m/Y', strtotime( $suivi->dateAudience))}}</small>
+                                                                    class="label bg-info">{{$suivi->dateAudience? date('d/m/Y', strtotime( $suivi->dateAudience)) :'N/A'}}</small>
                                                             @endif
                                                         </td>
                                                         <td>
@@ -1045,7 +1054,7 @@
                                                             <small class="label bg-warning">N/A</small>
                                                             @else
                                                             <small
-                                                                class="label bg-info">{{ date('d/m/Y', strtotime( $suivi->dateProchaineAudience))}}</small>
+                                                                class="label bg-info">{{$suivi->dateProchaineAudience? date('d/m/Y', strtotime( $suivi->dateProchaineAudience)):'N/A' }}</small>
                                                             @endif
                                                         </td>
                                                         <td>
@@ -2354,7 +2363,7 @@
                                     <div class="timeline-body">
                                         <div class="col-md-12">
 
-                                             <h4 class="text text-center bg-primary  text-white m-2 p-2"> Procédure contraditoires </h4>
+                                             <h4 class="text text-center bg-primary-light  text-white m-2 p-2"> Procédure contraditoires </h4>
 
                                              @if((empty($audiences_contraditoire) && empty($audiences_contraditoire_lier)))
                                                 <h4 class="text-center">
@@ -2384,7 +2393,7 @@
                                                                             @if($client->idAudience == $r->idAudience)
 
 
-                                                                                {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}
+                                                                                {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }} {{ $client->denomination ?? '' }}
                                                                                 c/
 
                                                                                 @foreach($procedure_autreRole as $p1)
@@ -2468,7 +2477,7 @@
                                                                     @if($client->idAudience == $r->idAudience)
 
 
-                                                                        {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}
+                                                                        {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }} {{ $client->denomination ?? '' }}
                                                                         c/
 
                                                                         @foreach($procedure_autreRole1 as $p1)
@@ -2527,7 +2536,7 @@
 
 
 
-                                            <h4 class="text text-center bg-primary  text-white m-2 p-2" >Procédure  non  contraditoires </h4>
+                                            <h4 class="text text-center bg-primary-light  text-white m-2 p-2" >Procédure  non  contraditoires </h4>
 
 
                                             @if((empty($procedure_requete) && empty($requete_contraditoire)))
@@ -2558,7 +2567,7 @@
                                                                 {{-- Clients liés à l'audience en cours avec leur rôle --}}
                                                                 @foreach($procedure_requete_clients as $client)
                                                                     @if($client->idProcedureLier == $r->idProcedureLier)
-                                                                        {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}
+                                                                        {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }} {{ $client->denomination ?? '' }}
                                                                         c/
                                                                         @foreach($procedure_autreRole_requete as $p1)
 
@@ -2719,8 +2728,8 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <div class="text-center">
-                                    <button type="" class="theme-bg btn btn-rounded btn-block " style="width:50%;">
-                                        Enregistrer</button>
+                                    <button type="submit" class="theme-bg btn btn-rounded btn-block ">
+                                       <i class="fa fa-save"></i> Enregistrer</button>
                                 </div>
                             </div>
                         </div>
@@ -2775,7 +2784,7 @@
                                 <label for="affaire" class="control-label">Affaire du client
                                     concerné*
                                     :</label>
-                                <select data-placeholder="Affaire du client concerné" style="width: 100%;height:28px" name="" id="affaireClient-req" >
+                                <select data-placeholder="Affaire du client concerné" style="width: 100%;height:28px" name="" id="affaireClient-req" class="form-select select2">
 
                                 </select>
                                 <div class="help-block with-errors"></div>
@@ -2801,8 +2810,8 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <div class="text-center">
-                                    <button type="" class="theme-bg btn btn-rounded btn-block " style="width:50%;">
-                                        Enregistrer</button>
+                                    <button type="submit" class="theme-bg btn btn-rounded btn-block ">
+                                        <i class="fa fa-save"></i> Enregistrer</button>
                                 </div>
                             </div>
                         </div>
@@ -2886,8 +2895,8 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <div class="text-center">
-                                    <button type="" class="theme-bg btn btn-rounded btn-block " style="width:50%;">
-                                        Enregistrer</button>
+                                    <button type="submit" class="theme-bg btn btn-rounded btn-block ">
+                                        <i class="fa fa-save"></i> Enregistrer</button>
                                 </div>
                             </div>
                         </div>
@@ -2921,285 +2930,285 @@
                             @if($audience[0]->niveauProcedural=='Appel')
                             <!-- form appel -->
                             <form class="padd-20" method="post" action="{{route('suiviAudienceAppel')}}" accept-charset="utf-8" enctype="multipart/form-data" id="audienceAppelForm">
-    @csrf
-    <input type="hidden" name="idAudience" value="{{$audience[0]->idAudience}}">
-    <!-- Ajout d'un champ caché pour la date de l'audience actuelle -->
-    <input type="hidden" id="dateAudienceActuelle" value="{{ $audience[0]->dateAudience ?? '' }}">
-    
-    <div class="row mrg-0">
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label for="inputPName" class="control-label">Actes</label>
-                <select class="form-control select js-example-tags" id="acteDecision" data-placeholder="" style="width: 100%;" name="acte" required>
-                    <option value="" selected disabled>-- Choisissez --</option>
-                    <option value="Conclusions">Conclusions</option>
-                    <option value="Invitation à conclure">Invitation à conclure</option>
-                    <option value="Injonction à conclure">Injonction à conclure</option>
-                    <option value="PV de constat de carence">PV de constat de carence</option>
-                    <option value="Avenir d'audience">Avenir d'audience</option>
-                    <option value="Conférence de mise en état/cloture">Conférence de mise en état/cloture</option>
-                    <option value="Mise en délibéré">Mise en délibéré</option>
-                    <option value="Délibéré prorogé">Délibéré prorogé</option>
-                    <option value="Renvoi">Renvoi</option>
-                    <option value="Autre">Autre</option>
-                </select>
-                <div class="help-block with-errors"></div>
-            </div>
-        </div>
-    </div>
+                                @csrf
+                                <input type="hidden" name="idAudience" value="{{$audience[0]->idAudience}}">
+                                <!-- Ajout d'un champ caché pour la date de l'audience actuelle -->
+                                <input type="hidden" id="dateAudienceActuelle" value="{{ $audience[0]->dateAudience ?? '' }}">
 
-    <!-- Sections spécifiques aux actes -->
-    <div class="row mrg-0" id="conclusion" style="display: none;">
-        <div class="col-sm-12">
-            <div class="form-group">
-                <div class="row">
-                    <label for="example-text-input" class="col-3" style="padding-top: 20px;margin-right:-70px;">Conclusions de l'</label>
-                    <div class="col-3">
-                        <select class="form-control select" data-placeholder="" style="width: 100%;margin-top:10px;" id="appelantIntimeConclusion" name="appelantIntimeConclusion">
-                            <option value="" selected disabled>-- Choisissez --</option>
-                            <option value="Appelant">Appelant</option>
-                            <option value="Intimé(e)">Intimé(e)</option>
-                        </select>
-                    </div>
-                    <label for="example-text-input" class="col-3 col-form-label" style="padding-top: 20px;margin-right:-90px;">en date du</label>
-                    <div class="">
-                        <input class="form-control" name="dateActeConclusion" type="date" value="" id="dateActeConclusion">
-                    </div>
-                    <label for="example-text-input" class="col-3 col-form-label" style="padding-top: 20px;margin-right:-80px;">reçues par la cour le</label>
-                    <div class="">
-                        <input class="form-control" name="dateReceptionConclusion" type="date" value="" id="dateReceptionConclusion">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                                <div class="row mrg-0">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="inputPName" class="control-label">Actes</label>
+                                            <select class="form-control select js-example-tags" id="acteDecision" data-placeholder="" style="width: 100%;" name="acte" required>
+                                                <option value="" selected disabled>-- Choisissez --</option>
+                                                <option value="Conclusions">Conclusions</option>
+                                                <option value="Invitation à conclure">Invitation à conclure</option>
+                                                <option value="Injonction à conclure">Injonction à conclure</option>
+                                                <option value="PV de constat de carence">PV de constat de carence</option>
+                                                <option value="Avenir d'audience">Avenir d'audience</option>
+                                                <option value="Conférence de mise en état/cloture">Conférence de mise en état/cloture</option>
+                                                <option value="Mise en délibéré">Mise en délibéré</option>
+                                                <option value="Délibéré prorogé">Délibéré prorogé</option>
+                                                <option value="Renvoi">Renvoi</option>
+                                                <option value="Autre">Autre</option>
+                                            </select>
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
 
-    <div class="row mrg-0" id="invitationAconclure" style="display: none;">
-        <div class="col-sm-12">
-            <div class="form-group">
-                <div class="row">
-                    <label for="example-text-input" class="col-4" style="padding-top: 20px;margin-right:-90px;">Invitation à conclure du</label>
-                    <div class="col-3">
-                        <input class="form-control" name="dateActeInvitation" type="date" value="" id="dateActeInvitation">
-                    </div>
-                    <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-80px;">pour les ecritures de l'</label>
-                    <div class="">
-                        <select class="form-control select js-example-tags" data-placeholder="" style="width: 100%;margin-top:10px" id="appelantIntimeInvitation" name="appelantIntimeInvitation">
-                            <option value="" selected disabled>-- Choisissez --</option>
-                            <option value="Appelant">Appelant</option>
-                            <option value="Intimé(e)">Intimé(e)</option>
-                        </select>
-                    </div>
-                    <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-80px;">à deposer au plutard le</label>
-                    <div class="">
-                        <input class="form-control" name="dateLimiteInvitation" type="date" id="dateLimiteInvitation">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                                <!-- Sections spécifiques aux actes -->
+                                <div class="row mrg-0" id="conclusion" style="display: none;">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label for="example-text-input" class="col-3" style="padding-top: 20px;margin-right:-70px;">Conclusions de l'</label>
+                                                <div class="col-3">
+                                                    <select class="form-control select" data-placeholder="" style="width: 100%;margin-top:10px;" id="appelantIntimeConclusion" name="appelantIntimeConclusion">
+                                                        <option value="" selected disabled>-- Choisissez --</option>
+                                                        <option value="Appelant">Appelant</option>
+                                                        <option value="Intimé(e)">Intimé(e)</option>
+                                                    </select>
+                                                </div>
+                                                <label for="example-text-input" class="col-3 col-form-label" style="padding-top: 20px;margin-right:-90px;">en date du</label>
+                                                <div class="">
+                                                    <input class="form-control" name="dateActeConclusion" type="date" value="" id="dateActeConclusion">
+                                                </div>
+                                                <label for="example-text-input" class="col-3 col-form-label" style="padding-top: 20px;margin-right:-80px;">reçues par la cour le</label>
+                                                <div class="">
+                                                    <input class="form-control" name="dateReceptionConclusion" type="date" value="" id="dateReceptionConclusion">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-    <div class="row mrg-0" id="injonctionAconclure" style="display: none;">
-        <div class="col-sm-12">
-            <div class="form-group">
-                <div class="row">
-                    <label for="example-text-input" class="col-4" style="padding-top: 20px;margin-right:-80px;">Injonction à conclure du</label>
-                    <div class="col-3">
-                        <input class="form-control" name="dateActeInjonction" type="date" value="" id="dateActeInjonction">
-                    </div>
-                    <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-80px;">pour les ecritures de l'</label>
-                    <div class="">
-                        <select class="form-control select" data-placeholder="" style="width: 100%;margin-top:10px" id="appelantIntimeInjonction" name="appelantIntimeInjonction">
-                            <option value="" selected disabled>-- Choisissez --</option>
-                            <option value="Appelant">Appelant</option>
-                            <option value="Intimé(e)">Intimé(e)</option>
-                        </select>
-                    </div>
-                    <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-80px;">à deposer au plutard le</label>
-                    <div class="">
-                        <input class="form-control" name="dateLimiteInjonction" type="date" value="" id="dateLimiteInjonction">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                                <div class="row mrg-0" id="invitationAconclure" style="display: none;">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label for="example-text-input" class="col-4" style="padding-top: 20px;margin-right:-90px;">Invitation à conclure du</label>
+                                                <div class="col-3">
+                                                    <input class="form-control" name="dateActeInvitation" type="date" value="" id="dateActeInvitation">
+                                                </div>
+                                                <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-80px;">pour les ecritures de l'</label>
+                                                <div class="">
+                                                    <select class="form-control select js-example-tags" data-placeholder="" style="width: 100%;margin-top:10px" id="appelantIntimeInvitation" name="appelantIntimeInvitation">
+                                                        <option value="" selected disabled>-- Choisissez --</option>
+                                                        <option value="Appelant">Appelant</option>
+                                                        <option value="Intimé(e)">Intimé(e)</option>
+                                                    </select>
+                                                </div>
+                                                <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-80px;">à deposer au plutard le</label>
+                                                <div class="">
+                                                    <input class="form-control" name="dateLimiteInvitation" type="date" id="dateLimiteInvitation">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-    <div class="row mrg-0" id="pvConstat" style="display: none;">
-        <div class="col-sm-12">
-            <div class="form-group">
-                <div class="row">
-                    <label for="example-text-input" class="col-5" style="padding-top: 20px;margin-right:-100px;">PV de constat de carence fait le</label>
-                    <div class="col-3">
-                        <input class="form-control" name="dateActeConstat" type="date" value="" id="dateActeConstat">
-                    </div>
-                    <div class="form-group mt-4">
-                        <label style="margin-left:16px">par l'huissier &nbsp;&nbsp;</label>
-                        <select class="form-control select2" name="huissierConstat" style="width: 50%;" id="huissierConstat">
-                            <option value="" selected disabled>-- Choisissez --</option>
-                            @foreach ($huissiers as $h )
-                            <option value="{{$h->prenomHss}} {{$h->nomHss}}">
-                                {{$h->prenomHss}} {{$h->nomHss}}
-                            </option>
-                            @endforeach
-                        </select>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                                <div class="row mrg-0" id="injonctionAconclure" style="display: none;">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label for="example-text-input" class="col-4" style="padding-top: 20px;margin-right:-80px;">Injonction à conclure du</label>
+                                                <div class="col-3">
+                                                    <input class="form-control" name="dateActeInjonction" type="date" value="" id="dateActeInjonction">
+                                                </div>
+                                                <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-80px;">pour les ecritures de l'</label>
+                                                <div class="">
+                                                    <select class="form-control select" data-placeholder="" style="width: 100%;margin-top:10px" id="appelantIntimeInjonction" name="appelantIntimeInjonction">
+                                                        <option value="" selected disabled>-- Choisissez --</option>
+                                                        <option value="Appelant">Appelant</option>
+                                                        <option value="Intimé(e)">Intimé(e)</option>
+                                                    </select>
+                                                </div>
+                                                <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-80px;">à deposer au plutard le</label>
+                                                <div class="">
+                                                    <input class="form-control" name="dateLimiteInjonction" type="date" value="" id="dateLimiteInjonction">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-    <div class="row mrg-0" id="avenirConstat" style="display: none;">
-        <div class="col-sm-12">
-            <div class="form-group">
-                <div class="row">
-                    <label for="example-text-input" class="col-4" style="padding-top: 20px;margin-right:-100px;">Avenir d'audience du</label>
-                    <div class="col-3">
-                        <input class="form-control" name="dateActeAvenir" type="date" value="" id="dateActeAvenir">
-                    </div>
-                    <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-170px;">servi par l'</label>
-                    <div class="col-5">
-                        <select class="form-control select" data-placeholder="" style="width: 100%;margin-top:10px" id="appelantIntimeAvenir" name="appelantIntimeAvenir">
-                            <option value="" selected disabled>-- Choisissez --</option>
-                            <option value="Appelant">Appelant</option>
-                            <option value="Intimé(e)">Intimé(e)</option>
-                        </select>
-                    </div>
-                    <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-110px;">pour l'audience du</label>
-                    <div class="">
-                        <input class="form-control" name="dateProchaineAudienceAvenir" type="date" value="" id="dateProchaineAudienceAvenir">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                                <div class="row mrg-0" id="pvConstat" style="display: none;">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label for="example-text-input" class="col-5" style="padding-top: 20px;margin-right:-100px;">PV de constat de carence fait le</label>
+                                                <div class="col-3">
+                                                    <input class="form-control" name="dateActeConstat" type="date" value="" id="dateActeConstat">
+                                                </div>
+                                                <div class="form-group mt-4">
+                                                    <label style="margin-left:16px">par l'huissier &nbsp;&nbsp;</label>
+                                                    <select class="form-control select2" name="huissierConstat" style="width: 50%;" id="huissierConstat">
+                                                        <option value="" selected disabled>-- Choisissez --</option>
+                                                        @foreach ($huissiers as $h )
+                                                        <option value="{{$h->prenomHss}} {{$h->nomHss}}">
+                                                            {{$h->prenomHss}} {{$h->nomHss}}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-    <div class="row mrg-0" id="conference" style="display: none;">
-        <div class="col-sm-12">
-            <div class="form-group">
-                <div class="row">
-                    <label for="example-text-input" class="col-6" style="padding-top: 20px;margin-right:-50px;">Conférence de mise en état/cloture en date du</label>
-                    <div class="col-3">
-                        <input class="form-control" name="dateEtat" type="date" value="" id="dateEtat">
-                    </div>
-                    <label for="example-text-input" class="col-5" style="padding-top: 20px;margin-right:-100px;">Reçu le </label>
-                    <div class="col-3">
-                        <input class="form-control" name="dateConferenceRecu" type="date" value="" id="dateConferenceRecu">
-                    </div>
-                    <label for="example-text-input" class="col-5" style="padding-top: 20px;margin-right:-100px;">Devant se tenir au plus tard le </label>
-                    <div class="col-3">
-                        <input class="form-control" name="dateExpConference" type="date" value="" id="dateExpConference">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                                <div class="row mrg-0" id="avenirConstat" style="display: none;">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label for="example-text-input" class="col-4" style="padding-top: 20px;margin-right:-100px;">Avenir d'audience du</label>
+                                                <div class="col-3">
+                                                    <input class="form-control" name="dateActeAvenir" type="date" value="" id="dateActeAvenir">
+                                                </div>
+                                                <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-170px;">servi par l'</label>
+                                                <div class="col-5">
+                                                    <select class="form-control select" data-placeholder="" style="width: 100%;margin-top:10px" id="appelantIntimeAvenir" name="appelantIntimeAvenir">
+                                                        <option value="" selected disabled>-- Choisissez --</option>
+                                                        <option value="Appelant">Appelant</option>
+                                                        <option value="Intimé(e)">Intimé(e)</option>
+                                                    </select>
+                                                </div>
+                                                <label for="example-text-input" class="col-4 col-form-label" style="padding-top: 20px;margin-right:-110px;">pour l'audience du</label>
+                                                <div class="">
+                                                    <input class="form-control" name="dateProchaineAudienceAvenir" type="date" value="" id="dateProchaineAudienceAvenir">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-    <div class="row mrg-0" id="miseDeliberer" style="display: none;">
-        <div class="col-sm-12">
-            <div class="form-group">
-                <div class="row">
-                    <label for="example-text-input" class="col-6" style="padding-top: 20px;margin-right:-80px;">Mise en délibéré pour décision être rendue le</label>
-                    <div class="col-3">
-                        <input class="form-control dateRecep" name="dateDeliberer" type="date" value="" id="dateDeliberer">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                                <div class="row mrg-0" id="conference" style="display: none;">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label for="example-text-input" class="col-6" style="padding-top: 20px;margin-right:-50px;">Conférence de mise en état/cloture en date du</label>
+                                                <div class="col-3">
+                                                    <input class="form-control" name="dateEtat" type="date" value="" id="dateEtat">
+                                                </div>
+                                                <label for="example-text-input" class="col-5" style="padding-top: 20px;margin-right:-100px;">Reçu le </label>
+                                                <div class="col-3">
+                                                    <input class="form-control" name="dateConferenceRecu" type="date" value="" id="dateConferenceRecu">
+                                                </div>
+                                                <label for="example-text-input" class="col-5" style="padding-top: 20px;margin-right:-100px;">Devant se tenir au plus tard le </label>
+                                                <div class="col-3">
+                                                    <input class="form-control" name="dateExpConference" type="date" value="" id="dateExpConference">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-    <div class="row mrg-0" id="delibererProroger" style="display: none;">
-        <div class="col-sm-12">
-            <div class="form-group">
-                <div class="row">
-                    <label for="example-text-input" class="col-4" style="padding-top: 20px;margin-right:-100px;">Date de l'acte</label>
-                    <div class="col-3">
-                        <input class="form-control" name="dateActeProrogé" type="date" value="" id="dateActeProrogé">
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <label for="example-text-input" class="col-4" style="padding-top: 20px;margin-right:-100px;">Délibéré prorogé au</label>
-                    <div class="col-3">
-                        <input class="form-control" name="dateProrogé" type="date" value="" id="dateProrogé">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                                <div class="row mrg-0" id="miseDeliberer" style="display: none;">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label for="example-text-input" class="col-6" style="padding-top: 20px;margin-right:-80px;">Mise en délibéré pour décision être rendue le</label>
+                                                <div class="col-3">
+                                                    <input class="form-control dateRecep" name="dateDeliberer" type="date" value="" id="dateDeliberer">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-    <div class="row mrg-0" id="Renvoi" style="display: none;">
-        <div class="col-sm-12">
-            <div class="form-group">
-                <div class="row">
-                    <label for="example-text-input" class="col-3" style="padding-top: 20px;margin-right:-100px;">Renvoi au</label>
-                    <div class="col-3">
-                        <input class="form-control" name="dateRenvoiAppel" type="date" value="" id="dateRenvoiAppel" required>
-                        <div class="error-message text-danger" id="dateRenvoiError" style="display: none; font-size: 12px; margin-top: 5px;">
-                            La date de renvoi doit être postérieure à la date de l'audience actuelle.
-                        </div>
-                    </div>
-                    <label for="example-text-input" class="col-2" style="padding-top: 20px;margin-right:-80px;">Pour</label>
-                    <div class="col-6">
-                        <input class="form-control" name="raisonRenvoi" type="text" value="" id="raisonRenvoi" required>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                                <div class="row mrg-0" id="delibererProroger" style="display: none;">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label for="example-text-input" class="col-4" style="padding-top: 20px;margin-right:-100px;">Date de l'acte</label>
+                                                <div class="col-3">
+                                                    <input class="form-control" name="dateActeProrogé" type="date" value="" id="dateActeProrogé">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label for="example-text-input" class="col-4" style="padding-top: 20px;margin-right:-100px;">Délibéré prorogé au</label>
+                                                <div class="col-3">
+                                                    <input class="form-control" name="dateProrogé" type="date" value="" id="dateProrogé">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-    <div class="row mrg-0" id="autreActe" style="display: none;">
-        <div class="row mrg-0">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <div class="form-group">
-                        <div class="flex-box align-items-center">
-                            <label for="PDate" class="control-label">Date de la prochaine audience</label>
-                            <span class="custom-checkbox">
-                                <input type="checkbox" id="NAAppel">
-                                <label for="NAAppel">Non Applicable (N/A)</label>
-                            </span>
-                        </div>
-                    </div>
-                    <input type="date" class="form-control dateProchaine" name="dateProchaineAudience" data-error="veillez entrer la date de la prochaine audience" id="PDateAppel">
-                </div>
-            </div>
-        </div>
+                                <div class="row mrg-0" id="Renvoi" style="display: none;">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label for="example-text-input" class="col-3" style="padding-top: 20px;margin-right:-100px;">Renvoi au</label>
+                                                <div class="col-3">
+                                                    <input class="form-control" name="dateRenvoiAppel" type="date" value="" id="dateRenvoiAppel" required>
+                                                    <div class="error-message text-danger" id="dateRenvoiError" style="display: none; font-size: 12px; margin-top: 5px;">
+                                                        La date de renvoi doit être postérieure à la date de l'audience actuelle.
+                                                    </div>
+                                                </div>
+                                                <label for="example-text-input" class="col-2" style="padding-top: 20px;margin-right:-80px;">Pour</label>
+                                                <div class="col-6">
+                                                    <input class="form-control" name="raisonRenvoi" type="text" value="" id="raisonRenvoi" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-        <div class="form-group">
-            <div class="">
-                <div class="col-9">
-                    <label for="" class="control-label">Mentionnez l'acte ici</label>
-                    <textarea class="form-control" name="autres" id="autres" cols="30" rows="5"></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
+                                <div class="row mrg-0" id="autreActe" style="display: none;">
+                                    <div class="row mrg-0">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <div class="form-group">
+                                                    <div class="flex-box align-items-center">
+                                                        <label for="PDate" class="control-label">Date de la prochaine audience</label>
+                                                        <span class="custom-checkbox">
+                                                            <input type="checkbox" id="NAAppel">
+                                                            <label for="NAAppel">Non Applicable (N/A)</label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <input type="date" class="form-control dateProchaine" name="dateProchaineAudience" data-error="veillez entrer la date de la prochaine audience" id="PDateAppel">
+                                            </div>
+                                        </div>
+                                    </div>
 
-    <div class="row mrg-0">
-        <div class="col-sm-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="header-title m-t-0">Pièces (Facultative)</h4>
-                </div>
-                <div class="card-body">
-                    <input type="file" accept="image/*,.pdf," class="fichiers form-control" name="fichiers[]" multiple>
-                </div>
-            </div>
-        </div>
-    </div>
+                                    <div class="form-group">
+                                        <div class="">
+                                            <div class="col-9">
+                                                <label for="" class="control-label">Mentionnez l'acte ici</label>
+                                                <textarea class="form-control" name="autres" id="autres" cols="30" rows="5"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-    <div class="row mrg-0">
-        <div class="col-md-12">
-            <div class="form-group">
-                <div class="text-center">
-                    <button type="submit" class="theme-bg btn btn-rounded btn-block" style="width:50%;">Enregistrer</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
+                                <div class="row mrg-0">
+                                    <div class="col-sm-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h4 class="header-title m-t-0">Pièces (Facultative)</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <input type="file" accept="image/*,.pdf," class="fichiers form-control" name="fichiers[]" multiple>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mrg-0">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="text-center">
+                                                <button type="submit" class="theme-bg btn btn-rounded btn-block"><i class="fa fa-save"></i> Enregistrer</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                             @else
                             <!-- form premiere instance -->
                             <form class="padd-20" method="post" action="{{ route('suiviAudience') }}" accept-charset="utf-8" enctype="multipart/form-data" id="audienceForm">
@@ -3355,7 +3364,7 @@
                                     <div class="col-12">
                                         <div class="form-group">
                                             <div class="text-center">
-                                                <button type="submit" class="theme-bg btn btn-rounded btn-block" style="width:50%;">Enregistrer</button>
+                                                <button type="submit" class="theme-bg btn btn-rounded btn-block"><i class="fa fa-save"></i> Enregistrer</button>
                                             </div>
                                         </div>
                                     </div>
@@ -3420,18 +3429,7 @@
                 </ul>
                 <h4 class="modal-title text-center"><i class="fa fa-envelope"></i> Envoi via e-mail</h4>
             </div>
-            @if($plan=='standard')
-            <div class="modal-body text-center" style="padding:30px">
-                <h2 class="bg-warning"><i class="fa fa-exclamation-triangle"></i> Module Premium</h2>
-                <p style="font-size:18px">Chèr(e) utilisateur ce module ne figure pas sur le plan <b>standard</b> auquel vous
-                    avez souscri. Veuillez contacter notre équipe pour passer au <b>premium</b> si vous voulez obtenir ce
-                    module. <br>
-                    visitez notre site web pour voir les différents plans <a href="https://www.smartylex.com#prix"
-                        target="_blank" style="color:blue"><i class="fa fa-arrow-right"></i> www.smartylex.com</a>
-                </p>
-
-            </div>
-            @else
+         
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
@@ -3758,7 +3756,6 @@
                     </div>
                 </div>
             </div>
-            @endif
         </div>
     </div>
 </div>

@@ -10,6 +10,7 @@ class courierLiers extends Model
     protected $primaryKey = 'idCourierLier';
     protected $fillable = [
 
+        'idCourierLier',
         'slugCourierLier',
         'cleCommune',
         'slug',

@@ -1,8 +1,7 @@
-<!--
-<a class="scroll-to-top rounded cl-white theme-bg" href="#page-top">
+<a class="scroll-to-top rounded cl-white" href="#page-top">
     <i class="ti-angle-double-up"></i>
-</a> -->
-<!-- jQuery (obligatoire en premier) -->
+</a>
+
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"
     integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 
@@ -51,142 +50,59 @@
 
 <!-- générer un PDF avec html2pdf   -->
 
-<script>
-     function exportDivToPDF() {
-        const elementsToHide = document.querySelectorAll('.hidden-print');
-        const buttonsToHide = document.querySelectorAll('button[type="button"]');
-        const linksToHide = document.querySelectorAll('a[type="button"], a[href="#"], a[href=""], a[href="@{{}}"], a[href="@{{}}"]');
 
-        const allToHide = [...elementsToHide, ...buttonsToHide, ...linksToHide];
-        allToHide.forEach(el => el.style.display = 'none');
+<!-- Custom scripts for all pages -->
+<script src="{{ asset('assets/dist/js/adminfier.js') }}"></script>
+<script src="{{ asset('assets/dist/js/jQuery.style.switcher.js') }}"></script>
 
-        // Déplier les collapse
-        const collapsedDivs = document.querySelectorAll('.collapse');
-        collapsedDivs.forEach(div => {
-            div.classList.add('show');
-            div.style.display = 'block';
-        });
+<!-- Validator JavaScript -->
+<script src="{{ asset('assets/plugins/validator/validator.js') }}"></script>
+<script src="{{ asset('assets/DataTables/datatables.min.js') }}"></script>
 
-        const element = document.getElementById('pdfContent1');
+<!-- Select2 -->
 
-        // Appliquer style police + taille au moment de l'export
-        element.style.fontFamily = "'Arial', sans-serif";
-        element.style.fontSize = '14px';
-        element.style.lineHeight = '1.4';
+<script src="{{ asset('assets/plugins/select2/select2.full.min.js') }}"></script>
 
-        html2pdf().set({
-            margin: [11, 11, 11, 1],
-            filename: 'smartylex.com.pdf',
-            html2canvas: {
-                scale: 4,
-                useCORS: true
-            },
-            jsPDF: {
-                orientation: 'landscape',
-                unit: 'mm',
-                format: 'a4',
-                putOnlyUsedFonts: true
-            },
-            pagebreak: {
-                mode: [ 'css', 'legacy'],
-                avoid: ['tr', '.no-break']
-            }
-        }).from(element).save().then(() => {
-            allToHide.forEach(el => el.style.display = '');
-            collapsedDivs.forEach(div => {
-                div.classList.remove('show');
-                div.style.display = 'none';
-            });
 
-            // Optionnel : remettre le style à vide ou d'origine si besoin
-            element.style.fontFamily = '';
-            element.style.fontSize = '';
-            element.style.lineHeight = '';
 
-            // ✅ Recharger la page après export
-            location.reload();
-        });
-    }
+<!-- bootstrap datepicker -->
+<script src="{{ asset('assets/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
 
-</script>
+<!-- bootstrap color picker -->
+<script src="{{ asset('assets/plugins/colorpicker/bootstrap-colorpicker.min.js') }}"></script>
 
-<script>
-    function exportDivToPDF2() {
-        const elementsToHide = document.querySelectorAll('.hidden-print');
-        const buttonsToHide = document.querySelectorAll('button[type="button"]');
-        const linksToHide = document.querySelectorAll('a[type="button"], a[href="#"], a[href=""], a[href="@{{}}"]');
+<!-- bootstrap time picker -->
+<script src="{{ asset('assets/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
 
-        const allToHide = [...elementsToHide, ...buttonsToHide, ...linksToHide];
-        allToHide.forEach(el => el.style.display = 'none');
+<!-- input mask -->
+<script src="{{ asset('assets/plugins/input-mask/jquery.inputmask.js') }}"></script>
+<script src="{{ asset('assets/plugins/input-mask/jquery.inputmask.date.extensions.js') }}"></script>
+<script src="{{ asset('assets/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
 
-        // Déplier les collapse
-        const collapsedDivs = document.querySelectorAll('.collapse');
-        collapsedDivs.forEach(div => {
-            div.classList.add('show');
-            div.style.display = 'block';
-        });
+<!-- iCheck 1.0.1 -->
+<script src="{{ asset('assets/plugins/iCheck/icheck.min.js') }}"></script>
 
-        // Récupérer la section active (onglet actif)
-        const activeTab = document.querySelector('.tab-content .tab-pane.active');
-        if (!activeTab) {
-            alert("Aucune section active détectée.");
-            return;
-        }
-        const element = document.getElementById('pdfContent');
 
-        // Appliquer style temporaire à la section active
-        activeTab.style.fontFamily = "'Arial', sans-serif";
-        activeTab.style.fontSize = '14px';
-        activeTab.style.lineHeight = '1.4';
 
-        html2pdf().set({
-            margin: [11, 11, 11, 1],
-            filename: `export-${activeTab.id}.pdf`, // nom dynamique selon section active
-            html2canvas: {
-                scale: 4,
-                useCORS: true
-            },
-            jsPDF: {
-                orientation: 'landscape',
-                unit: 'mm',
-                format: 'a4',
-                putOnlyUsedFonts: true
-            },
-            pagebreak: {
-                mode: ['css', 'legacy'],
-                avoid: ['tr', '.no-break']
-            }
-        }).from(activeTab).save().then(() => {
-            html2pdf().from(element).save().then(() => {
-                // Réafficher les éléments masqués
-                allToHide.forEach(el => el.style.display = '');
-                collapsedDivs.forEach(div => {
-                    div.classList.remove('show');
-                    div.style.display = 'none';
-                });
+<!-- FastClick -->
+<script src="{{ asset('assets/plugins/fastclick/fastclick.js') }}"></script>
 
-                // Nettoyer le style temporaire
-                activeTab.style.fontFamily = '';
-                activeTab.style.fontSize = '';
-                activeTab.style.lineHeight = '';
-            });
-            // Réafficher les éléments masqués
-            allToHide.forEach(el => el.style.display = '');
-            collapsedDivs.forEach(div => {
-                div.classList.remove('show');
-                div.style.display = 'none';
-            });
 
-            // Nettoyer le style temporaire
-            activeTab.style.fontFamily = '';
-            activeTab.style.fontSize = '';
-            activeTab.style.lineHeight = '';
+<!-- Advance Form Element -->
+<script src="{{ asset('assets/dist/js/custom/form-element.js') }}"></script>
 
-            // Recharger la page si besoin
-            location.reload();
-        });
-    }
-</script>
+
+<script src="{{ asset('assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
+<script src="{{ asset('assets/dist/js/custom/form-wizard.js') }}"></script>
+
+<!-- Begin API_Reader file -->
+<script src="{{ asset('assets/apiReader/pdfobject.js') }}"></script>
+<script src="{{ asset('assets/apiReader/pdfobject.min.js') }}"></script>
+
+
+
+
+
 
 <!-- End API_Reader file  -->
 <script>
@@ -207,66 +123,14 @@
     }
 </script>
 
-<?php
-    // Chemin : adapte selon où est réellement ton logo
-    // Exemple : si $cabinet->logo == 'assets/upload/photos/logo-texte-bleu.png'
-    $logoData = '';
-    $logoPath = public_path($cabinet->logo); // ou storage_path(...) si tu utilises storage/app/public
-
-    if (file_exists($logoPath)) {
-        $type = pathinfo($logoPath, PATHINFO_EXTENSION);
-        $data = file_get_contents($logoPath);
-        // sécurité : vérifier que ce n'est pas trop volumineux si nécessaire
-        $logoData = 'data:image/' . strtolower($type) . ';base64,' . base64_encode($data);
-    }
-
-    // Nettoyer la signature (si c'est du HTML, on enlève les balises ; tu peux aussi la rendre en image séparément)
-    //$signatureText = strip_tags($cabinet->signature);
-
-        
-    $signatureText = strip_tags($cabinet->piedPage);
-        
-
-?>
-
 <script>
-    let smartylexBase64 = null; // version base64 de ton image
-
-    function convertImgToBase64(url, callback) {
-        const img = new Image();
-        img.crossOrigin = 'anonymous'; // utile si l'image vient d’un autre domaine
-        img.onload = function () {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-            const dataURL = canvas.toDataURL('image/png');
-            callback(dataURL);
-        };
-        img.src = url;
-    }
-
-    // 🔽 Appelle cette fonction AVANT d’initialiser DataTable
-    convertImgToBase64("assets/upload/photos/3(1).png", function (dataUrl) {
-        smartylexBase64 = dataUrl;
-
-        // ⚠️ Initialise DataTable ici pour être sûr que l’image est prête
-        initDataTable();
-    });
-</script>
-
-<script>
-
-
-
 $(document).ready(function() {
-
 
     // fonction ajax pour send-audience-recap a partir de js chaque soir a 16h00
     function checkTime() {
         const now = new Date();
-        if (now.getHours() === 16 && now.getMinutes() === 0 && now.getSeconds() === 0) {
+        //console.log(`Heure actuelle dans recap audience : ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`);
+        if (now.getHours() === 13 && now.getMinutes() === 10 && now.getSeconds() === 0) {
             $.ajax({
                 type: "GET",
                 url: "/send-audience-recap",
@@ -280,48 +144,136 @@ $(document).ready(function() {
 
     setInterval(checkTime, 1000);
 
+    // Fonction ajax permettante d'envoyer les mails pour completer les suivi d'audiences chaques jours de a 08h30min et 12h00min
+    function checkTimeMailSuivi() {
+        const now = new Date();
+        //console.log(`Heure actuelle dans suivi : ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`);
 
-    function getBase64FromImageUrl(url, callback) {
-    var img = new Image();
-        img.crossOrigin = 'Anonymous';
-        
-        img.onload = function() {
-            var canvas = document.createElement('canvas');
-            var ctx = canvas.getContext('2d');
-            canvas.height = this.naturalHeight;
-            canvas.width = this.naturalWidth;
-            ctx.drawImage(this, 0, 0);
-            var dataURL = canvas.toDataURL('image/png');
-            callback(dataURL);
-        };
-        
-        img.onerror = function() {
-            console.error("Erreur de chargement de l'image: " + url);
-            callback(null);
-        };
-        
-        // Ajoute un timestamp pour éviter le cache
-        img.src = url + '?' + new Date().getTime();
+        if (now.getHours() === 17 && now.getMinutes() === 0 && now.getSeconds() === 0) {
+            $.ajax({
+                type: "GET",
+                url: "/send-notification-suivi-audience",
+                success: function(response) {
+                },
+                error: function(xhr, status, error) {
+                }
+            });
+        }
     }
 
-    // Préchargez l'image avant l'initialisation de DataTable
-    var smartylexLogoBase64 = null;
+    setInterval(checkTimeMailSuivi, 1000);
 
-    // Utilisez le chemin absolu correct
-    getBase64FromImageUrl(window.location.origin + '/assets/upload/photos/Logo.png', function(base64) {
-        smartylexLogoBase64 = base64;
-        
-        // Initialisez DataTable seulement après le chargement de l'image
-        initDataTable();
-    });
+    // premier instance
 
-    const cabinetName = <?php echo json_encode($cabinet->nomCabinet); ?>;
-    const signatureText = <?php echo json_encode($signatureText); ?>;
+    function premierInstance() {
+        const now = new Date();
 
-    const logoBase64 = "<?php echo $logoData; ?>";
+        if (now.getHours() === 19 && now.getMinutes() === 30 && secondes === 0 && now.getSeconds()=== 0) {
+            $.ajax({
+                type: "GET",
+                url: "/send-notification-suivi-audience-premier_instance",
+                success: function(response) {
+                    console.log("Réponse serveur :", response);
+                    if (response.status === 'info') {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Information',
+                            text: response.message,
+                            timer: 4000,
+                            showConfirmButton: false
+                        });
+                    } else if (response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Suivi effectué',
+                            text: response.message,
+                            timer: 4000,
+                            showConfirmButton: false
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Erreur AJAX :", error);
+                }
+            });
+        }
+    }
 
+    setInterval(premierInstance, 1000);
 
+    let logoBase64 = null;
+
+    let nomCabinet = "{{ $nomCabinet ?? '' }}";
     
+    let dateOuverturePlateforme = "{{ $dateOuverturePlateforme ?? '' }}";
+    let planAbonnement = "{{ $planAbonnement ?? '' }}";
+
+    const planDurations = {
+        gratuit: 2,
+        decouverte: 6,
+        classique: 12,
+        avance: 18,
+        premium: 24
+    };
+
+    if (dateOuverturePlateforme && planDurations[planAbonnement]) {
+
+        const today = new Date();
+        const startDate = new Date(dateOuverturePlateforme);
+
+        const expirationDate = new Date(startDate);
+        expirationDate.setMonth(expirationDate.getMonth() + planDurations[planAbonnement]);
+
+        const diffDays = Math.ceil((expirationDate - today) / (1000 * 60 * 60 * 24));
+
+        const alertDiv = document.getElementById('alertAbonnement');
+
+        if (!alertDiv) return;
+
+        if (diffDays <= 0) {
+            alertDiv.innerHTML = `
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong><i class="fa fa-times-circle mr-2"></i> Abonnement expiré !</strong>
+                    Votre abonnement a expiré. Veuillez le renouveler pour continuer à utiliser la plateforme.
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            `;
+        }
+        else if (diffDays <= 30) {
+            alertDiv.innerHTML = `
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong><i class="fa fa-exclamation-triangle mr-2"></i> Abonnement bientôt expiré !</strong>
+                    Il vous reste <strong>${diffDays} jour(s)</strong> avant l’expiration de votre abonnement.
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            `;
+        }
+    }
+
+
+
+
+    @if (!empty($logoCabinet))
+    let logoPath = "{{ $logoCabinet }}"; 
+
+
+    fetch("{{ url('/') }}/" + logoPath)
+        .then(res => {
+            if (!res.ok) throw new Error("Image non trouvée !");
+            return res.blob();
+        })
+        .then(blob => {
+            let reader = new FileReader();
+            reader.onloadend = function () {
+                logoBase64 = reader.result;
+            }
+            reader.readAsDataURL(blob);
+        })
+        .catch(err => console.error(err));
+    @endif
+
+
+
     $('.dataTableExport').DataTable({
         dom: 'Bfrtip',
         searching: true,
@@ -338,170 +290,89 @@ $(document).ready(function() {
                 exportOptions: {
                     columns: ':visible'
                 },
-                customize: function (doc) {
-                    // 1. MARGES DU DOCUMENT
-                    doc.pageMargins = [30, 70, 20, 50]; // réduit la marge bas pour moins d'espace blanc
+                title: function () {
+                    let titre = document.title;
+                    titre = titre.replace(/-/g, " ").replace(/\s+/g, " ").trim();
+                    return titre.split(" ").slice(0, 3).join(" ");
+                },
+            customize: function (doc) {
+                    const now = new Date().toLocaleString('fr-FR', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
 
-                    // 2. EN-TÊTE
-                    doc.header = function (currentPage, pageCount, pageSize) {
-                        const now = new Date().toLocaleString('fr-FR', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-
+                    // HEADER
+                    doc.header = function (currentPage, pageCount) {
                         return {
-                            margin: [0, 0, 0, 5],
+                            margin: [0, 0, 0, 20],
                             columns: [
-                                // Colonne gauche : logo principal
-                                {
-                                    width: 'auto',
-                                    stack: [
-                                        logoBase64 ? {
-                                            image: logoBase64,
-                                            width: 50,
-                                            margin: [10, 10, 0, 10] // ✅ marge gauche bien appliquée ici
-                                        } : { text: '', width: 50 }
-                                    ]
-                                },
-
-                                // Colonne centrale : vide ou texte centré
-                                {
-                                    width: '*',
-                                    text: '', // ou un titre centré ici
-                                    alignment: 'center',
-                                    margin: [0, 20, 0, 0],
-                                    fontSize: 12,
-                                    bold: true
-                                },
-                            
-                                {
-                                    text: 'Téléchargé à partir de www.smartylex.com le : ' + now,
-                                    alignment: 'left',
-                                    margin: [0, 10, 10, 0],
-                                    italics: true,
-                                    fontSize: 9
-                                },
-                                smartylexLogoBase64 ? {
-                                    image: smartylexLogoBase64,
-                                    width: 60,
-                                    height: 35,
-                                    margin: [0, 5, 10, 0]
-                                } : { text: '', width: 60 }
-
+                                logoBase64 ? { image: logoBase64, width: 50, margin: [0, 0, 10, 0] } : {},
+                                { text: nomCabinet, alignment: 'left', fontSize: 12, bold: true, margin: [0, 15, 0, 0] },
+                                { text: 'Téléchargé le : ' + now, alignment: 'right', fontSize: 10, bold: true, margin: [0, 10, 20, 0] }
                             ]
                         };
-
                     };
 
-                    // 3. PIED DE PAGE
+                    // FOOTER
                     doc.footer = function (currentPage, pageCount) {
                         return {
                             columns: [
                                 {
-                                    text: signatureText,
-                                    alignment: 'center',
-                                    margin: [6, 6, 6, 6],
+                                    text: 'www.smartylex.com',
+                                    alignment: 'right',
+                                    margin: [0, 10, 20, 5],
                                     fontSize: 9,
-                                    preserveLeadingSpaces: true
+                                    color: '#003366',
+                                    bold: true
                                 }
-                            ],
-                            margin: [10, 10, 10, 0]
+                            ]
                         };
                     };
 
-                    // 4. CENTRAGE ET AJUSTEMENT DU TABLEAU
-                    if (doc.content) {
-                        doc.content.forEach(function(section, index) {
-                            if (section.table && Array.isArray(section.table.body) && section.table.body.length > 0) {
-                                const headerRow = section.table.body[0];
+                    // Styles pour centrer le contenu
+                    doc.styles = {
+                        header: { fontSize: 18, bold: true, alignment: 'center', margin: [0, 0, 0, 10] },
+                        subheader: { fontSize: 14, bold: true, alignment: 'center', margin: [0, 10, 0, 5] }
+                    };
 
-                                // Trouver les index de colonnes à supprimer
-                                const forbiddenKeywords = ['action', 'voir/sup', 'voir', 'sup', 'details'];
-                                const columnsToRemove = [];
+                    // CENTRER LES TABLEAUX HORIZONTAL
+                    if (doc.content && Array.isArray(doc.content)) {
+                        for (let i = 0; i < doc.content.length; i++) {
+                            if (doc.content[i] && doc.content[i].table) {
 
-                                headerRow.forEach((cell, i) => {
-                                    let text = '';
-                                    if (typeof cell === 'object' && cell.text) {
-                                        text = cell.text.toString().toLowerCase().trim();
-                                    } else if (typeof cell === 'string') {
-                                        text = cell.toLowerCase().trim();
-                                    }
+                                // Centrer horizontalement
+                                doc.content[i].alignment = 'center';
+                                doc.content[i].margin = [0, 20, 0, 0];
 
-                                    if (forbiddenKeywords.some(keyword => text.includes(keyword))) {
-                                        columnsToRemove.push(i);
-                                    }
+                                
+                                doc.content[i].table.body[0].forEach(function(cell) {
+                                    cell.fillColor = '#009CAA';  // couleur de fond de l'entête
+                                    cell.color = 'white';         // couleur du texte dans l'entête
+                                    cell.bold = true;             // texte en gras
                                 });
 
-                                // Si toutes les colonnes doivent être supprimées, on ignore cette table
-                                if (columnsToRemove.length === headerRow.length) return;
-
-                                // Fonction pour filtrer les colonnes d'une ligne
-                                function filterRow(row) {
-                                    return row.filter((_, idx) => !columnsToRemove.includes(idx));
-                                }
-
-                                // Appliquer la suppression de colonnes
-                                const filteredBody = section.table.body.map(filterRow);
-
-                                // Nettoyage et style
-                                filteredBody.forEach(row => {
-                                    row.forEach(cell => {
-                                        if (typeof cell === 'object') {
-                                            if (cell.text && typeof cell.text === 'string') {
-                                                cell.text = cell.text.trim();
-                                            }
-                                            cell.alignment = 'left';
-                                            cell.fontSize = 9;
-                                            cell.margin = [20, 10, 10, 10];
-                                        }
-                                    });
-                                });
-
-                                section.table.body = filteredBody;
-
-                                doc.content[index] = {
-                                    alignment: 'center',
-                                    stack: [
-                                        {
-                                            table: section.table,
-                                            layout: {
-                                                hLineWidth: () => 1.0,
-                                                vLineWidth: () => 0,
-                                                hLineColor: () => '#ccc',
-                                                paddingLeft: () => 3,
-                                                paddingRight: () => 3,
-                                                paddingTop: () => 1,
-                                                paddingBottom: () => 1
-                                            }
-                                        }
+                                // Optionnel : envelopper le tableau pour un meilleur centrage
+                                doc.content[i] = {
+                                    columns: [
+                                        { text: '', width: '*' },
+                                        { table: doc.content[i].table, width: 'auto' },
+                                        { text: '', width: '*' }
                                     ],
                                     margin: [0, 20, 0, 0]
                                 };
                             }
-                        });
+                        }
                     }
+                    // Marges générales
+                    doc.pageMargins = [20, 70, 20, 40]; 
 
-
-
-
-
-                    // 5. STYLES
-                    doc.styles.tableHeader = {
-                        bold: true,
-                        fontSize: 9,
-                        alignment: 'center',
-                        color: 'white',
-                        fillColor: '#003366'
-                    };
-
+                    // Style par défaut
                     doc.defaultStyle = {
-                        fontSize: 9,
-                        alignment: 'center',
-                        lineHeight: 1.1
+                        fontSize: 10,
+                        alignment: 'center'
                     };
                 }
 
@@ -510,11 +381,24 @@ $(document).ready(function() {
         ],
         order: []
     });
+
+
+    // $('.dataTableExport').DataTable({
+    //     dom: 'Bfrtip',
+    //     searching: true,
+    //     pageLength: 20,
+    //     responsive: true,
+    //     buttons: [
+    //         'copy', 'csv', 'excel', 'pdf', 'print'
+    //     ],
+    //     order: []
+    // });
+
     var monSwitchButton = document.getElementById("infowitch");
 
-   // var elements = document.querySelectorAll(".infoPrive");
+    var elements = document.querySelectorAll(".infoPrive");
 
-        /*
+        
 
         for (var i = 0; i < elements.length; i++) {
         elements[i].style.filter = "blur(5px)"; // Ajustez la valeur de flou selon vos besoins
@@ -533,20 +417,6 @@ $(document).ready(function() {
                 }
             }
         });
-
-        */
-
-        const elements = document.querySelectorAll(".infoPrive");
-
-            $('#infowitch').on('change', function () {
-            if (this.checked) {
-                // Masquer les données
-                elements.forEach(el => el.classList.remove('revealed'));
-            } else {
-                // Afficher les données
-                elements.forEach(el => el.classList.add('revealed'));
-            }
-    });
 
 
     $('#togglePasswordField').click(function(){
@@ -940,7 +810,7 @@ $(document).ready(function() {
 
     $('.tacheConditionnelClient').hide();
     // Mettre les champ priorite cacher a Faible
-    $('.priorite').val('Faible'); 
+    $('.priorite').val('Faible');
 
 
     //activer personne physique au demarrage
@@ -1276,7 +1146,7 @@ $(document).ready(function() {
     });
     // Script permettant d'afficher le reste des informations de l'audiences
     $('#up').attr('hidden', true);
-    $('#audienceInfos').attr('hidden', true);
+   //$('#audienceInfos').attr('hidden', true);
     $('#fileAssignAudience').attr('hidden', true);
     $('#idAudienceAssign').attr('hidden', true);
 
@@ -1575,6 +1445,185 @@ function newNotification() {
 
 }
 
+/*
+
+function newNotificationListe() {
+
+
+    document.getElementById('notification-box').innerHTML = '';
+    document.getElementById('nbNotif').innerHTML = '';
+
+    $.ajax({
+        type: "GET",
+        url: `/fetch-notif`,
+        dataType: "json",
+        success: function(response) {
+
+
+            var nbre = response.newNotif.length;
+
+            $.each(response.newNotif, function(key, value) {
+                var slug = value.urlParam;
+                var category = value.categorie;
+                if (category == 'Tâche') {
+                    $('#notification-box').append(
+                        ` <div class="ground ground-list-single">
+              <div class="btn-circle-40 btn-info">
+              <i class="ti ti-layers"></i>
+              </div>
+            <div class="ground-content">
+            <a href="/tache/view/${value.urlParam}" id="${value.urlParam}" class="${value.id}"  onclick=" var param=this.id ; var idNotif=this.className; voir(param,idNotif)"><h5><b>${value.categorie}</b></h5></a>
+            <small class="text-fade">${value.messages}</small>
+            </div></div>`
+                    )
+                } else if (category == 'Courriers - Départ') {
+                    $('#notification-box').append(
+                        ` <div class="ground ground-list-single">
+              <div class="btn-circle-40 btn-info">
+              <i class="fa fa-envelope"></i>
+              </div>
+            <div class="ground-content">
+            <a href="/courier_depart/viewFonction/${value.urlParam}" id="${value.urlParam}" class="${value.id}"  onclick=" var param=this.id ; var idNotif=this.className; voir(param,idNotif)"><h5><b>${value.categorie}</b></h5></a>
+            <small class="text-fade">${value.messages}</small>
+            </div></div>`
+                    )
+
+                } else if (category == 'Courriers - Arrivée') {
+                    $('#notification-box').append(
+                        ` <div class="ground ground-list-single">
+              <div class="btn-circle-40 btn-info">
+              <i class="fa fa-envelope"></i>
+              </div>
+            <div class="ground-content">
+            <a href="/courier_arriver/view/${value.urlParam}" id="${value.urlParam}" class="${value.id}"  onclick=" var param=this.id ; var idNotif=this.className; voir(param,idNotif)"><h5><b>${value.categorie}</b></h5></a>
+            <small class="text-fade">${value.messages}</small>
+            </div></div>`
+                    )
+
+                } else if (category == 'Rappel Courrier') {
+                    $('#notification-box').append(
+                        ` <div class="ground ground-list-single">
+              <div class="btn-circle-40 btn-warning">
+              <i class="fa fa-bullhorn"></i>
+              </div>
+            <div class="ground-content">
+            <a href="/courier_arriver/view/${value.urlParam}" id="${value.urlParam}" class="${value.id}"  onclick=" var param=this.id ; var idNotif=this.className; voir(param,idNotif)"><h5><b>${value.categorie}</b></h5></a>
+            <small class="text-fade">${value.messages}</small>
+            </div></div>`
+                    )
+
+
+
+                }
+
+            });
+
+            $.each(response.newNotifSuivi, function(key, value) {
+
+
+                $('#notification-box').append(
+                    ` <div class="ground ground-list-single">
+              <div class="btn-circle-40 btn-info">
+              <i class="fa fa-balance-scale"></i>
+              </div>
+            <div class="ground-content">
+            <a href="/audience/view/${value.idAudience}/${value.slug}/${value.niveauProcedural}" id="${value.urlParam}" class="${value.id}"  onclick=" var param=this.id ; var idNotif=this.className; voir(param,idNotif)"><h5><b>${value.categorie}</b></h5></a>
+            <small class="text-fade">${value.messages}</small>
+            </div></div>`
+                )
+
+
+            });
+
+
+
+            $.each(response.newNotifAudience, function(key, value) {
+                $('#notification-box').append(
+                    ` <div class="ground ground-list-single">
+             <div class="btn-circle-40 btn-info">
+             <i class="fa fa-balance-scale"></i>
+             </div>
+           <div class="ground-content">
+           <a href="/audience/view/${value.idAudience}/${value.slug}/${value.niveauProcedural}" id="${value.urlParam}" class="${value.id}"  onclick=" var param=this.id ; var idNotif=this.className; voir(param,idNotif)"><h5><b>${value.categorie}</b></h5></a>
+           <small class="text-fade">${value.messages}</small>
+           </div></div>`
+                )
+
+
+            });
+
+            $.each(response.newNotifSuiviAppel, function(key, value) {
+                $('#notification-box').append(
+                    ` <div class="ground ground-list-single">
+             <div class="btn-circle-40 btn-info">
+             <i class="fa fa-balance-scale"></i>
+             </div>
+           <div class="ground-content">
+           <a href="/audience/view/${value.idAudience}/${value.slug}/${value.niveauProcedural}" id="${value.urlParam}" class="${value.id}"  onclick=" var param=this.id ; var idNotif=this.className; voir(param,idNotif)"><h5><b>${value.categorie}</b></h5></a>
+           <small class="text-fade">${value.messages}</small>
+           </div></div>`
+                )
+
+
+            });
+
+            $.each(response.newNotifRequeteSuivi, function(key, value) {
+                $('#notification-box').append(
+                    ` <div class="ground ground-list-single">
+             <div class="btn-circle-40 btn-info">
+             <i class="fa fa-balance-scale"></i>
+             </div>
+           <div class="ground-content">
+           <a href="/requete/detail/${value.slug}" id="${value.urlParam}" class="${value.id}"  onclick=" var param=this.id ; var idNotif=this.className; voir(param,idNotif)"><h5><b>${value.categorie}</b></h5></a>
+           <small class="text-fade">${value.messages}</small>
+           </div></div>`
+                )
+            });
+
+            $.each(response.newNotifRequete, function(key, value) {
+                $('#notification-box').append(
+                    ` <div class="ground ground-list-single">
+             <div class="btn-circle-40 btn-info">
+             <i class="fa fa-balance-scale"></i>
+             </div>
+           <div class="ground-content">
+           <a href="/requete/detail/${value.slug}" id="${value.urlParam}" class="${value.id}"  onclick=" var param=this.id ; var idNotif=this.className; voir(param,idNotif)"><h5><b>${value.categorie}</b></h5></a>
+           <small class="text-fade">${value.messages}</small>
+           </div></div>`
+                )
+            })
+
+           // consol.log();
+
+            $.each(response.newNotifsFacture, function(key, value) {
+                $('#notification-box').append(
+                    ` <div class="ground ground-list-single">
+             <div class="btn-circle-40 btn-info">
+             <i class="fa fa-money"></i>
+             </div>
+           <div class="ground-content">
+           <a href="/facturation/show/${value.slug}" id="${value.urlParam}" class="${value.id}"  onclick=" var param=this.id ; var idNotif=this.className; voir(param,idNotif)"><h5><b>${value.categorie}</b></h5></a>
+           <small class="text-fade">${value.messages}</small>
+           </div></div>`
+                )
+
+
+            });
+
+            $('#nbNotif').append(
+                `<span class="a-dropdown--title" >${nbre} Notification(s)</span>`)
+
+
+
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            //console.log(`JQHR ${jqXHR} \n status: ${textStatus}\n error: ${errorThrown}`);
+        }
+    });
+
+
+}
+*/
 
 function newNotificationListe() {
 
@@ -1598,6 +1647,35 @@ function newNotificationListe() {
               
 
             });
+
+             $.each(response.notifSuivitAudience, function(key, value) {
+
+                
+                  // Construire le contenu du h5
+                  let h5Text = ` ${value.idClient || ''} > ${value.prenom || ''} ${value.nom || ''} ${value.denomination || ''}> ${value.idAffaire || ''}  ${value.nomAffaire || ''}`;
+
+                // Tronquer h5 si plus de 27 caractères
+                if (h5Text.length > 30) {
+                    h5Text = h5Text.substring(0, 30) + '...';
+                }
+
+                    // Tronquer le message aussi (au cas où il serait long)
+                    let message = value.messages.length > 27
+                    ? value.messages.substring(0, 27) + '...'
+                    : value.messages;
+
+                $('#notification-box').append(
+                    ` <div class="ground ground-list-single">
+                    <div class="btn-circle-40 btn-info">
+                    <i class="fa fa-balance-scale"></i>
+                    </div>
+                    <div class="ground-content">
+                    <a href="/audience/view/${value.idAudience}/${value.slug}/${value.niveauProcedural}" id="${value.urlParam}" class="${value.id}"  onclick=" var param=this.id ; var idNotif=this.className; voir(param,idNotif)"><h5><b>  ${h5Text}</b></h5></a>
+                    <small class="text-fade">${value.messages}</small>
+                    </div></div>`
+                 )
+            });
+
 
            
 
@@ -1623,7 +1701,7 @@ function newNotificationListe() {
             $.each(response.newNotifsCourierArriversClient, function(key, value) {
 
                  // Construire le contenu du h5
-                 let h5Text = `${value.idClient} > ${value.prenom} ${value.nom} > ${value.idAffaire}  ${value.nomAffaire}`;
+                 let h5Text = `${value.idClient || ''} > ${value.prenom || ''} ${value.nom || ''} ${value.denomination || ''}> ${value.idAffaire || ''}  ${value.nomAffaire || ''}`;
 
                     // Tronquer h5 si plus de 27 caractères
                     if (h5Text.length > 30) {
@@ -1674,7 +1752,7 @@ function newNotificationListe() {
 
             $.each(response.newNotifsCourierDepartsClient, function(key, value) {
                  // Construire le contenu du h5
-                 let h5Text = `${value.idClient} > ${value.prenom} ${value.nom} > ${value.idAffaire}  ${value.nomAffaire}`;
+                 let h5Text = `${value.idClient || ''} > ${value.prenom || ''} ${value.nom || ''} ${value.denomination || ''} > ${value.idAffaire || ''}  ${value.nomAffaire || ''}`;
 
                     // Tronquer h5 si plus de 27 caractères
                     if (h5Text.length > 30) {
@@ -1704,7 +1782,7 @@ function newNotificationListe() {
 
             $.each(response.newNotifsTaches, function(key, value) {
                  // Construire le contenu du h5
-                 let h5Text = `${value.idClient} > ${value.prenom} ${value.nom} > ${value.idAffaire}  ${value.nomAffaire}`;
+                 let h5Text = `${value.idClient || ''} > ${value.prenom || ''} ${value.nom || ''} ${value.denomination || ''}> ${value.idAffaire || ''}  ${value.nomAffaire || ''}`;
 
                     // Tronquer h5 si plus de 27 caractères
                     if (h5Text.length > 30) {
@@ -1730,7 +1808,7 @@ function newNotificationListe() {
             $.each(response.newNotifSuivi, function(key, value) {
 
                   // Construire le contenu du h5
-                  let h5Text = ` ${value.idClient} > ${value.prenom} ${value.nom} > ${value.idAffaire}  ${value.nomAffaire}`;
+                  let h5Text = ` ${value.idClient || ''} > ${value.prenom || ''} ${value.nom || ''} ${value.denomination || ''}> ${value.idAffaire || ''}  ${value.nomAffaire || ''}`;
 
                 // Tronquer h5 si plus de 27 caractères
                 if (h5Text.length > 30) {
@@ -1759,7 +1837,7 @@ function newNotificationListe() {
             $.each(response.newNotifAudience, function(key, value) {
 
                   // Construire le contenu du h5
-                  let h5Text = `${value.idClient} > ${value.prenom} ${value.nom} > ${value.idAffaire}  ${value.nomAffaire}`;
+                  let h5Text = `${value.idClient || ''} > ${value.prenom || ''} ${value.nom || ''} ${value.denomination || ''}> ${value.idAffaire || ''}  ${value.nomAffaire || ''}`;
 
                 // Tronquer h5 si plus de 27 caractères
                 if (h5Text.length > 30) {
@@ -1790,7 +1868,7 @@ function newNotificationListe() {
             $.each(response.newNotifAudience2, function(key, value) {
 
                  // Construire le contenu du h5
-                 let h5Text = `${value.idClient} > ${value.prenom} ${value.nom} > ${value.idAffaire}  ${value.nomAffaire}`;
+                 let h5Text = `${value.idClient || ''} > ${value.prenom || ''} ${value.nom || ''} ${value.denomination || ''}> ${value.idAffaire || ''}  ${value.nomAffaire || ''}`;
 
                 // Tronquer h5 si plus de 27 caractères
                 if (h5Text.length > 30) {
@@ -1821,7 +1899,7 @@ function newNotificationListe() {
 
             $.each(response.newNotifSuiviAppel, function(key, value) {
                   // Construire le contenu du h5
-                  let h5Text = ` ${value.idClient} > ${value.prenom} ${value.nom} > ${value.idAffaire}  ${value.nomAffaire}`;
+                  let h5Text = ` ${value.idClient || ''} > ${value.prenom || ''} ${value.nom || ''} ${value.denomination || ''}> ${value.idAffaire || ''}  ${value.nomAffaire || ''}`;
 
                     // Tronquer h5 si plus de 27 caractères
                     if (h5Text.length > 30) {
@@ -1849,7 +1927,7 @@ function newNotificationListe() {
 
             $.each(response.newNotifRequeteSuivi, function(key, value) {
                 // Construire le contenu du h5
-                let h5Text = `${value.idClient} > ${value.prenom} ${value.nom} > ${value.idAffaire}  ${value.nomAffaire}`;
+                let h5Text = `${value.idClient || ''} > ${value.prenom || ''} ${value.nom || ''} ${value.denomination || ''}> ${value.idAffaire || ''}  ${value.nomAffaire || ''}`;
 
                 // Tronquer h5 si plus de 27 caractères
                 if (h5Text.length > 30) {
@@ -1876,7 +1954,7 @@ function newNotificationListe() {
 
             $.each(response.newNotifRequete, function(key, value) {
                  // Construire le contenu du h5
-                let h5Text = `${value.idClientRequete} > ${value.prenomRequete} ${value.nomRequete} > ${value.idAffaireRequete}  ${value.nomAffaireRequete}`;
+                let h5Text = `${value.idClientRequete || ''} > ${value.prenomRequete || ''} ${value.nomRequete || ''} ${value.denomination || ''}> ${value.idAffaireRequete || ''}  ${value.nomAffaireRequete || ''}`;
 
                 // Tronquer h5 si plus de 27 caractères
                 if (h5Text.length > 30) {
@@ -1912,7 +1990,7 @@ function newNotificationListe() {
             $.each(response.newNotifsFacture, function(key, value) {
 
                 // Construire le contenu du h5
-                let h5Text = `${value.idClient} > ${value.nom}${value.nom}  > ${value.idAffaire}  ${value.nomAffaire}`;
+                let h5Text = `${value.idClient || ''} > ${value.prenom || ''}${value.nom || ''} ${value.denomination || ''} > ${value.idAffaire || ''}  ${value.nomAffaire || ''}`;
 
                 // Tronquer h5 si plus de 27 caractères
                 if (h5Text.length > 30) {
@@ -2388,50 +2466,6 @@ $(".categoryFilter6").change(function(e) {
 });
 
 
-$("#filterTable7_filter.dataTables_filter").append($(".categoryFilter7"));
-    $(".categoryFilter7").change(function(e) {
-
-    var table = $('.filterTable7').DataTable();
-        var categoryIndex = 0;
-        $("#filterTable7 th").each(function(i) {
-            if ($($(this)).html() == "Statut") {
-                categoryIndex = i;
-                return false;
-            }
-        
-        });
-
-        $.fn.dataTable.ext.search.push(
-            function(settings, data, dataIndex) {
-                var selectedItem = $('.categoryFilter7').val()
-                var category = data[categoryIndex];
-                if (selectedItem === "" || category.includes(selectedItem)) {
-                    return true;
-                }
-                return false;
-            }
-        );
-
-        table.draw();
-    });
-
-    // **Réinitialiser la recherche si le collapse s'ouvre**
-    $('#collapseOne').on('shown.bs.collapse', function () {
-    var table = $('.filterTable7').DataTable();
-    $(".categoryFilter7").val(""); // Réinitialiser le filtre
-    $.fn.dataTable.ext.search = []; // Supprimer les filtres actifs
-    table.search("").draw(); // Effacer la recherche et rafraîchir le tableau
-    });
-
-    // **Réinitialiser la recherche si le collapse se ferme**
-    $('#collapseOne').on('hidden.bs.collapse', function () {
-    var table = $('.filterTable7').DataTable();
-    $(".categoryFilter7").val(""); // Réinitialiser le filtre
-    $.fn.dataTable.ext.search = []; // Supprimer les filtres actifs
-    table.search("").draw(); // Effacer la recherche et rafraîchir le tableau
-    });
-
-
 
 
 
@@ -2470,167 +2504,6 @@ $("#filterTable7_filter.dataTables_filter").append($(".categoryFilter7"));
 
 });
 </script>
-
-<script>
-    const currentSlugCourier = @json($courier->slug ?? null);
-</script>
-
-
-<script>
-    function confirmDelete(url) {
-        Swal.fire({
-            title: 'Confirmation de suppression',
-            html: `
-                <strong>Êtes-vous sûr de vouloir supprimer ?&nbsp;</strong><br>
-                <small>Cette action est <span style="color:red;">irréversible</span>.</small>
-            `,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: '<i class="fa fa-trash"></i> Supprimer',
-            cancelButtonText: '<i class="fa fa-times" style="color:white; margin-right:5px;"></i> Annuler',
-            confirmButtonColor: '#d33',    // Rouge
-            cancelButtonColor: '#007bff',  // Bleu
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: 'Suppression en cours...',
-                    text: 'Veuillez patienter.',
-                    icon: 'info',
-                    showConfirmButton: false,
-                    allowOutsideClick: false
-                });
-                // Redirection après un court délai pour montrer l'effet
-                setTimeout(() => {
-                    window.location.href = url;
-                }, 800);
-            }
-        });
-    }
-</script>
-
-<script>
-    
-    function fetchAffaireCouriers(idClient) {
-        var currentSlug = $('#slugCourier').val(); 
-        if (!idClient) return;
-
-        $.ajax({
-            type: "GET",
-            url: `/fetch-affaire-couriers/${idClient}`,
-            data: { slugCourier: currentSlug },
-            dataType: "json",
-            success: function(response) {
-                const $affaireSelect = $('#affaireClient-req');
-                const $courrierArriverSelect = $('#courrierArriverSelect');
-                const $courrierDepartSelect = $('#courrierDepartSelect');
-                const $affaireName = $('#selectedAffaireName');
-                const slugCourier = currentSlug || '';
-
-                // Reset Select2 client si initialisés
-                if ($.fn.select2) {
-                    [$affaireSelect, $courrierArriverSelect, $courrierDepartSelect].forEach($select => {
-                        if ($select.hasClass("select2-hidden-accessible")) $select.select2('destroy');
-                    });
-                }
-
-                // Vider uniquement les selects client
-                $affaireSelect.empty();
-                $courrierArriverSelect.empty();
-                $courrierDepartSelect.empty();
-                $affaireName.addClass('d-none').text('');
-
-                if (Array.isArray(response.affaires) && response.affaires.length > 0) {
-                    $('#affaireContent-req').removeClass('d-none');
-
-                    const courrierArriversParAffaire = {};
-                    const courrierDepartsParAffaire = {};
-                    const nomAffaireParId = {};
-
-                    response.affaires.forEach(item => {
-                        const affaire = item.affaire || {};
-                        const arrivers = Array.isArray(item.couriers_arrivers) ? item.couriers_arrivers : [];
-                        const departs = Array.isArray(item.couriers_departs) ? item.couriers_departs : [];
-
-                        if (!affaire.idAffaire) return;
-
-                        $affaireSelect.append(
-                            $('<option></option>').val(affaire.idAffaire).text(affaire.nomAffaire || '')
-                        );
-
-                        // Exclure le courrier en cours
-                        courrierArriversParAffaire[affaire.idAffaire] = arrivers.filter(c => c && c.slug && c.slug !== slugCourier);
-                        courrierDepartsParAffaire[affaire.idAffaire] = departs.filter(c => c && c.slug && c.slug !== slugCourier);
-                        nomAffaireParId[affaire.idAffaire] = affaire.nomAffaire || '';
-                    });
-
-                    $affaireSelect.select2();
-
-                    $affaireSelect.off('change').on('change', function () {
-                        const selectedId = parseInt($(this).val(), 10); // <-- conversion en nombre
-                        const nomAffaire = nomAffaireParId[selectedId] || '';
-                        const courriersArrivers = courrierArriversParAffaire[selectedId] || [];
-                        const courriersDeparts = courrierDepartsParAffaire[selectedId] || [];
-
-                        $affaireName.toggleClass('d-none', !nomAffaire).text(nomAffaire ? ` ${nomAffaire}` : '');
-
-                        $courrierArriverSelect.empty();
-                        $courrierDepartSelect.empty();
-
-                        // Pour les courriers arrivés
-                        $courrierArriverSelect.empty();
-                        $courrierArriverSelect.append('<option value=""></option>'); // <-- option vide
-
-                        if (courriersArrivers.length) {
-                            console.log("Courriers arrivés:", courriersArrivers);
-                            courriersArrivers.forEach(c => {
-                                if (c) $courrierArriverSelect.append(
-                                    $('<option></option>').val(c.slug || '').text(`${c.idClient || ''} > ${c.prenom || ''} ${c.nom || ''} > ${c.idAffaire || ''}  ${c.nomAffaire || ''}`)
-                                );
-                            });
-                        } else {
-                            console.log("Aucun courrier arrivé");
-                            $courrierArriverSelect.append('<option disabled>Aucun courrier arrivé</option>');
-                        }
-
-                        // Pour les courriers départs
-                        $courrierDepartSelect.empty();
-                        $courrierDepartSelect.append('<option value=""></option>'); // <-- option vide
-
-                        if (courriersDeparts.length) {
-                            console.log("Courriers départs:", courriersDeparts);
-                            courriersDeparts.forEach(c => {
-                                if (c) $courrierDepartSelect.append(
-                                    $('<option></option>').val(c.slug || '').text(`${c.idClient || ''} > ${c.prenom || ''} ${c.nom || ''} > ${c.idAffaire || ''}  ${c.nomAffaire || ''}`)
-                                );
-                            });
-                        } else {
-                            console.log("Aucun courrier départ");
-                            $courrierDepartSelect.append('<option disabled>Aucun courrier départ</option>');
-                        }
-
-
-                        $courrierArriverSelect.select2();
-                        $courrierDepartSelect.select2();
-                    });
-
-                    // Pour que le premier chargement affiche déjà les courriers de l'affaire sélectionnée
-                    $affaireSelect.trigger('change');
-
-
-                } else $('#affaireContent-req').addClass('d-none');
-
-                // **Ne rien toucher aux selects du cabinet ici**
-            },
-            error: function(xhr) {
-                console.error("Erreur AJAX :", xhr.responseText);
-                alert("Erreur lors du chargement des données.");
-            }
-        });
-    }
-
-</script>
-
 
 
 
@@ -2771,6 +2644,37 @@ $('#affaireClient-req').on("change", function() {
 });
 
 
+
+
+/*
+function fechRequeteClient(idClient) {
+
+    $('#requeteContent').removeAttr('hidden');
+    $.ajax({
+        type: "GET",
+        url: `/fetch-requete/${idClient}`,
+        dataType: "json",
+
+        success: function(response) {
+            $('#requeteClient').html("");
+            $('#requeteClient').append(
+                `<option disabled>-- Choisissez --</option>`);
+
+            //console.log(response);
+            $.each(response.requeteClientFetch, function(key, value) {
+                $('#requeteClient').append(
+                    `<option value=${value.slug}> ${value.objet}</option>`
+                )
+            });
+        
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+        // console.log(`JQHR ${jqXHR} \n status: ${textStatus}\n error: ${errorThrown}`);
+        }
+    });
+}
+    */
+
 function fechRequeteClient(idClient) {
 
     var currentSlug = $('#currentSlug').val(); // récupère le slug actuel
@@ -2793,7 +2697,7 @@ function fechRequeteClient(idClient) {
                     `<option value=${value.slug}> ${value.objet}</option>`
                 )
             });
-        
+
         },
         error: function(jqXHR, textStatus, errorThrown) {
         // console.log(`JQHR ${jqXHR} \n status: ${textStatus}\n error: ${errorThrown}`);
@@ -2803,32 +2707,32 @@ function fechRequeteClient(idClient) {
 
 function clientReqFunction(idclient) {
 
-    const affaireContent = "#affaireContent-req";
-    const affaireClient = "#affaireClient-req";
-    $(affaireContent).removeAttr('hidden');
-    $(affaireClient).removeAttr('hidden');
-    $('#clientProcedure-req').removeAttr('hidden');
-    fechRequeteClient(idclient);
+        const affaireContent = "#affaireContent-req";
+        const affaireClient = "#affaireClient-req";
+        $(affaireContent).removeAttr('hidden');
+        $(affaireClient).removeAttr('hidden');
+        $('#clientProcedure-req').removeAttr('hidden');
+        fechRequeteClient(idclient);
 
 
-    $.ajax({
-        type: "GET",
-        url: `/fetch-affaire/${idclient}`,
-        dataType: "json",
-        success: function(response) {
-            $(affaireClient).html("");
+        $.ajax({
+            type: "GET",
+            url: `/fetch-affaire/${idclient}`,
+            dataType: "json",
+            success: function(response) {
+                $(affaireClient).html("");
 
-            $.each(response.affaire, function(key, value) {
-                $(affaireClient).append(
-                    `<option value=${value.idAffaire}> ${value.nomAffaire}</option>`)
-            });
+                $.each(response.affaire, function(key, value) {
+                    $(affaireClient).append(
+                        `<option value=${value.idAffaire}> ${value.nomAffaire}</option>`)
+                });
 
 
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            //console.log(`JQHR ${jqXHR} \n status: ${textStatus}\n error: ${errorThrown}`);
-        }
-    });
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                //console.log(`JQHR ${jqXHR} \n status: ${textStatus}\n error: ${errorThrown}`);
+            }
+        });
 
 
 };
@@ -2859,7 +2763,7 @@ function roleASKa(id) {
     $(personneExterne).attr('hidden', true);
     $(typeAvocat).attr('required', true);
 
-    
+
 
 
 };
@@ -4072,7 +3976,7 @@ $(document).on('change', '#monnaieParDefaut', function() {
     $('#m1').val("GNF/" + monnaieParDefaut);
     $('#m2').val("EURO/" + monnaieParDefaut);
     $('#m3').val("USD/" + monnaieParDefaut);
-    $('#m4').val(" XOF/" + monnaieParDefaut);
+    $('#m4').val("FCFA/" + monnaieParDefaut);
 
 
 });
@@ -4085,10 +3989,8 @@ $("#dynamic-arRIB").click(function() {
         i +
         '][idCompteBank]" value=' + i + '><td><input type="text" name="formset[' + i +
 
-        '][nomBank]" class="form-control" required /></td><td><input type="text" name="formset[' + i +
-
-        '][devise]" class="form-control" required /></td><td><input type="text" name="formset[' + i +
-
+        '][nomBank]" class="form-control" required /></td><td><input type="text" name="formset[' +
+        i +
         '][codeBank]" class="form-control" /></td><td><input type="text" name="formset[' + i +
 
         '][codeGuichet]" class="form-control"  /></td><td><input type="text" name="formset[' + i +
@@ -4104,11 +4006,12 @@ $("#dynamic-arRIB").click(function() {
 });
 
 /*
+
 $(document).on('click', '.remove-input-field-RIB', function() {
     $(this).parents('tr').remove();
-    console.log("eoi");
 });
 */
+
 
 $(document).on('click', '.remove-input-field-RIB', function () {
     var tr = $(this).closest('tr');
@@ -4129,7 +4032,6 @@ $(document).on('click', '.remove-input-field-RIB', function () {
         tr.remove();
     }
 });
-
 
 
 
@@ -4706,60 +4608,67 @@ $('.dateProchaine').on("change", function() {
     $('.dateRecep').val(dateProchaine);
 });
 
-function fechAClientExist() {
-    var prenom = $('#inputPrenom').val();
-    var nom = $('#inputNom').val();
-    var denomination = $('#inputDenomination').val();
+function fechAClientExist(event) {
+    event.preventDefault(); // ⛔ empêche le submit auto
+
+    var denomination = $('#inputDenomination').val().trim();
     var form = document.getElementById('clientMoral');
 
     $.ajax({
         type: "GET",
-        url: "/fetch-clientName/"+ encodeURIComponent(denomination),
+        url: "/fetch-clientName/" + encodeURIComponent(denomination),
         dataType: "json",
-        success: function(response) {
-            if (response.client.length==0) {
+        success: function (response) {
+
+            if (response.client.length === 0) {
+
                 if (form.checkValidity()) {
-                    form.submit();
+                    form.submit(); // ✅ submit manuel
                 } else {
-                    alert('Veuillez remplir correctement tous les champs obligatoires.');
+                    form.reportValidity(); // ✅ message HTML5 natif
                 }
+
             } else {
                 $('#confirmClient').modal('show');
             }
         },
-        error: function(jqXHR, textStatus, errorThrown) {
-        // console.log(`JQHR ${jqXHR} \n status: ${textStatus}\n error: ${errorThrown}`);
+        error: function () {
+            alert("Erreur lors de la vérification du client.");
         }
     });
 }
 
-function fechAClientExist2() {
-    var prenom = $('#inputPrenom').val();
-    var nom = $('#inputNom').val();
+
+function fechAClientExist2(event) {
+    event.preventDefault(); // ⛔ empêche le submit automatique
+
+    var prenom = $('#inputPrenom').val().trim();
+    var nom = $('#inputNom').val().trim();
     var form = document.getElementById('clientPhysique');
+
     $.ajax({
         type: "GET",
-        url: "/fetch-clientName/"+ encodeURIComponent(prenom) + "/" +  encodeURIComponent(nom),
+        url: "/fetch-clientName/" + encodeURIComponent(prenom) + "/" + encodeURIComponent(nom),
         dataType: "json",
-        success: function(response) {
-            if (response.client.length==0) {
-                
+        success: function (response) {
+            if (response.client.length === 0) {
+
                 if (form.checkValidity()) {
-                    form.submit();
+                    form.submit(); // ✅ submit contrôlé
                 } else {
-                    alert('Veuillez remplir correctement tous les champs obligatoires.');
+                    form.reportValidity(); // ✅ affiche les erreurs HTML5
                 }
-                
+
             } else {
                 $('#confirmClient2').modal('show');
             }
-          
         },
-        error: function(jqXHR, textStatus, errorThrown) {
-        // console.log(`JQHR ${jqXHR} \n status: ${textStatus}\n error: ${errorThrown}`);
+        error: function () {
+            alert("Erreur lors de la vérification du client.");
         }
     });
 }
+
 
 function audJonction() {
 
@@ -4786,5 +4695,175 @@ function audJonction() {
     });
 };
 console.clear();
+
+</script>
+
+<script>
+
+    function fetchAffaireCouriers(idClient) {
+        var currentSlug = $('#slugCourier').val();
+        if (!idClient) return;
+
+        $.ajax({
+            type: "GET",
+            url: `/fetch-affaire-couriers/${idClient}`,
+            data: { slugCourier: currentSlug },
+            dataType: "json",
+            success: function(response) {
+                const $affaireSelect = $('#affaireClient-req');
+                const $courrierArriverSelect = $('#courrierArriverSelect');
+                const $courrierDepartSelect = $('#courrierDepartSelect');
+                const $affaireName = $('#selectedAffaireName');
+                const slugCourier = currentSlug || '';
+
+                // Reset Select2 client si initialisés
+                if ($.fn.select2) {
+                    [$affaireSelect, $courrierArriverSelect, $courrierDepartSelect].forEach($select => {
+                        if ($select.hasClass("select2-hidden-accessible")) $select.select2('destroy');
+                    });
+                }
+
+                // Vider uniquement les selects client
+                $affaireSelect.empty();
+                $courrierArriverSelect.empty();
+                $courrierDepartSelect.empty();
+                $affaireName.addClass('d-none').text('');
+
+                if (Array.isArray(response.affaires) && response.affaires.length > 0) {
+                    $('#affaireContent-req').removeClass('d-none');
+
+                    const courrierArriversParAffaire = {};
+                    const courrierDepartsParAffaire = {};
+                    const nomAffaireParId = {};
+
+                    response.affaires.forEach(item => {
+                        const affaire = item.affaire || {};
+                        const arrivers = Array.isArray(item.couriers_arrivers) ? item.couriers_arrivers : [];
+                        const departs = Array.isArray(item.couriers_departs) ? item.couriers_departs : [];
+
+                        if (!affaire.idAffaire) return;
+
+                        $affaireSelect.append(
+                            $('<option></option>').val(affaire.idAffaire).text(affaire.nomAffaire || '')
+                        );
+
+                        // Exclure le courrier en cours
+                        courrierArriversParAffaire[affaire.idAffaire] = arrivers.filter(c => c && c.slug && c.slug !== slugCourier);
+                        courrierDepartsParAffaire[affaire.idAffaire] = departs.filter(c => c && c.slug && c.slug !== slugCourier);
+                        nomAffaireParId[affaire.idAffaire] = affaire.nomAffaire || '';
+                    });
+
+                    $affaireSelect.select2();
+
+                    $affaireSelect.off('change').on('change', function () {
+                        const selectedId = parseInt($(this).val(), 10); // <-- conversion en nombre
+                        const nomAffaire = nomAffaireParId[selectedId] || '';
+                        const courriersArrivers = courrierArriversParAffaire[selectedId] || [];
+                        const courriersDeparts = courrierDepartsParAffaire[selectedId] || [];
+
+                        $affaireName.toggleClass('d-none', !nomAffaire).text(nomAffaire ? ` ${nomAffaire}` : '');
+
+                        $courrierArriverSelect.empty();
+                        $courrierDepartSelect.empty();
+
+                        // Pour les courriers arrivés
+                        $courrierArriverSelect.empty();
+                        $courrierArriverSelect.append('<option value=""></option>'); // <-- option vide
+
+                        if (courriersArrivers.length) {
+                            console.log("Courriers arrivés:", courriersArrivers);
+                            courriersArrivers.forEach(c => {
+                                if (c) $courrierArriverSelect.append(
+                                    $('<option></option>').val(c.slug || '').text(`${c.idClient || ''} > ${c.prenom || ''} ${c.nom || ''}  ${c.denomination || ''} > ${c.idAffaire || ''}  ${c.nomAffaire || ''}`)
+                                );
+                            });
+                        } else {
+                            console.log("Aucun courrier arrivé");
+                            $courrierArriverSelect.append('<option disabled>Aucun courrier arrivé</option>');
+                        }
+
+                        // Pour les courriers départs
+                        $courrierDepartSelect.empty();
+                        $courrierDepartSelect.append('<option value=""></option>'); // <-- option vide
+
+                        if (courriersDeparts.length) {
+                            console.log("Courriers départs:", courriersDeparts);
+                            courriersDeparts.forEach(c => {
+                                if (c) $courrierDepartSelect.append(
+                                    $('<option></option>').val(c.slug || '').text(`${c.idClient || ''} > ${c.prenom || ''} ${c.nom || ''} ${c.denomination || ''} > ${c.idAffaire || ''}  ${c.nomAffaire || ''}`)
+                                );
+                            });
+                        } else {
+                            console.log("Aucun courrier départ");
+                            $courrierDepartSelect.append('<option disabled>Aucun courrier départ</option>');
+                        }
+
+
+                        $courrierArriverSelect.select2();
+                        $courrierDepartSelect.select2();
+                    });
+
+                    // Pour que le premier chargement affiche déjà les courriers de l'affaire sélectionnée
+                    $affaireSelect.trigger('change');
+
+
+                } else $('#affaireContent-req').addClass('d-none');
+
+                // **Ne rien toucher aux selects du cabinet ici**
+            },
+            error: function(xhr) {
+                console.error("Erreur AJAX :", xhr.responseText);
+                alert("Erreur lors du chargement des données.");
+            }
+        });
+    }
+
+</script>
+
+<script>
+    function confirmDelete(url) {
+        Swal.fire({
+            title: 'Confirmation de suppression',
+            html: `
+                <strong>Êtes-vous sûr de vouloir supprimer ?&nbsp;</strong><br>
+                <small>Cette action est <span style="color:red;">irréversible</span>.</small>
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa fa-trash"></i> Supprimer',
+            cancelButtonText: '<i class="fa fa-times" style="color:white; margin-right:5px;"></i> Annuler',
+            confirmButtonColor: '#d33',    // Rouge
+            cancelButtonColor: '#007bff',  // Bleu
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Suppression en cours...',
+                    text: 'Veuillez patienter.',
+                    icon: 'info',
+                    showConfirmButton: false,
+                    allowOutsideClick: false
+                });
+                // Redirection après un court délai pour montrer l'effet
+                setTimeout(() => {
+                    window.location.href = url;
+                }, 800);
+            }
+        });
+    }
+
+
+    var monSwitchButton = document.getElementById("infowitch");
+    const elements = document.querySelectorAll(".infoPrive");
+
+    $('#infowitch').on('change', function () {
+            if (this.checked) {
+                // Masquer les données
+                elements.forEach(el => el.classList.remove('revealed'));
+            } else {
+                // Afficher les données
+                elements.forEach(el => el.classList.add('revealed'));
+            }
+    });
 
 </script>

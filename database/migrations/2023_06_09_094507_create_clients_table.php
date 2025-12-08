@@ -36,9 +36,9 @@ class CreateClientsTable extends Migration
             $table->string('denomination')->nullable();
             $table->string('capitalSocial')->nullable();
             $table->string('rccm')->nullable();
+            $table->string('logo')->nullable();
             $table->string('nif')->nullable();
             $table->string('cnss')->nullable();
-            $table->string('logo')->nullable();
 
             $table->string('emailFacture')->nullable();
             $table->text('slug')->nullable();

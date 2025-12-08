@@ -17,6 +17,7 @@ return new class extends Migration
             $table->collation = 'utf8_unicode_ci';
 
             $table->increments('idFacture');
+            $table->text('typeFacture');
             $table->unsignedInteger('idClient');
             $table->unsignedInteger('idAffaire');
             $table->foreign('idClient')->references('idClient')->on('clients')->onDelete('cascade');

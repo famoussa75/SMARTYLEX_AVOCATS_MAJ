@@ -31,6 +31,10 @@ use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Planification\PlanificationController;
 
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -42,7 +46,9 @@ use App\Http\Controllers\Planification\PlanificationController;
 |
 */
 
-
+ // liste courrier->affaire->client
+ Route::get('/fetch-affaire-couriers/{id}', [CourierArriverController::class, 'fetchAffaireCouriers']);
+ Route::get('/fetch-courriers-cabinet', [CourierArriverController::class, 'fetchCourriersCabinet']);
 
 
      Route::get('/', [TwoFAController::class, 'index'])->name('endPoint');
@@ -50,9 +56,15 @@ use App\Http\Controllers\Planification\PlanificationController;
      //Route::get('/', [AdministrationController::class, 'requetes'])->name('requetes');
 
 
-
+ /**
+       * Debut des routes de gestion de l'envoi des recapitulatif des audiences
+       */
+      Route::get('/send-audience-recap', [PlanificationController::class, 'sendRecapEmail'])->name('RecapEmail');
+      Route::get('/send-notification-suivi-audience', [PlanificationController::class, 'sendFollowUpReminderEmail'])->name('RecapNotification');
 
     /* Module utilisateur */
+
+    Route::get('/send-notification-suivi-audience-premier_instance', [PlanificationController::class, 'NotifSuivi'])->name('send.notification.suivi.audience');
 
     Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -210,15 +222,6 @@ use App\Http\Controllers\Planification\PlanificationController;
     /* Fin Module Client */
 
     /* Routes AJAX */
-
-   // routes/web.php
-   
-
-   // liste courrier->affaire->client
-    Route::get('/fetch-affaire-couriers/{id}', [CourierArriverController::class, 'fetchAffaireCouriers']);
-    Route::get('/fetch-courriers-cabinet', [CourierArriverController::class, 'fetchCourriersCabinet']);
-
-
 
     // Reccuperer une seule affaire
     Route::get('/fetch-affaire/{id}', [AffaireController::class, 'fetchAffaire'])->name('fetchAffaire');
@@ -586,12 +589,6 @@ use App\Http\Controllers\Planification\PlanificationController;
     });
 
 
-      /**
-       * Debut des routes de gestion de l'envoi des recapitulatif des audiences
-       */
-        Route::get('/send-audience-recap', [PlanificationController::class, 'sendRecapEmail'])->name('RecapEmail');
-
-
     // Enregistrement de l'audience
     Route::post('/audience/save', [AudiencesController::class, 'store'])->name('storeAudience');
 
@@ -628,7 +625,7 @@ use App\Http\Controllers\Planification\PlanificationController;
     Route::get('/audience/edit/{slug}/{id}', [AudiencesController::class, 'pubUpdate'])->name('editAudience');
 
     // La route permettante de mettre à jours les informations d'une audience selectionner
-    Route::post('/audience/update/{slug}/{id}', [AudiencesController::class, 'editAudience'])->name('updateAudience');
+    Route::post('/audience/update', [AudiencesController::class, 'editAudienceInfo'])->name('updateAudience');
 
     Route::post('/audience/saveJonction', [AudiencesController::class, 'saveJonction'])->name('saveJonction');
 
@@ -692,6 +689,12 @@ use App\Http\Controllers\Planification\PlanificationController;
 
     Route::get('/facturation/creation/{idClient}', [FacturationController::class, 'createFromClient'])->name('factureFormClient');
 
+    Route::post('/facturation/debours/{idFacture}/{slug}', [FacturationController::class, 'rembourserFacture'])->name('rembourserFacture');
+
+    Route::post('/facturation/validerProforma/{idFacture}/{slug}', [FacturationController::class, 'validerProforma'])->name('validerProforma');
+
+    Route::post('/facturation/rejetProforma/{idFacture}/{slug}', [FacturationController::class, 'rejeterProforma'])->name('rejeterProforma');
+
     Route::get('/facturation/creation/{idClient}/{idAffaire}', [FacturationController::class, 'createFromAffaire'])->name('factureFormAffaire');
     
     Route::get('/facturation/historique', [FacturationController::class, 'list'])->name('histoFacture');
@@ -751,8 +754,6 @@ use App\Http\Controllers\Planification\PlanificationController;
 
     Route::post('/annuaires/import', [AnnuairesController::class, 'importAnnuaireData'])->name('importAnnuaireData');
 
-    
-
 
 
     // Tous les avocats
@@ -809,10 +810,11 @@ use App\Http\Controllers\Planification\PlanificationController;
     /* Fin Données externes */
     Route::middleware('auth')->post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
+    Route::post('/soumetre-courrier-Arrivers', [CourierArriverController::class, 'soumetre'])
+    ->name('soumetreCourierArrivers'); 
+
     Route::post('/soumetre-courrier', [CourierDepartController::class, 'soumetre'])
     ->name('soumetre');
-    Route::post('/soumetre-courrier-Arrivers', [CourierArriverController::class, 'soumetre'])
-    ->name('soumetreCourierArrivers');
 
 
 });

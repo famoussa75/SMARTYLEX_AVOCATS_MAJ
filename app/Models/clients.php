@@ -25,9 +25,9 @@ class clients extends Model
         'denomination',
         'capitalSocial',
         'rccm',
+        'logo',
         'nif',
         'cnss',
-        'logo',
         'slug',
     ];
 

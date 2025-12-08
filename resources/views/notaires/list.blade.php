@@ -2,25 +2,36 @@
 @section('title','Liste des notaires')
 @section('content')
 <div class="container-fluid">
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
+   <!-- Title & Breadcrumbs -->
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
 
-        <h4 class="theme-cl"><i class="ti i-cl-0 ti-server"></i> Données externes > <span class="label bg-info"><b>Notaires</b></span></h4>
+        <!-- Bloc gauche : icône + titre -->
+        <div class="d-flex align-items-center mb-2 mb-md-0">
+            <div class="icon-wrapper theme-bg">
+                <i class="ti i-cl-0 ti-server"></i>
+            </div>
+            <div class="ms-2">
+                <h4 class="page-title mb-1">
+                    Données externes
+                    <span class="page-subtitle">
+                     › Notaires
+                    </span>
+                </h4>
+                <small class="page-description text-secondary">
+                    Gérez les notaires externes et leurs informations dans le système.
+                </small>
+            </div>
         </div>
 
-        <!-- <div class="col-md-7 text-right">
-            <div class="btn-group mr-lg-2">
-                <div class="btn-group">
-                    <a href="" title="Créer une tâche" data-toggle="modal" data-target="#addnotaire">
-                        <i class="fa fa-plus"></i>
-                        Ajouter un notaire
-                    </a>
-                </div>
-            </div>
+        <!-- Bloc droit : bouton d’action
+        <div class="d-flex align-items-center">
+            <a href="#" class="btn btn-gradient-custom shadow-sm" data-bs-toggle="modal" data-bs-target="#addnotaire" title="Ajouter un notaire">
+                <i class="fa fa-plus me-1"></i> Ajouter un notaire
+            </a>
         </div> -->
 
     </div>
+
 
     <!-- Title & Breadcrumbs-->
 

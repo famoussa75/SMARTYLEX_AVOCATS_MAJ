@@ -9,6 +9,16 @@
   <title>{{ $cabinet[0]->nomCabinet ?? 'Votre cabinet' }}</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ asset('assets/build/css/demo.css') }}">
+  <!-- Bootstrap 4 CSS -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css">
+
+  <!-- Font Awesome (pour l’icône) -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
   <link rel="shortcut icon" href="{{ URL::to('/') }}/{{ $cabinet[0]->logo ?? '' }}" />
 
   <style>
@@ -93,14 +103,15 @@
 
   </style>
 
-
-
 </head>
 <body>
+
 
   <!-- 🧾 FORMULAIRE DE CONNEXION -->
   <div class="login-container">
     <div class="login-card text-center">
+    <div id="alertAbonnement"></div>
+
       <img src="{{ URL::to('/') }}/{{ $cabinet[0]->logo ?? '' }}" class="logo mb-3" alt="Logo">
       <h2 class="mb-2">Bienvenue</h2>
       <p class="text-light mb-4">Veuillez vous connecter à votre espace</p>
@@ -188,7 +199,104 @@
     </div>
   </div>
 
+  <!-- MODAL ABONNEMENT EXPIRE -->
+  <div class="modal fade" id="modalAbonnementExpire"
+      data-backdrop="static" data-keyboard="false"
+      tabindex="-1" role="dialog" aria-hidden="true">
+
+      <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content border-0 shadow-lg">
+
+              <div class="modal-body text-center p-5">
+
+                  <div class="mb-4">
+                      <i class="fa fa-times-circle fa-4x text-danger"></i>
+                  </div>
+
+                  <h4 class="font-weight-bold mb-3 text-danger">
+                      Abonnement expiré
+                  </h4>
+
+                  <p class="text-muted mb-4">
+                      Votre abonnement est arrivé à expiration.<br>
+                      Veuillez le renouveler pour continuer à utiliser la plateforme.
+                  </p>
+
+                  <div class="mt-4 text-left">
+                    <p class="font-weight-bold mb-2">
+                        📞 Contactez notre service commercial :
+                    </p>
+
+                    <p class="mb-1">
+                        <i class="fa fa-phone text-danger mr-2"></i>
+                        <a href="tel:+224613870892" class="text-dark font-weight-bold">
+                            +224 613 87 08 92
+                        </a>
+                    </p>
+
+                    <p class="mb-0">
+                        <i class="fa fa-phone text-danger mr-2"></i>
+                        <a href="tel:+224612735577" class="text-dark font-weight-bold">
+                            +224 612 73 55 77
+                        </a>
+                    </p>
+                </div>
+
+
+              </div>
+          </div>
+      </div>
+  </div>
+
+
   <!-- JS Bootstrap -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Popper.js (obligatoire pour Bootstrap 4) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+
+<!-- Bootstrap 4 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.min.js"></script>
+
+  <script>
+    let dateOuverturePlateforme = "{{ $cabinet[0]->created_at ?? '' }}";
+    let planAbonnement = "{{ $cabinet[0]->plan ?? '' }}";
+
+    const planDurations = {
+        gratuit: 2,
+        decouverte: 6,
+        classique: 12,
+        avance: 18,
+        premium: 24
+    };
+
+    if (dateOuverturePlateforme && planDurations[planAbonnement]) {
+
+        const today = new Date();
+        const startDate = new Date(dateOuverturePlateforme);
+
+        const expirationDate = new Date(startDate);
+        expirationDate.setMonth(expirationDate.getMonth() + planDurations[planAbonnement]);
+
+        const diffDays = Math.ceil((expirationDate - today) / (1000 * 60 * 60 * 24));
+
+        const alertDiv = document.getElementById('alertAbonnement');
+
+
+        if (diffDays <= 0) {
+          $('#modalAbonnementExpire').modal('show');
+        }
+        else if (diffDays <= 30) {
+            alertDiv.innerHTML = `
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong><i class="fa fa-exclamation-triangle mr-2"></i> Abonnement bientôt expiré !</strong>
+                    Il vous reste <strong>${diffDays} jour(s)</strong> avant l’expiration de votre abonnement.
+                </div>
+            `;
+        }
+    }
+  </script>
 </body>
 </html>

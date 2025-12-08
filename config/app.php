@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Facade;
-use Illuminate\Support\Str;
 use Illuminate\Support\ServiceProvider;
 
 return [
@@ -112,7 +111,6 @@ return [
 
     'faker_locale' => 'en_US',
 
-    'slug' => str_shuffle(random_int(48727592, 94832767).sha1(sha1( random_int(48727592, 94832767)))),
     /*
     |--------------------------------------------------------------------------
     | Encryption Key
@@ -172,10 +170,10 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        
 
 
-
-
+        
     ])->toArray(),
 
     /*

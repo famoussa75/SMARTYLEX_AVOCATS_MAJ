@@ -198,7 +198,8 @@ class AdministrationController extends Controller
                 // Supprimer en base
                 CompteBancaires::where('idCompteBank', $value['idCompteBank'])->delete();
                 continue;
-            }
+            } 
+            
             if ($value['nomBank']=='') {
                 # code...
             } else {
@@ -208,7 +209,6 @@ class AdministrationController extends Controller
                    
                     'idCabinet' => $idCabinet[0]->id,
                     'nomBank' => $value['nomBank'],
-                    'devise' => $value['devise'],
                     'codeBank' => $value['codeBank'],
                     'codeGuichet' => $value['codeGuichet'],
                     'numCompte' => $value['numCompte'],

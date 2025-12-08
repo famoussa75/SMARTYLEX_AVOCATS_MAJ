@@ -264,7 +264,7 @@ class AffaireController extends Controller
                     if (in_array($c->role, ['Demandeur', 'Appelant(e)', 'Demandeur au pourvoi', 'Partie civile'])) {
                         $demandeurs[] = $partieCabinet;
                     }
-                    if (in_array($c->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi', 'Prevenu / Accusé'])) {
+                    if (in_array($c->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi', 'Prévenu(e) / Accusé(e)'])) {
                         $defendeurs[] = $partieCabinet;
                     }
                 }
@@ -275,7 +275,7 @@ class AffaireController extends Controller
                     if (in_array($e->role, ['Demandeur', 'Appelant(e)', 'Demandeur au pourvoi', 'Partie civile'])) {
                         $demandeurs[] = $e->denomination;
                     }
-                    if (in_array($e->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi', 'Prevenu / Accusé'])) {
+                    if (in_array($e->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi', 'Prévenu(e) / Accusé(e)'])) {
                         $defendeurs[] = $e->denomination;
                     }
                     if ($e->autreRole === 'pc') $partieCivile[] = $e->denomination;
@@ -289,7 +289,7 @@ class AffaireController extends Controller
                     if (in_array($p->role, ['Demandeur', 'Appelant(e)', 'Demandeur au pourvoi', 'Partie civile'])) {
                         $demandeurs[] = $personneNom;
                     }
-                    if (in_array($p->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi', 'Prevenu / Accusé'])) {
+                    if (in_array($p->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi', 'Prévenu(e) / Accusé(e)'])) {
                         $defendeurs[] = $personneNom;
                     }
                     if ($p->autreRole === 'pc') $partieCivile[] = $personneNom;
@@ -433,14 +433,16 @@ class AffaireController extends Controller
         $formattedAudiences = $this->getAudienceData($audiences, $cabinet, $personne_adverses, $entreprise_adverses, $autreRoles);
 
 
-        // procedure requete
-
-          // procedure requete
-
-          $requetes1 = DB::select("SELECT procedure_requetes.slug, procedure_requetes.* FROM procedure_requetes JOIN parties_requetes ON procedure_requetes.idProcedure = parties_requetes.idRequete
-          JOIN affaires ON parties_requetes.idAffaire = affaires.idAffaire
-          WHERE affaires.slug = ?
-         ", [$slug]);
+       //$requetes = DB::select("select * from procedure_requetes");
+       //$personne_adverses2 = DB::select("select * from personne_adverses_requetes,parties_requetes where parties_requetes.idPartie=personne_adverses_requetes.idPartie");
+        //$entreprise_adverses2 = DB::select("select * from entreprise_adverses_requetes,parties_requetes where parties_requetes.idPartie=entreprise_adverses_requetes.idPartie");
+       // $autreRoles2 = DB::select("select * from parties_requetes,procedure_requetes where procedure_requetes.idProcedure=parties_requetes.idRequete");
+       // $cabinet2 =  DB::select("select parties_requetes.idRequete,parties_requetes.idPartie,nom,prenom,email,emailEntreprise,affaires.slug as affaireslug,nomAffaire,affaires.idAffaire,denomination,clients.slug as clientslug,clients.idClient,role from parties_requetes,clients,affaires where parties_requetes.idClient=clients.idClient and parties_requetes.idAffaire=affaires.idAffaire");
+ 
+        $requetes1 = DB::select("SELECT procedure_requetes.slug, procedure_requetes.* FROM procedure_requetes JOIN parties_requetes ON procedure_requetes.idProcedure = parties_requetes.idRequete
+        JOIN affaires ON parties_requetes.idAffaire = affaires.idAffaire
+        WHERE affaires.slug = ?
+        ", [$slug]);
  
          //dd( $requetes1);
  
@@ -464,7 +466,6 @@ class AffaireController extends Controller
         
          }
 
-
         //dd($infoClient);
         return view(
             'affaires.affaireInfo',
@@ -484,8 +485,7 @@ class AffaireController extends Controller
                 'infoClient',
                 'factures',
                 'taches',
-
-
+                
                 'requetes1',
                 'personne_adverses1',
                 'entreprise_adverses1',

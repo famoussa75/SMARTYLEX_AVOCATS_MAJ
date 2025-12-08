@@ -2,27 +2,41 @@
 @section('title','Liste du personnel')
 @section('content')
 <div class="container-fluid">
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-6 align-self-center">
-            <h4 class="theme-cl"><i class="fa fa-users"></i> RH > <span class="label bg-info"><b>Personnels avec ou sans compte utilisateur</b></span></h4>
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+        <!-- Bloc gauche : icône + titre -->
+        <div class="d-flex align-items-center mb-2 mb-md-0">
+            <div class="icon-wrapper theme-bg">
+                <i class="fa fa-users"></i>
+            </div>
+            <div class="ms-2">
+                <h4 class="page-title mb-1">
+                    RH
+                    <span class="page-subtitle text-muted">› Personnels avec ou sans compte utilisateur</span>
+                </h4>
+                <small class="page-description text-secondary">
+                    Gérez tous les personnels, qu'ils disposent ou non d’un compte utilisateur.
+                </small>
+            </div>
         </div>
 
-        <div class="col-md-6 text-right">
-            <div class="btn-group mr-lg-2">
-                <a href="{{ route('personneCard') }}" class="cl-white theme-bg btn tooltips">
-                    <i class="ti-flix ti-layout-grid2"></i>
-                </a>
-            </div>
-            
-            <div class="btn-group">
-                <a href="{{ route('formPersonnel') }}" class="cl-white theme-bg btn btn-rounded" title="Ajouter un personnel">
-                    <i class="fa fa-plus"></i>
-                    Ajouter un personnel
-                </a>
-            </div>
+        <!-- Bloc droit : boutons d’action -->
+        <div class="d-flex align-items-center flex-wrap gap-2">
+            <a href="{{ route('personneCard') }}" 
+            class="btn btn-outline-primary-custom shadow-sm"
+            title="Vue grille des personnels">
+                <i class="ti-flix ti-layout-grid2"></i>
+            </a>
+            &nbsp;
+            <a href="{{ route('formPersonnel') }}" 
+            class="btn btn-gradient-custom shadow-sm"
+            title="Ajouter un personnel">
+                <i class="fa fa-plus me-1"></i> Ajouter un personnel
+            </a>
         </div>
+
     </div>
+
     <!-- Title & Breadcrumbs-->
 
 

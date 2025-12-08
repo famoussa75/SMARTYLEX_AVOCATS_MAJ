@@ -1,7 +1,6 @@
 @extends('layouts.base')
 @section('title','Courriers - Départ')
 @section('content')
-
 <style>
 .radio-sm {
     width: 18px;   /* taille du bouton */
@@ -101,13 +100,8 @@
 
                                                 <td>Date du courrier</td>
                                                 <td>
-                                                    @if(empty($courier->dateCourier))
-                                                        <small>N/A</small>
-                                                    @else
-                                                        <small
-                                                        class="label bg-success">{{ date('d-m-Y', strtotime( $courier->dateCourier))}}</small>
-                                                    @endif
-                                                    
+                                                    <small
+                                                        class="label bg-success">{{$courier->dateCourier? date('d-m-Y', strtotime( $courier->dateCourier)) :'N/A'}}</small>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -119,12 +113,8 @@
 
                                                 <td>Date d'envoi</td>
                                                 <td>
-                                                    @if(empty($courier->dateEnvoi))
-                                                        <small>N/A</small>
-                                                    @else
-                                                        <small
-                                                            class="label bg-info">{{ date('d-m-Y', strtotime( $courier->dateEnvoi))}}</small>
-                                                    @endif
+                                                    <small
+                                                        class="label bg-info">{{$courier->dateEnvoi? date('d-m-Y', strtotime( $courier->dateEnvoi)) :'N/A'}}</small>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -136,12 +126,8 @@
 
                                                 <td>Accusé reception le</td>
                                                 <td>
-                                                    @if(empty($courier->dateReception))
-                                                        <small>N/A</small>
-                                                    @else
-                                                        <small
-                                                            class="label bg-warning">{{ $courier->dateReception }}</small>
-                                                    @endif
+                                                    <small
+                                                        class="label bg-warning">{{ $courier->dateReception }}</small>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -187,34 +173,31 @@
                                             @endif
                                     </tbody>
                                 </table>
-                               
                             </div>
                         </div>
+                        @if(empty($clientAffaire))
+                        @else
+                            <div class="row">
+                                <div class="col-md-3"></div>
+                                <div class="col-md-3">
+                                <form action="{{ route('soumetre') }}" method="post">
+                                    @csrf
+                                    <div class="row">
+                                        <button type="submit" class="form-control bg-primary btn-rounded">Transmettre</button>
+                                        <input type="hidden" name="slugCourier" value="{{ $courier->slug }}">
+                                    </div>
+                                </form>
+                                </div>
+                                <div class="col-md-3"></div>
+                                <br><br><br><br>
+                            </div>
+                        
+                        @endif
                     </div>
                 </li>
                 <!-- END timeline item -->
             </ul>
-            @if(empty($clientAffaire))
-            @else
-                <div class="row">
-                    <div class="col-md-3"></div>
-                    <div class="col-md-3">
-                    <form action="{{ route('soumetre') }}" method="post">
-                        @csrf
-                        <div class="row">
-                            <button type="submit" class="form-control bg-primary btn-rounded">Transmettre</button>
-                            <input type="hidden" name="slugCourier" value="{{ $courier->slug }}">
-                        </div>
-                    </form>
-                    </div>
-                    <div class="col-md-3"></div>
-                    <br><br><br><br>
-                </div>
-            
-            @endif
-           
         </div>
-        
         <div class="card col-md-4">
             <br>
             <!-- The timeline -->
@@ -286,16 +269,10 @@
                     <span class="bg-info">
                         Courriers liés
                     </span>&nbsp;
-                    @if($courier->statut=='Annulé')
-                        
-                    @else
-                        <a href="#" title="Lier un courrier" data-toggle="modal" data-target="#modal-2"
-                                class="cl-white bg-info btn  btn-rounded">
-                                <i class="fa fa-plus"></i>
-                            </a>
-                    @endif
-                   
-                   
+                    <a href="#" title="Lier un courrier" data-toggle="modal" data-target="#modal-2"
+                        class="cl-white bg-info btn  btn-rounded">
+                        <i class="fa fa-plus"></i>
+                    </a>
                 </li>
                 <li>
                     <div class="timeline-item">
@@ -321,7 +298,7 @@
                                                         @endphp
                                                         @foreach($infoCourier as $info)
                                                             @if($info->slugCourierLier == $c->slugArriver)
-                                                                {{$info->idClient}} > {{$info->prenom}} {{$info->nom}} > {{$info->idAffaire}} {{$info->nomAffaire}}
+                                                                {{$info->idClient}} > {{$info->prenom}} {{$info->nom}} {{$info->denomination}} > {{$info->idAffaire}} {{$info->nomAffaire}}
                                                                 @php $found = true; @endphp
                                                                 @break
                                                             @endif
@@ -359,7 +336,7 @@
                                                             @foreach($infoCourierDepart as $info)
                                                         
                                                                 @if($info->slugCourierLier == $c->slugDepart)
-                                                                    {{$info->idClient}} > {{$info->prenom}} {{$info->nom}} > {{$info->idAffaire}} {{$info->nomAffaire}}
+                                                                    {{$info->idClient}} > {{$info->prenom}} {{$info->nom}} {{$info->denomination}}  > {{$info->idAffaire}} {{$info->nomAffaire}}
                                                                     @php $found = true; @endphp
                                                                     @break
                                                                 @endif
@@ -395,7 +372,80 @@
     </div>
 </div>
 
-<!-- modal-courier lier -->
+<!--
+<div class="modal modal-box-2 fade" id="modal-2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="myModalLabel">
+            <div class="modal-header theme-bg">
+                <ul class="card-actions icons right-top">
+                    <li>
+                        <a href="javascript:void(0)" class="text-white" data-dismiss="modal" aria-label="Close">
+                            <i class="ti-close"></i>
+                        </a>
+                    </li>
+                </ul>
+                <h4 class="modal-title text-center"><i class="fa fa-link"></i> Lier à d'autres courriers</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="card">
+
+                            <form class="padd-20" method="post" action="{{route('saveCourierLier')}}"
+                                accept-charset="utf-8" enctype="multipart/form-data">
+                                <div class="text-center">
+                                    @csrf
+                                </div>
+                                <div class="row mrg-0">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="inputPName" class="control-label">Courriers Arrivé/Départ </label>
+                                            <select class="form-control select2" style="width: 100%;" name="idCourierLier[]" id="preparant" multiple required>
+                                                    @foreach ($courierArrivers as $row)
+                                                    <option value="{{ $row->slug }}">Courrier-Arrivé N° {{ $row->numero }}</option>
+                                                    @endforeach
+                                                    @foreach ($courierDeparts as $row2)
+                                                    <option value="{{ $row2->slug }}">Courrier-Départ N° {{ $row2->numCourier }}</option>
+                                                    @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if(empty($courierArriverLiers) && !empty($courierDepartLiers))
+                                   <input type="hidden" name="cleCommune" value="{{$courierDepartLiers[0]->cleCommune}}">
+                                @elseif(!empty($courierArriverLiers) && empty($courierDepartLiers))
+                                    <input type="hidden" name="cleCommune" value="{{$courierArriverLiers[0]->cleCommune}}">
+                                @elseif(!empty($courierArriverLiers) && !empty($courierDepartLiers))
+                                    <input type="hidden" name="cleCommune" value="{{$courierArriverLiers[0]->cleCommune}}">
+                                @else
+                                    <input type="hidden" name="cleCommune" value="">
+                                @endif
+
+                                <input type="hidden" name="slugCourier" value="{{$courier->slug}}">
+                           
+                                <div class="row mrg-0">
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <div class="text-center">
+                                                <button type="submit" class="theme-bg btn btn-rounded btn-block "
+                                                    style="width:50%;"> Enregistrer</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ -->
 <div class="modal modal-box-2 fade" id="modal-2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -428,7 +478,7 @@
                                     </label>
                                 
                                     <label>
-                                        <input type="radio" name="categorie" id="cabinet" value="arrive" class="radio-sm"> Courrier  cabinet
+                                        <input type="radio" name="categorie" id="cabinet" value="arrive" class="radio-sm"> Courrier cabinet
                                     </label>
                                     <label>
                                         <input type="radio" name="categorie" id="suggerer" value="suggerer" class="radio-sm"> Me suggerer
@@ -438,14 +488,17 @@
 
                                 <div class="container" id="suggererClient">
                                     <div class="row">
-                                    <label for="clientReq">Suggestions de courriers arrivée' concernant ce client:</label>
+                                    <label for="clientReq">Suggestions de courriers arrivée concernant ce client:</label>
 
                                         <select id=""  class="form-control select2" style="width:100%" name="idCourierLier[]" >
                                             <option value=""></option>
                                             
                                             @foreach ($suggeCourierDepart as $c)
                                                
-                                                <option value="{{ $c->slugDepart }}">{{$c->idClient }}>  {{ $c->prenom }} {{ $c->nom }} >{{ $c->idAffaire }} {{ $c->nomAffaire }} 
+                                               
+                                                     <!--   <option value="{{ $c->slugDepart }}">{{$c->idClient }}>  {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }} >{{ $c->idAffaire }} {{ $c->nomAffaire }}  >{{ $c->idAffaire }} {{ $c->nomAffaire }} -->
+                                                 <option value="{{ $c->slugDepart }}">N° {{$c->numero}}  - {{$c->objet}} 
+                                                 
                                                 </option>
                                             @endforeach
                                         </select>
@@ -514,7 +567,7 @@
                                             <option value=""></option>
                                             @foreach($courriersArriverCabinet as $cabinet)
                                                 @if($cabinet->slug)
-                                                    <option value="{{ $cabinet->slug }}">{{ $cabinet->numero }} {{ $cabinet->objet }}</option>
+                                                    <option value="{{ $cabinet->slug }}"> N° {{ $cabinet->numero }} - {{ $cabinet->objet }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -528,7 +581,7 @@
                                             @foreach($courriersDepartCabinet as $cabinet)
                                                 @if($cabinet->slug)
                                             
-                                                    <option value="{{ $cabinet->slug }}">{{ $cabinet->numCourier }} {{ $cabinet->objet }}</option>
+                                                    <option value="{{ $cabinet->slug }}">N° {{ $cabinet->numCourier }} - {{ $cabinet->objet }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -571,14 +624,12 @@
         </div>
     </div>
 </div>
-<!-- End modal-courier lier -->
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
 document.getElementById('cr').classList.add('active');
 </script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
 
@@ -630,5 +681,6 @@ document.getElementById('cr').classList.add('active');
     });
 
 </script>
+
 
 @endsection

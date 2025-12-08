@@ -10,6 +10,7 @@ class Factures extends Model
     protected $primaryKey = 'idFacture';
     protected $fillable = [
         'idFacture',
+        'typeFacture',
         'idClient',
         'idAffaire',
         'dateFacture',
@@ -21,6 +22,8 @@ class Factures extends Model
         'monnaie',
         'notification',
         'rappel',
+        'motif_remboursement',
+        'motif_rejetProforma',
         'slug',
     ];
     use HasFactory;

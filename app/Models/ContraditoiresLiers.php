@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ContraditoiresLiers extends Model
 {
-    protected $table = 'contraditoire_liers';
+    protected $table = 'contraditoire_liers'; // ✅ Correction ici
     protected $primaryKey = 'idContraditoireLier';
     protected $fillable = [
         'idContraditoireLier',

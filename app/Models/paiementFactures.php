@@ -19,8 +19,9 @@ class paiementFactures extends Model
         'banqueCheque',
         'numeroCheque',
         'dateVirement',
+        'emoney',
+        'ref_emoney',
         'statut',
         'slug',
-        
     ];
 }

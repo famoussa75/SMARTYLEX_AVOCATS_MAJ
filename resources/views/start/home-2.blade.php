@@ -31,7 +31,7 @@
                 <div class="widget-caption primary">
                     <div class="row">
                         <div class="col-4 padd-r-0">
-                            <i class="icon ti-user"></i>
+                            <i class="icon fa fa-id-card"></i>
                         </div>
                         <div class="col-8">
                             <div class="widget-detail">
@@ -163,7 +163,7 @@
                                                     @endphp
 
                                                     @foreach($entreprise_adverses as $e)
-                                                        @if($w->idAudience === $e->idAudience && in_array($e->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi','Prevenu / Accusé']))
+                                                        @if($w->idAudience === $e->idAudience && in_array($e->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi','Prévenu(e) / Accusé(e)']))
                                                             @php
                                                                 $denominations[] = $e->denomination;
                                                             @endphp
@@ -179,7 +179,7 @@
                                                     @endphp
 
                                                     @foreach($personne_adverses as $p)
-                                                        @if($w->idAudience === $p->idAudience && in_array($p->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi','Prevenu / Accusé']))
+                                                        @if($w->idAudience === $p->idAudience && in_array($p->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi','Prévenu(e) / Accusé(e)']))
                                                             @php
                                                                 $personnes[] = $p->prenom . ' ' . $p->nom;
                                                             @endphp
@@ -240,7 +240,7 @@
                                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
                                                                     @break 
                                                                 @endif
-                                                                @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
+                                                                @if($w->idAudience === $c->idAudience && $c->role=='Prévenu(e) / Accusé(e)')
                                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
                                                                     @break 
                                                                 @endif
@@ -257,7 +257,7 @@
                                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
                                                                     @break 
                                                                 @endif
-                                                                @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
+                                                                @if($w->idAudience === $c->idAudience && $c->role=='Prévenu(e) / Accusé(e)')
                                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
                                                                     @break 
                                                                 @endif

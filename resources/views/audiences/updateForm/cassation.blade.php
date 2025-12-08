@@ -124,7 +124,7 @@
                                         <label for="affaire" class="control-label">Affaire du client
                                             concerné*
                                             :</label>
-                                        <select data-placeholder="Affaire du client concerné" style="width: 100%;height:28px" name="formset[0][idAffaire]" id="affaireClient-0" >
+                                        <select data-placeholder="Affaire du client concerné" style="width: 100%;height:28px" name="formset[0][idAffaire]" id="affaireClient-0" class="form-select select2">
                                             <option value="{{$partiesCabinet[0]->idAffaire}}">
                                                     {{$partiesCabinet[0]->nomAffaire}}</option>
                                     

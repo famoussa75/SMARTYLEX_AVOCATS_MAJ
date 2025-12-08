@@ -383,7 +383,7 @@ class ClientController extends Controller
                     if (in_array($c->role, ['Demandeur', 'Appelant(e)', 'Demandeur au pourvoi', 'Partie civile'])) {
                         $demandeurs[] = $partieCabinet;
                     }
-                    if (in_array($c->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi', 'Prevenu / Accusé'])) {
+                    if (in_array($c->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi', 'Prévenu(e) / Accusé(e)'])) {
                         $defendeurs[] = $partieCabinet;
                     }
                 }
@@ -394,7 +394,7 @@ class ClientController extends Controller
                     if (in_array($e->role, ['Demandeur', 'Appelant(e)', 'Demandeur au pourvoi', 'Partie civile'])) {
                         $demandeurs[] = $e->denomination;
                     }
-                    if (in_array($e->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi', 'Prevenu / Accusé'])) {
+                    if (in_array($e->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi', 'Prévenu(e) / Accusé(e)'])) {
                         $defendeurs[] = $e->denomination;
                     }
                     if ($e->autreRole === 'pc') $partieCivile[] = $e->denomination;
@@ -408,7 +408,7 @@ class ClientController extends Controller
                     if (in_array($p->role, ['Demandeur', 'Appelant(e)', 'Demandeur au pourvoi', 'Partie civile'])) {
                         $demandeurs[] = $personneNom;
                     }
-                    if (in_array($p->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi', 'Prevenu / Accusé'])) {
+                    if (in_array($p->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi', 'Prévenu(e) / Accusé(e)'])) {
                         $defendeurs[] = $personneNom;
                     }
                     if ($p->autreRole === 'pc') $partieCivile[] = $personneNom;
@@ -431,7 +431,7 @@ class ClientController extends Controller
                 'idAudience' => $row->idAudience,
                 'slugAud' => $row->slugAud,
                 'objet' => $row->objet,
-                'prochaineAudience' => $row->prochaineAudience,
+                'dateAudience' => $row->dateAudience,
                 'statutAud' => $row->statutAud,
                 'numRg' => $row->numRg,
                 'niveauProcedural' => $row->niveauProcedural,
@@ -491,7 +491,7 @@ class ClientController extends Controller
 
         // recuperation des informations audiences du clients
 
-        $audienceClient = DB::select("SELECT idAudience,subquery.numRg, subquery.objet, subquery.niveauProcedural, subquery.slugAud, subquery.statutAud, isChild, prochaineAudience 
+        $audienceClient = DB::select("SELECT idAudience,subquery.numRg, subquery.objet, subquery.niveauProcedural, subquery.slugAud, subquery.statutAud, isChild, prochaineAudience as dateAudience
         FROM (
             SELECT MAX(idAudience) as idAudience, MAX(numRg) as numRg, MAX(objet) as objet, MAX(niveauProcedural) as niveauProcedural, slugAud, statutAud, MAX(isChild) as isChild, MAX(prochaineAudience) as prochaineAudience
             FROM (
@@ -518,7 +518,6 @@ class ClientController extends Controller
         ) AS subquery
         WHERE isChild is null or isChild!='oui'
         ORDER BY idAudience ASC");
-
 
 
         // recuperation des informations du courrier depart du client
@@ -560,12 +559,17 @@ class ClientController extends Controller
 
         $formattedAudiences = $this->getAudienceData($audienceClient, $cabinet, $personne_adverses, $entreprise_adverses, $autreRoles);
 
-
-        // procedure requete
+        // requetes 
+       // $requetes = DB::select("select * from procedure_requetes");
+        //$personne_adverses2 = DB::select("select * from personne_adverses_requetes,parties_requetes where parties_requetes.idPartie=personne_adverses_requetes.idPartie");
+        //$entreprise_adverses2 = DB::select("select * from entreprise_adverses_requetes,parties_requetes where parties_requetes.idPartie=entreprise_adverses_requetes.idPartie");
+        //$autreRoles2 = DB::select("select * from parties_requetes,procedure_requetes where procedure_requetes.idProcedure=parties_requetes.idRequete");
+        //$cabinet2 =  DB::select("select parties_requetes.idRequete,parties_requetes.idPartie,nom,prenom,email,emailEntreprise,affaires.slug as affaireslug,nomAffaire,affaires.idAffaire,denomination,clients.slug as clientslug,clients.idClient,role from parties_requetes,clients,affaires where parties_requetes.idClient=clients.idClient and parties_requetes.idAffaire=affaires.idAffaire");
+ 
 
         $requetes1 = DB::select("SELECT procedure_requetes.slug, procedure_requetes.* FROM procedure_requetes JOIN parties_requetes ON procedure_requetes.idProcedure = parties_requetes.idRequete
-         JOIN clients ON parties_requetes.idClient = clients.idClient
-         WHERE clients.idClient = ?
+        JOIN clients ON parties_requetes.idClient = clients.idClient
+        WHERE clients.idClient = ?
         ", [$id]);
 
         //dd( $requetes1);
@@ -591,6 +595,7 @@ class ClientController extends Controller
         }
        
 
+
         return view('clients.infoClient', compact(
             'cabinet',
             'personne_adverses',
@@ -609,13 +614,12 @@ class ClientController extends Controller
             'personnelClient',
             'factures',
             'annuaires',
-
-            'requetes1',
+            
+             'requetes1',
             'personne_adverses1',
             'entreprise_adverses1',
             'autreRoles1',
             'cabinet1'
-
         ));
     }
 

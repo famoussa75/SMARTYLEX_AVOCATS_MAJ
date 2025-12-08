@@ -616,9 +616,9 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <label class="custom-control custom-radio">
                                     <input id="roleASKa-` + i + `" name="formset[` + i + `][role]"
                                         type="radio" class="custom-control-input" onclick="var id=` + i + `; roleASKa(id)"
-                                        value="Prevenu / Accusé" required>
+                                        value="Prévenu(e) / Accusé(e)" required>
                                     <span class="custom-control-indicator"></span>
-                                    <span class="custom-control-description">Prevenu / Accusé</span>
+                                    <span class="custom-control-description">Prévenu(e) / Accusé(e)</span>
                                 </label>
                             </div>
                         </div>

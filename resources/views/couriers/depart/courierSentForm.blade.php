@@ -3,21 +3,35 @@
 @section('content')
 
 <div class="container-fluid">
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"><i class="fa fa-envelope"></i> Courriers - Départ > <span class="label bg-info"><b>Création</b></span></h4>
+<div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+    <!-- Bloc gauche : icône + titre -->
+    <div class="d-flex align-items-center mb-2 mb-md-0">
+        <div class="icon-wrapper theme-bg">
+            <i class="fa fa-envelope-open"></i>
         </div>
-        <div class="col-md-7 text-right">
-            <div class="btn-group">
-                <a href="{{ route('listCourierDepart') }}" title="Liste des couriers"
-                    class="cl-white theme-bg btn  btn-rounded">
-                    <i class="fa fa-navicon"></i>
-                    Liste Courriers - Départ
-                </a>
-            </div>
+        <div class="ms-2">
+            <h4 class="page-title mb-1">
+                Courriers - Départ 
+                <span class="page-subtitle text-muted">› Création</span>
+            </h4>
+            <small class="page-description text-secondary">
+                Enregistrez un nouveau courrier sortant dans le système.
+            </small>
         </div>
     </div>
+
+    <!-- Bloc droit : bouton d’action -->
+    <div class="d-flex align-items-center">
+        <a href="{{ route('listCourierDepart') }}" 
+           class="btn btn-gradient-custom" 
+           title="Liste des courriers départ">
+            <i class="fa fa-list me-1"></i> Liste des courriers - Départ
+        </a>
+    </div>
+
+</div>
+
     <!-- Title & Breadcrumbs-->
 
 
@@ -36,6 +50,8 @@
             @csrf
             <div class="col-md-12 col-sm-12">
                 <div class="card padd-20">
+                    <h5 class="page-title">Etape 1</h5>
+                    <hr>
                     <div class="col-md-8">
                         <div class="form-group">
                             <label>Type de courrier</label>
@@ -97,10 +113,10 @@
                             
                                     <option value=0>-- Ne pas lier --</option>
                                     @foreach ($courierArrivers as $row)
-                                    <option value="{{ $row->slug }}">Courrier-Arrivé N° {{ $row->numero }} - {{$row->objet}}</option>
-                                    @endforeach
+                                    <option value="{{ $row->slug }}">Courrier-Arrivé N° {{ $row->numero }} - {{ $row->objet }}</option>
+                                    @endforeach 
                                     @foreach ($courierDeparts as $row2)
-                                    <option value="{{ $row2->slug }}">Courrier-Départ N° {{ $row2->numCourier }} - {{$row2->objet}}</option>
+                                    <option value="{{ $row2->slug }}">Courrier-Départ N° {{ $row2->numCourier }} - {{ $row->objet }}</option>
                                     @endforeach
                             </select>
                         </div>
@@ -109,6 +125,8 @@
                 </div>
 
                 <div class="card padd-20">
+                    <h5 class="page-title">Etape 2</h5>
+                    <hr>
 
                     <div class="row mrg-0">
                         <div class="col-sm-2">
@@ -569,8 +587,7 @@
                     <div class="col-12">
                         <div class="form-group">
                             <div class="text-center">
-                                <button type="submit" class="theme-bg btn btn-rounded btn-block"
-                                    style="width:50%;">Enregistrer</button>
+                                <button type="submit" class="theme-bg btn btn-rounded btn-block"><i class="fa fa-save"></i> Enregistrer</button>
                             </div>
                         </div>
                     </div>

@@ -68,7 +68,7 @@
                                     <select name="formset[0][autreRole]" id="otherSelect-0" onchange="var id=0;otherSelect(id)" class="form-control select2" style="width:100%" data-placeholder="Choisissez..." >
                                         <option value="" selected disabled>-- Choisissez --</option>
                                         <option value='in'>Intervenant</option>
-                                        <option value='pc'>Partie civile</option>
+                                        
                                         <option value='mp'>Ministère public</option>
                                     </select>
                                 </div>
@@ -118,7 +118,7 @@
                                     <label for="affaire" class="control-label">Affaire du client
                                         concerné*
                                         :</label>
-                                    <select data-placeholder="Affaire du client concerné" style="width: 100%;height:28px" name="formset[0][idAffaire]" id="affaireClient-0" >
+                                    <select data-placeholder="Affaire du client concerné" style="width: 100%;height:28px" name="formset[0][idAffaire]" id="affaireClient-0" class="form-select select2">
 
                                     </select>
                                     <div class="help-block with-errors"></div>

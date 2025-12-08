@@ -4,23 +4,40 @@
 <div class="container-fluid">
     @foreach ($personnel as $person)
     <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"><i class="fa fa-user"></i> RH > <span class="label bg-info"><b>Profil utilisateur</b></span></h4>
-        </div>
-        @if(Auth::user()->role=='Administrateur')
-        <div class="col-md-7 text-right">
-            <div class="btn-group">
-                <a href="{{ route('allPersonnel') }}" class="cl-white theme-bg btn btn-rounded"
-                    title="Enregistrer un personnel">
-                    <i class="fa fa-navicon"></i>
-                    Liste du personnel
-                </a>
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+        <!-- Bloc gauche : icône + titre -->
+        <div class="d-flex align-items-center mb-2 mb-md-0">
+            <div class="icon-wrapper theme-bg">
+                <i class="fa fa-user"></i>
+            </div>
+            <div class="ms-2">
+                <h4 class="page-title mb-1">
+                    RH
+                    <span class="page-subtitle text-muted">› Profil utilisateur</span>
+                </h4>
+                <small class="page-description text-secondary">
+                    Consultation des informations du compte utilisateur.
+                </small>
             </div>
         </div>
-        @else
+
+        <!-- Bloc droit : action -->
+        @if(Auth::user()->role=='Administrateur')
+        <div class="d-flex align-items-center flex-wrap gap-2">
+
+            <a href="{{ route('allPersonnel') }}"
+            class="btn btn-outline-primary-custom shadow-sm"
+            title="Liste du personnel">
+                <i class="ti-view-list-alt"></i>
+                <span class="d-none d-md-inline">Liste du personnel</span>
+            </a>
+
+        </div>
         @endif
+
     </div>
+
     <!-- Title & Breadcrumbs-->
 
     <!-- row -->
@@ -164,14 +181,7 @@
                                             {{ $row->denomination }}
                                         </td>
                                         @endif
-                                        <td>
-                                            @if(empty($row->dateFin))
-                                                <small>N/A</small>
-                                            @else
-                                                {{ date('d-m-Y', strtotime($row->dateFin)) }}
-                                            @endif
-                                           
-                                        </td>
+                                        <td>{{ date('d-m-Y', strtotime($row->dateFin)) }}</td>
                                         <td>
                                             <span class="btn btn-small font-midium font-13 btn-rounded @if($row->fonction=='Responsable')bg-primary-light @else bg-default-light @endif"> 
                                                 {{ $row->fonction }}

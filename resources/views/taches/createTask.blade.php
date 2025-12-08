@@ -6,36 +6,49 @@
 <div class="container-fluid">
     <!-- Title & Breadcrumbs-->
 
-    <!-- page creation-->
-    <div class="row page-breadcrumbs ">
-    @if($tacheAff==false)
-    <div class="col-md-5 align-self-center">
-            <h5 class="theme-cl"><i class="ti i-cl-0 ti-layers"></i> Tâches > <span class="label bg-info"><b>Nouvelle de Tâche</b></span></h5>
-    </div>
-    @else
-    <div class="col-md-5 align-self-center">
-        <h5 class="theme-cl">
-            @foreach ($clients as $data )
-                {{ $data->idClient }} > {{$data->prenom}} {{$data->nom}} {{$data->denomination}} >
-            @endforeach
-            @foreach ($affaire as $aff)
-                {{ $aff->idAffaire }} {{ $aff->nomAffaire }} >
-            @endforeach
-            <span class="label bg-info-light"><b>Nouvelle de tâche</b></span>
-        </h5>
-    </div>
-  
-    @endif
-       
-        <div class="col-md-7 text-right">
-            <div class="btn-group">
-                <a type="button" href="{{ route('allTasks') }}" class="cl-white theme-bg btn btn-rounded" title="Voir la liste des tâches">
-                    <i class="fa fa-navicon"></i>
-                    Liste des Tâches
-                </a>
-            </div>
+   <!-- Page Creation -->
+<div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+    <!-- Bloc gauche : icône + titre -->
+    <div class="d-flex align-items-center mb-2 mb-md-0">
+        <div class="icon-wrapper theme-bg">
+            <i class="ti i-cl-0 ti-layers"></i>
+        </div>
+        <div class="ms-2">
+            <h4 class="page-title mb-1">
+                Tâches
+                @if($tacheAff == false)
+                    <span class="page-subtitle">
+                    › Nouvelle tâche
+                    </span>
+                @else
+                    @foreach ($clients as $data )
+                        {{ $data->idClient }} › {{ $data->prenom }} {{ $data->nom }} {{ $data->denomination }} ›
+                    @endforeach
+                    @foreach ($affaire as $aff)
+                        {{ $aff->idAffaire }} {{ $aff->nomAffaire }} ›
+                    @endforeach
+                    <span class="page-subtitle badge bg-light border text-dark px-3 py-2 shadow-sm">
+                        <b>Nouvelle tâche</b>
+                    </span>
+                @endif
+            </h4>
+            <small class="page-description text-secondary">
+                Créez une nouvelle tâche et assignez-la aux clients et affaires concernés.
+            </small>
         </div>
     </div>
+
+    <!-- Bloc droit : bouton d’action -->
+    <div class="d-flex align-items-center">
+        <a href="{{ route('allTasks') }}" 
+        class="btn btn-gradient-custom shadow-sm" 
+        title="Voir la liste des tâches">
+            <i class="fa fa-navicon me-1"></i> Liste des tâches
+        </a>
+    </div>
+</div>
+
     <!-- Title & Breadcrumbs-->
 
 
@@ -180,7 +193,7 @@
                                             <div class="form-group">
                                                 <label for="R" class="control-label">Type de tâche :</label>
 
-                                                <select class="form-control select2" data-placeholder="selectionner le client" style="width: 100%;" name="idTypeTache"  required>
+                                                <select class="form-select select2" data-placeholder="selectionner le client" style="width: 100%;" name="idTypeTache"  required>
                                                     <option value=1>Tâche ordinaire</option>
 
                                                 </select>
@@ -288,7 +301,7 @@
                                         </div>
                                     </div>
                                     <div class="row mrg-0">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             <div class="form-group">
                                                 <label for="type" class="control-label">Piece(s) jointe(s) ( Facultatif )</label>
                                                 <input type="file" accept="image/*,.pdf," class="fichiers form-control" name="fichiers[]" multiple>
@@ -296,11 +309,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row mrg-0">
+                                    <div class="row mrg-0 mt-2">
                                         <div class="col-12">
                                             <div class="form-group">
                                                 <div class="text-center">
-                                                    <button type="submit" class="theme-bg btn btn-rounded btn-block" style="width:50%;" id="addTache"> Enregistrer</button>
+                                                    <button type="submit" class="theme-bg btn btn-rounded btn-block" id="addTache"><i class="fa fa-save"></i> Enregistrer</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -327,7 +340,7 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label for="R" class="control-label">Type de tâche :</label><br>
-                                                <select class="select-control select" style="width:100%;height:35px" name="idTypeTache" id="typeTache" required>
+                                                <select class="form-select select2" style="width:100%;height:35px" name="idTypeTache" id="typeTache" required>
                                                    
                                                     <option value="" selected disabled>-- Choisissez --</option>
                                                     @foreach($typeTaches as $t)
@@ -806,7 +819,7 @@
                                     </div>
 
                                     <div class="row mrg-0">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             <div class="form-group">
                                                 <label for="type" class="control-label">Piece(s) jointe(s) ( Facultatif )</label>
                                                 <input type="file" accept="image/*,.pdf," class="fichiers form-control" name="fichiers[]" multiple>
@@ -818,7 +831,7 @@
                                         <div class="col-12">
                                             <div class="form-group">
                                                 <div class="text-center">
-                                                    <button type="submit" class="theme-bg btn btn-rounded btn-block " style="width:50%;" id="addTache"> Enregistrer</button>
+                                                    <button type="submit" class="theme-bg btn btn-rounded btn-block " id="addTache"><i class="fa fa-save"></i> Enregistrer</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -852,7 +865,7 @@
                                             <div class="form-group">
                                                 <label for="R" class="control-label">Type de tâche :</label>
 
-                                                <select class="form-control select2" style="width: 100%;" name="idTypeTache" id="typeTache" required>
+                                                <select class="form-select select2" style="width: 100%;" name="idTypeTache" id="typeTache" required>
                                                     <option value="1">Tâche cabinet</option>
 
                                                 </select>
@@ -954,7 +967,7 @@
                                         </div>
                                     </div>
                                     <div class="row mrg-0">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             <div class="form-group">
                                                 <label for="type" class="control-label">Piece(s) jointe(s) ( Facultatif )</label>
                                                 <input type="file" accept="image/*,.pdf," class="fichiers form-control" name="fichiers[]" multiple>
@@ -962,11 +975,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row mrg-0">
+                                    <div class="row mrg-0 mt-2">
                                         <div class="col-12">
                                             <div class="form-group">
                                                 <div class="text-center">
-                                                    <button type="submit" class="theme-bg btn btn-rounded btn-block" style="width:50%;" id="addTache"> Enregistrer</button>
+                                                    <button type="submit" class="theme-bg btn btn-rounded btn-block" id="addTache"><i class="fa fa-save"></i> Enregistrer</button>
                                                 </div>
                                             </div>
                                         </div>

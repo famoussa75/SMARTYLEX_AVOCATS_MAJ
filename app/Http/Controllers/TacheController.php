@@ -581,25 +581,6 @@ class TacheController extends Controller
                     // Enregistrement
                     $tache->save();
 
-                    $admins = DB::select("select * from users where role='Administrateur'");
-
-                    foreach ($admins as $a) {
-                        DB::select(
-                            'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
-                            [
-                                'Tâche',
-                                'Vous avez une nouvelle tâche en attente.',
-                                'masquer',
-                                'admin',
-                                $request->_token . "" . rand(1234, 3458),
-                                "non",
-                                "infosTask",
-                                $tache->slug,
-                                $a->id
-                            ]
-                        );
-                    }
-
                     
                     $idTache = DB::select("select idTache from taches where slug=?", [$tache->slug]);
                     for ($j = 0; $j < count($arrResponsable); $j++) {

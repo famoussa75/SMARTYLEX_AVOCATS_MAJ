@@ -36,16 +36,21 @@ class TwoFAController extends Controller
     public function index()
     {
 
-         // Vérifie si la période de 6 mois est écoulée
-         if ($this->isPastSixMonths()) {
-            // Redirection ou réponse d'erreur 403
-            return response()->view('errors.403');
-        }else {
-            $user = User::all()->count();
-            $cabinet = DB::select("select * from cabinets");
+        //  // Vérifie si la période de 6 mois est écoulée
+        //  if ($this->isPastSixMonths()) {
+        //     // Redirection ou réponse d'erreur 403
+        //     return response()->view('errors.403');
+        // }else {
+        //     $user = User::all()->count();
+        //     $cabinet = DB::select("select * from cabinets");
 
-            return view('auth.login', compact('user', 'cabinet'));
-        }
+        //     return view('auth.login', compact('user', 'cabinet'));
+        // }
+
+        $user = User::all()->count();
+        $cabinet = DB::select("select * from cabinets");
+
+        return view('auth.login', compact('user', 'cabinet'));
        
     }
 
@@ -58,9 +63,13 @@ class TwoFAController extends Controller
             $lastUsedDate =  date(("Y-m-d"), strtotime( $cabinet[0]->created_at));// Récupérer la date de dernière utilisation depuis la base de données ou un autre stockage
                 // Vérifie si 6 mois se sont écoulés depuis la dernière utilisation
             if ($cabinet[0]->plan=='gratuit') {
-                return Carbon::parse($lastUsedDate)->addMonths(1)->isPast();
-            } elseif ($cabinet[0]->plan=='standard') {
+                return Carbon::parse($lastUsedDate)->addMonths(2)->isPast();
+            } elseif ($cabinet[0]->plan=='decouverte') {
+                return Carbon::parse($lastUsedDate)->addMonths(6)->isPast();
+            }elseif ($cabinet[0]->plan=='classique') {
                 return Carbon::parse($lastUsedDate)->addMonths(12)->isPast();
+            }elseif ($cabinet[0]->plan=='avance') {
+                return Carbon::parse($lastUsedDate)->addMonths(18)->isPast();
             } elseif ($cabinet[0]->plan=='premium') {
                 return Carbon::parse($lastUsedDate)->addMonths(24)->isPast();
             }else{}
@@ -68,7 +77,6 @@ class TwoFAController extends Controller
         }else{}
        
         
-    
     }
   
     /**

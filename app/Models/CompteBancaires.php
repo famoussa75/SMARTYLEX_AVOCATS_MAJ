@@ -13,7 +13,6 @@ class CompteBancaires extends Model
         'idCompteBank',
         'idCabinet',
         'nomBank',
-        'devise',
         'codeBank',
         'codeGuichet',
         'numCompte',

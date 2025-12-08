@@ -55,7 +55,7 @@ class FacturationController extends Controller
                 END
             ) AS TFactures
         FROM factures
-        WHERE factures.statut != 'Annulée'");
+        WHERE factures.statut NOT IN ('Annulée', 'Remboursée') AND factures.typeFacture='Finale'");
         
         $TFacturesPaye = DB::select("
         SELECT 
@@ -69,7 +69,7 @@ class FacturationController extends Controller
                     END
                 ) AS TFacturesPaye
             FROM factures,paiement_factures
-            WHERE factures.statut = 'Payée' ");
+            WHERE factures.statut = 'Payée' AND factures.typeFacture='Finale' ");
 
         $TFacturesEncours = DB::select("
                 SELECT
@@ -83,7 +83,21 @@ class FacturationController extends Controller
                     END
                 ) AS TFacturesEncours
             FROM factures
-            WHERE statut = 'En cours de paiement' ");
+            WHERE statut = 'En cours de paiement' AND factures.typeFacture='Finale' ");
+
+        $TFacturesRembourser= DB::select("
+            SELECT
+            SUM(
+                CASE
+                    WHEN monnaie = 'GNF' THEN montantTTC * $valeurTauxGNF
+                    WHEN monnaie = '€' THEN montantTTC * $valeurTauxEURO
+                    WHEN monnaie = '$' THEN montantTTC * $valeurTauxUSD
+                    WHEN monnaie = 'FCFA' THEN montantTTC * $valeurTauxFCFA
+                    ELSE 0 
+                END
+            ) AS TFacturesRembourser
+            FROM factures
+            WHERE statut = 'Remboursée' AND factures.typeFacture='Finale' ");
 
         $TFacturesDue1 = DB::select("
                         SELECT
@@ -97,7 +111,7 @@ class FacturationController extends Controller
                         END
                     ) AS TFacturesDue
                 FROM factures
-                WHERE factures.statut = 'En retard' ");
+                WHERE factures.statut = 'En retard' AND factures.typeFacture='Finale' ");
         
 
         $TFacturesDue2 = DB::select("
@@ -112,7 +126,7 @@ class FacturationController extends Controller
                 END
             ) AS TFacturesDue
         FROM factures,paiement_factures 
-        WHERE factures.statut = 'En cours de paiement'");
+        WHERE factures.statut = 'En cours de paiement' AND factures.typeFacture='Finale' ");
 
 
         $TFacturesDue = $TFacturesDue1[0]->TFacturesDue + $TFacturesDue2[0]->TFacturesDue;
@@ -120,7 +134,7 @@ class FacturationController extends Controller
 
         $cabinet = DB::select("select * from cabinets");
         $plan = $cabinet[0]->plan;
-        return view('facturations.historique',compact('factures','TFactures','TFacturesPaye','TFacturesEncours','TFacturesDue','monnaieParDefaut','plan','facturesPaiements'));
+        return view('facturations.historique',compact('factures','TFactures','TFacturesPaye','TFacturesEncours','TFacturesDue','monnaieParDefaut','plan','facturesPaiements','TFacturesRembourser'));
     }
 
     /**
@@ -183,6 +197,7 @@ class FacturationController extends Controller
             'montantTTC' =>$request->montantTTC,
             'monnaie' =>$request->monnaie,
             'dateEcheance' =>$request->dateEcheance,
+            'typeFacture' =>$request->typeFacture,
             'rappel' => 'non',
             'statut' => 'Créée',
             'slug' => $request->_token . "" . rand(1234, 3458),
@@ -222,7 +237,6 @@ class FacturationController extends Controller
                 'slug' => $request->_token . "" . rand(1234, 3458),
             ]);  
         }
-        /*
 
         if (Session::has('idPersonnel')) {
             foreach (Session::get('idPersonnel') as $Personnel) {
@@ -254,56 +268,14 @@ class FacturationController extends Controller
                 $assistant = $assistantSelect[0]->idPersonnel;
             }
 
-            foreach($assistantSelect as $assistant){
-                DB::select(
-                    'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
-                    [
-                        'Facture',
-                        "Une facture a été enregistrée.",
-                        'masquer',
-                        $assistant->idPersonnel, 
-                        'non',
-                        $request->_token . "" . rand(1234, 3458),
-                        "facture",
-                        $idFacture[0]->slug
-                    ]
-                );
-            }
 
-
-           
-          //  dd( $assistantSelect);
-        }
-          */
-
-        $admins = DB::select("select * from users where role='Administrateur'");
-
-        foreach ($admins as $a) {
-            DB::select(
-            'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
-            [
-                'Facture',
-                "Une facture a été enregistrée.",
-                'masquer',
-                'admin',
-                'non',
-                $request->_token . "" . rand(1234, 3458),
-                "facture",
-                $idFacture[0]->slug,
-                $a->id
-            ]);
-        }
-
-        $assistantSelect = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
-
-        foreach($assistantSelect as $assistant){
             DB::select(
                 'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
                 [
                     'Facture',
                     "Une facture a été enregistrée.",
                     'masquer',
-                    $assistant->idPersonnel, 
+                    $assistant,
                     'non',
                     $request->_token . "" . rand(1234, 3458),
                     "facture",
@@ -311,7 +283,6 @@ class FacturationController extends Controller
                 ]
             );
         }
-       // dd( $assistantSelect,$admins);
         
         $lastFacture = DB::select("select slug,idFacture from factures order by idFacture desc limit 1 ");
 
@@ -374,14 +345,14 @@ class FacturationController extends Controller
             'banqueCheque' =>$request->banqueCheque,
             'numeroCheque' =>$request->numeroCheque,
             'dateVirement' =>$request->dateVirement,
+            'emoney' =>$request->e_money,
+            'ref_emoney' =>$request->ref_emoney,
             'statut' =>'Non validé',
             'slug' => $request->_token . "" . rand(1234, 3458),
         ]);
 
 
         DB::update("update factures set statut='En cours de paiement' where slug=?",[$slugFacture]);
-
-        /*
 
         if (Session::has('idPersonnel')) {
             foreach (Session::get('idPersonnel') as $Personnel) {
@@ -428,46 +399,6 @@ class FacturationController extends Controller
                 ]
             );
         }
-
-        */
-
-        $admins = DB::select("select * from users where role='Administrateur'");
-
-        foreach ($admins as $a) {
-            DB::select(
-                'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
-                [
-                    'Facture',
-                    "Un paiement de facture a été initié.",
-                    'masquer',
-                    'admin',
-                    'non',
-                    $request->_token . "" . rand(1234, 3458),
-                    "facture",
-                    $slugFacture,
-                    $a->id
-            ]);
-        }
-
-        $assistantSelect = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
-
-        foreach($assistantSelect as $assistant){
-            DB::select(
-                'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
-                [
-                    'Facture',
-                    "Un paiement de facture a été initié.",
-                    'masquer',
-                    $assistant->idPersonnel,
-                    'non',
-                    $request->_token . "" . rand(1234, 3458),
-                    "facture",
-                    $slugFacture
-                ]
-            );
-        }
-
-       // dd($admins, $assistantSelect);
         
         return back()->with('success','Paiement initié avec succès !');
     }
@@ -577,27 +508,27 @@ class FacturationController extends Controller
                     DB::update("update factures set notification='envoyer' where slug=?",[$slug]);
 
                     if (Session::has('idPersonnel')) {
-                        foreach (Session::get('idPersonnel') as $Personnel) {
-                            $idPersonConnected = $Personnel->idPersonnel;
-                        }
-                       $admins = DB::select("select * from users where role='Administrateur'");
+                            foreach (Session::get('idPersonnel') as $Personnel) {
+                                $idPersonConnected = $Personnel->idPersonnel;
+                            }
+                        $admins = DB::select("select * from users where role='Administrateur'");
 
-                    foreach ($admins as $a) {
-                        DB::select(
-                            'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
-                            [
-                                'Facture',
-                                "Une facture a été envoyé au client.",
-                                'masquer',
-                                'admin',
-                                'non',
-                                $request->_token . "" . rand(1234, 3458),
-                                "facture",
-                                $slug,
-                                $a->id
-                            ]
-                        );
-                    }
+                        foreach ($admins as $a) {
+                            DB::select(
+                                'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
+                                [
+                                    'Facture',
+                                    "Une facture a été envoyé au client.",
+                                    'masquer',
+                                    'admin',
+                                    'non',
+                                    $request->_token . "" . rand(1234, 3458),
+                                    "facture",
+                                    $slug,
+                                    $a->id
+                                ]
+                            );
+                        }
                     } else {
                         $assistantSelect = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
                         if (empty($assistantSelect)) {
@@ -736,6 +667,169 @@ class FacturationController extends Controller
             
 
         return view('facturations.historique',compact('factures','TFactures','TFacturesPaye','TFacturesEncours','TFacturesDue','monnaieParDefaut','dateDebut','dateFin','plan'));
+    }
+
+    public function rembourserFacture(Request $request, $idFacture, $slug)
+    {
+        DB::update("update factures set statut='Remboursée', motif_remboursement=? where idFacture=?", [$request->motif, $idFacture]);
+
+        if (Session::has('idPersonnel')) {
+            foreach (Session::get('idPersonnel') as $Personnel) {
+                $idPersonConnected = $Personnel->idPersonnel;
+            }
+            $admins = DB::select("select * from users where role='Administrateur'");
+
+            foreach ($admins as $a) {
+                DB::select(
+                    'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
+                    [
+                        'Facture',
+                        "Une facture a été remboursée au client.",
+                        'masquer',
+                        'admin',
+                        'non',
+                        $request->_token . "" . rand(1234, 3458),
+                        "facture",
+                        $slug,
+                        $a->id
+                    ]
+                );
+            }
+        } else {
+            $assistantSelect = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
+            if (empty($assistantSelect)) {
+                $assistant = 'Assistant';
+            } else {
+                $assistant = $assistantSelect[0]->idPersonnel;
+            }
+
+
+            DB::select(
+                'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
+                [
+                    'Facture',
+                    "Une facture a été remboursée au client.",
+                    'masquer',
+                    $assistant,
+                    'non',
+                    $request->_token . "" . rand(1234, 3458),
+                    "facture",
+                    $slug
+                ]
+            );
+        }
+
+        return back()->with("success", "Facture remboursée avec succès.");
+
+    }
+
+    public function validerProforma(Request $request, $idFacture, $slug)
+    {
+        DB::update("update factures set statut='Créée', typeFacture='Finale' where idFacture=?", [$idFacture]);
+
+        if (Session::has('idPersonnel')) {
+            foreach (Session::get('idPersonnel') as $Personnel) {
+                $idPersonConnected = $Personnel->idPersonnel;
+            }
+            $admins = DB::select("select * from users where role='Administrateur'");
+
+            foreach ($admins as $a) {
+                DB::select(
+                    'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
+                    [
+                        'Facture',
+                        "Une facture pro forma a été validée.",
+                        'masquer',
+                        'admin',
+                        'non',
+                        $request->_token . "" . rand(1234, 3458),
+                        "facture",
+                        $slug,
+                        $a->id
+                    ]
+                );
+            }
+        } else {
+            $assistantSelect = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
+            if (empty($assistantSelect)) {
+                $assistant = 'Assistant';
+            } else {
+                $assistant = $assistantSelect[0]->idPersonnel;
+            }
+
+
+            DB::select(
+                'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
+                [
+                    'Facture',
+                    "Une facture pro forma a été validée.",
+                    'masquer',
+                    $assistant,
+                    'non',
+                    $request->_token . "" . rand(1234, 3458),
+                    "facture",
+                    $slug
+                ]
+            );
+        }
+
+        return back()->with("success", "Facture pro forma validée avec succès.");
+
+    }
+
+    public function rejeterProforma(Request $request, $idFacture, $slug)
+    {
+
+        DB::update("update factures set statut='Annulée', motif_rejetProforma=? where idFacture=?", [$request->motif, $idFacture]);
+
+        if (Session::has('idPersonnel')) {
+            foreach (Session::get('idPersonnel') as $Personnel) {
+                $idPersonConnected = $Personnel->idPersonnel;
+            }
+            $admins = DB::select("select * from users where role='Administrateur'");
+
+            foreach ($admins as $a) {
+                DB::select(
+                    'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
+                    [
+                        'Facture',
+                        "Une facture pro forma a été rejetée.",
+                        'masquer',
+                        'admin',
+                        'non',
+                        $request->_token . "" . rand(1234, 3458),
+                        "facture",
+                        $slug,
+                        $a->id
+                    ]
+                );
+            }
+        } else {
+            $assistantSelect = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
+            if (empty($assistantSelect)) {
+                $assistant = 'Assistant';
+            } else {
+                $assistant = $assistantSelect[0]->idPersonnel;
+            }
+
+
+            DB::select(
+                'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
+                [
+                    'Facture',
+                    "Une facture pro forma a été rejetée.",
+                    'masquer',
+                    $assistant,
+                    'non',
+                    $request->_token . "" . rand(1234, 3458),
+                    "facture",
+                    $slug
+                ]
+            );
+        }
+
+        return back()->with("success", "Facture pro forma rejetée avec succès.");
+
     }
 
 }

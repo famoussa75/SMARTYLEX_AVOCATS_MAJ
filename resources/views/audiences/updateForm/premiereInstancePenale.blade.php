@@ -32,9 +32,9 @@
                             <div class="col-md-4">
                                 <div class="custom-controls-stacked">
                                     <label class="custom-control custom-radio">
-                                        <input id="roleASKa-0" name="formset[0][role]" onclick="var id=0; roleASKa(id)" value="Prevenu / Accusé" type="radio" class="custom-control-input" required   @if($partiesCabinet[0]->role=='Prevenu / Accusé') checked @else disabled @endif>
+                                        <input id="roleASKa-0" name="formset[0][role]" onclick="var id=0; roleASKa(id)" value="Prévenu(e) / Accusé(e)" type="radio" class="custom-control-input" required   @if($partiesCabinet[0]->role=='Prévenu(e) / Accusé(e)') checked @else disabled @endif>
                                         <span class="custom-control-indicator"></span>
-                                        <span class="custom-control-description" id="labelroleASKa-0">Prevenu / Accusé</span>
+                                        <span class="custom-control-description" id="labelroleASKa-0">Prévenu(e) / Accusé(e)</span>
                                     </label>
                                 </div>
                             </div>
@@ -123,7 +123,7 @@
                                     <label for="affaire" class="control-label">Affaire du client
                                         concerné*
                                         :</label>
-                                    <select data-placeholder="Affaire du client concerné" style="width: 100%;height:28px" name="formset[0][idAffaire]" id="affaireClient-0" >
+                                    <select data-placeholder="Affaire du client concerné" style="width: 100%;height:28px" name="formset[0][idAffaire]" id="affaireClient-0" class="form-select select2">
                                     <option value="{{$partiesCabinet[0]->idAffaire}}">
                                             {{$partiesCabinet[0]->nomAffaire}}</option>
                                     </select>
@@ -185,10 +185,10 @@
                                 <div class="custom-controls-stacked">
                                     <label class="custom-control custom-radio">
                                         <input id="roleASKa-1" name="formset[{{ $loop->iteration }}][role]"
-                                            value="Prevenu / Accusé" type="radio" class="custom-control-input" required
-                                            @if($p->role=='Prevenu / Accusé') checked @else disabled @endif >
+                                            value="Prévenu(e) / Accusé(e)" type="radio" class="custom-control-input" required
+                                            @if($p->role=='Prévenu(e) / Accusé(e)') checked @else disabled @endif >
                                         <span class="custom-control-indicator"></span>
-                                        <span class="custom-control-description" id="labelroleASKa-0">Prevenu / Accusé</span>
+                                        <span class="custom-control-description" id="labelroleASKa-0">Prévenu(e) / Accusé(e)</span>
                                     </label>
                                 </div>
                             </div>

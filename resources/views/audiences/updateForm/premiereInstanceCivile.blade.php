@@ -66,7 +66,6 @@
                                     </label>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="row" style="margin-top: 20px;">
@@ -141,7 +140,7 @@
                                         :</label>
                                     <select data-placeholder="Affaire du client concerné"
                                         style="width: 100%;height:28px" name="formset[0][idAffaire]"
-                                        id="affaireClient-0">
+                                        id="affaireClient-0" class="form-select select2">
                                         <option value="{{$partiesCabinet[0]->idAffaire}}">
                                             {{$partiesCabinet[0]->nomAffaire}}</option>
                                     </select>
@@ -332,10 +331,10 @@
                                         <label class="custom-control custom-radio">
                                             <input id="typeAdverse1-1"
                                                 name="formset[{{ $loop->iteration }}][typeAdverse]"
-                                                onclick="var id= 0 ; personneOption(id)" type="radio"
+                                               onclick="personneOption({{ $loop->iteration }})" type="radio"
                                                 class="custom-control-input typeAdverse1-0" value="Personne physique"
                                                 @if(is_null($p->denomination)&&($p->role!='Autre')) checked @else
-                                            disabled @endif >
+                                             @endif >
                                             <span class="custom-control-indicator"></span>
                                             <span class="custom-control-description">Personne
                                                 physique
@@ -349,10 +348,10 @@
                                         <label class="custom-control custom-radio">
                                             <input id="typeAdverse2-1"
                                                 name="formset[{{ $loop->iteration }}][typeAdverse]" type="radio"
-                                                onclick="var id= 0 ; entrepriseOption(id)"
+                                                onclick="entrepriseOption({{ $loop->iteration }})"
                                                 class="custom-control-input typeAdverse2-0" value="Entreprise"
                                                 @if(!(is_null($p->denomination))&&($p->role!='Autre')) checked @else
-                                            disabled @endif>
+                                             @endif>
                                             <span class="custom-control-indicator"></span>
                                             <span class="custom-control-description">Entreprise</span>
                                         </label>
@@ -554,47 +553,49 @@
             </div>
             <hr> -->
             <div class="row mb-5" style="border: 1px solid; padding:10px;border-radius: 5px;">
-
                 <div class="col-md-3" id="assignationCheckbox">
                     <div class="custom-controls-stacked">
                         <label class="custom-control custom-radio">
-                            <input id="assignation" name="typeActe" onclick="formAssignation()" type="radio"
-                                class="custom-control-input" value="Assignation" required
-                                @if($actes[0]->typeActe=='Assignation') checked @else disabled @endif>
+                            <input id="assignation" name="typeActe"
+                                onclick="formAssignation()"
+                                type="radio" class="custom-control-input" value="Assignation"
+                                @if($actes[0]->typeActe=='Assignation') checked @endif>
+
                             <span class="custom-control-indicator"></span>
-                            <span class="custom-control-description">Assignation
-                            </span>
+                            <span class="custom-control-description">Assignation</span>
                         </label>
                     </div>
                 </div>
-                <br>
 
                 <div class="col-md-3" id="requeteCheckbox">
                     <div class="custom-controls-stacked">
                         <label class="custom-control custom-radio">
-                            <input id="requete" name="typeActe" onclick="formRequete()" type="radio"
-                                class="custom-control-input" value="Requete" @if($actes[0]->typeActe=='Requete') checked
-                            @else disabled @endif>
+                            <input id="Citation" name="typeActe"
+                                onclick="formCitation()"
+                                type="radio" class="custom-control-input" value="Citation"
+                                @if($actes[0]->typeActe=='Citation') checked @endif >
+
                             <span class="custom-control-indicator"></span>
-                            <span class="custom-control-description">Requete</span>
+                            <span class="custom-control-description">Citation</span>
                         </label>
                     </div>
                 </div>
+
                 <div class="col-md-6" id="requisitoireCheckbox">
                     <div class="custom-controls-stacked">
                         <label class="custom-control custom-radio">
-                            <input id="requisitoire" name="typeActe" onclick="formOpposition()" type="radio"
-                                class="custom-control-input" value="Opposition" @if($actes[0]->typeActe=='Opposition')
-                            checked @else disabled @endif>
+                            <input id="requisitoire" name="typeActe"
+                                onclick="formOpposition()"
+                                type="radio" class="custom-control-input" value="Opposition"
+                                @if($actes[0]->typeActe=='Opposition') checked @endif >
+
                             <span class="custom-control-indicator"></span>
                             <span class="custom-control-description">Opposition / Tierce Opposition</span>
                         </label>
                     </div>
                 </div>
-
             </div>
-            @if($actes[0]->typeActe=='Assignation')
-            <div class="row mrg-0" id="formAssignation" @if($actes[0]->typeActe=='Assignation') @else hidden @endif>
+            <div class="row mrg-0" id="formAssignation" @if($actes[0]->typeActe!='Assignation') @else hidden @endif>
                 <div class="col-md-12" style="text-align:center ;">
                     <h2>Assignation</h2>
                     <hr>
@@ -604,7 +605,7 @@
                     <div class="form-group">
                         <label for="inputPr" class="control-label">N° RG :</label>
                         <input type="text" class="form-control" id="numRg" data-error=" veillez saisir le N° RG"
-                            name="numRg" value="{{$acteDetail[0]->numRg}}">
+                            name="numRgAss" value="{{$acteDetail[0]->numRg ?? ''}}">
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
@@ -614,9 +615,9 @@
                             :</label>
 
                         <select class="form-control select2" data-placeholder="Rechercher..." style="width: 100%;"
-                            name="idHuissier" id="huissierAssign">
-                            <option value={{$acteDetail[0]->idHuissier}} selected>{{$acteDetail[0]->prenomHss}}
-                                {{$acteDetail[0]->nomHss}}</option>
+                            name="idHuissierAss" id="huissierAssign">
+                            <option value={{$acteDetail[0]->idHuissier ?? ''}} selected>{{$acteDetail[0]->prenomHss ?? ''}}
+                                {{$acteDetail[0]->nomHss ?? ''}}</option>
                             @foreach ($huissiers as $h)
                             <option value={{ $h->idHss }}>
                                 {{ $h->prenomHss }}
@@ -633,7 +634,7 @@
                         <label for="inpuRC" class="control-label">Réçue par :</label>
                         <input type="text" class="form-control" id="recepteurAss"
                             data-error=" veillez saisir le nom du receveur" name="recepteurAss"
-                            value="{{$acteDetail[0]->recepteurAss}}">
+                            value="{{$acteDetail[0]->recepteurAss ?? '' }}">
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
@@ -643,7 +644,7 @@
                         <label for="inputASN" class="control-label">Date assignation :</label>
                         <input type="date" onchange="validateDatesAss()" class="form-control" id="dateAssignation"
                             data-error=" veillez saisir la date asignation" name="dateAssignation"
-                            value="{{$acteDetail[0]->dateAssignation}}">
+                            value="{{$acteDetail[0]->dateAssignation ?? ''}}">
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
@@ -653,7 +654,7 @@
                         <label for="inputENAS" class="control-label">Date enrôlement :</label>
                         <input type="date" onchange="validateDatesAss()" class="form-control" id="dateEnrollement"
                             data-error=" veillez saisir la date d'enroulement" name="dateEnrollement"
-                            value="{{$acteDetail[0]->dateEnrollement}}">
+                            value="{{$acteDetail[0]->dateEnrollement ?? ''}}">
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
@@ -663,7 +664,7 @@
                             :</label>
                         <input type="date" onchange="validateDatesAss()" class="form-control" id="datePremiereComp"
                             data-error=" veillez saisir la Date de la première comparution" name="datePremiereComp"
-                            value="{{$acteDetail[0]->datePremiereComp}}">
+                            value="{{$acteDetail[0]->datePremiereComp ?? ''}}">
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
@@ -673,7 +674,7 @@
                             :</label>
                         <textarea id="mentionParticuliereAssign" cols="4" rows="2" class="form-control"
                             data-error=" veillez saisir la mention particulière"
-                            name="mentionParticuliere">{{$acteDetail[0]->mentionParticuliere}}</textarea>
+                            name="mentionParticuliereAssign">{{$acteDetail[0]->mentionParticuliere ?? ''}}</textarea>
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
@@ -685,65 +686,106 @@
                     </div>
                 </div> -->
             </div>
-            @endif
+           
+           
+            <div class="row mrg-0" id="formCitation" @if($actes[0]->typeActe!='Citation') @else hidden @endif>
+               
+                    <div class="col-md-12" style="text-align:center ;">
+                        <h2>Signification de la citation à comparaitre</h2>
+                        <hr>
+                    </div>
+                    <div class="row col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="client" class="control-label">Huissier
+                                    :</label>
 
-            @if($actes[0]->typeActe=='Requete')
-            <div class="row mrg-0" id="formRequete" @if($actes[0]->typeActe=='Requete') @else hidden @endif>
-                <div class="col-md-12" style="text-align:center ;">
-                    <h2>Requete</h2>
+                                <select class="form-control select2" data-placeholder="Rechercher..." style="width: 100%;"
+                                    name="idHuissier" id="huissierCita">
+                                    <option value="{{ $acteDetail[0]->idHuissier ?? '' }}">
+                                            {{ $acteDetail[0]->prenomHss ?? '' }} {{ $acteDetail[0]->nomHss ?? '' }}
+                                    </option>
+                                    @foreach ($huissiers as $h)
+                                    <option value="{{ $h->idHss }}">
+                                        {{ $h->prenomHss }}
+                                        {{ $h->nomHss }}
+                                    </option>
+                                    @endforeach
+
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="inputPr" class="control-label">Date de la signification :</label>
+                                <input type="date" class="form-control" id="dateSignification" data-error=" veillez saisir la date" name="dateSignification"  value="{{ $acteDetail[0]->dateSignification ?? '' }}" >
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="" class="control-label">Signification faite à :</label>
+                                <input type="text" class="form-control" id="personneCharger" data-error=" veillez remplir ce champ" name="personneCharger"  value="{{ $acteDetail[0]->personneCharger ?? '' }}" >
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    
+
+                    </div>
+        
+                    <div class="col-md-12" style="text-align:center ;">
+                        <hr>
+                        <h2>Citation</h2>
+                    </div>
+                    <div class="row col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="inputPr" class="control-label">N° RG :</label>
+                                <input type="text" class="form-control" id="numRg" data-error=" veillez saisir le mumero RG" name="numRg" value="{{ $acteDetail[0]->numRg ?? '' }}" >
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="inputPr" class="control-label">Date de la citation :</label>
+                                <input type="date" class="form-control" id="dateCitation" data-error=" veillez saisir la date" name="dateCitation" value="{{ $acteDetail[0]->dateCitation ?? '' }}" >
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="inputPr" class="control-label">Date audience :</label>
+                                <input type="date" class="form-control" id="dateAudienceCitation" data-error=" veillez saisir la date" name="dateAudience"  value="{{ $acteDetail[0]->dateAudience ?? '' }}">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="" class="control-label">Lieu d'audience:</label>
+                                <input type="text" class="form-control" id="lieuAudience" data-error=" veillez remplir ce champ" name="lieuAudience" value="{{ $acteDetail[0]->lieuAudience ?? '' }}" >
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        
+                    </div>
                     <hr>
-                </div>
-                <div class="row col-md-12">
-                    <div class="col-md-6">
+                    <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="inputPr" class="control-label">N° d'Enregistrement :</label>
-                            <input type="text" class="form-control" id="numRgRequete"
-                                data-error=" veillez saisir le mumero RG" name="numRgRequete"
-                                value="{{$acteDetail[0]->numRg}}">
+                            <label for="inputRPAV" class="control-label">Copie de la citation :</label>
+                            <input type="file" class="fichiers form-control" id="pieceCitation" data-error=" veillez joindre la pièce de l'assignation" name="pieceCitation" accept=".pdf"  value="{{ $acteDetail[0]->pieceCitation ?? '' }}" >
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="inputPr" class="control-label">Date de la requete :</label>
-                            <input type="date" class="form-control" id="dateRequete"
-                                data-error=" veillez saisir la date" name="dateRequete"
-                                value="{{$acteDetail[0]->dateRequete}}">
-                            <div class="help-block with-errors"></div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="inputPr" class="control-label">Date d'arrivée (Greffe) :</label>
-                            <input type="date" class="form-control" id="dateArriver"
-                                data-error=" veillez saisir la date" name="dateArriver"
-                                value="{{$acteDetail[0]->dateArriver}}">
-                            <div class="help-block with-errors"></div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="" class="control-label">Juridiction presidentielle :</label>
-                            <input type="text" class="form-control" id="juriductionPresidentielle"
-                                data-error=" veillez remplir ce champ" name="juriductionPresidentielle"
-                                value="{{$acteDetail[0]->juriductionPresidentielle}}">
-                            <div class="help-block with-errors"></div>
-                        </div>
-                    </div>
-                    <!-- <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="inputRPAV" class="control-label">Pièce :</label>
-                        <input type="file" class="fichiers form-control" id="pieceREQ" data-error=" veillez joindre la pièce de l'assignation" name="pieceREQ" accept="image/*,.pdf, .doc, docx" >
-                        <div class="help-block with-errors"></div>
-                    </div>
-                </div> -->
-
-                </div>
+               
             </div>
-            @endif
-
-            @if($actes[0]->typeActe=='Opposition')
-            <div class="row mrg-0" id="formOpposition" @if($actes[0]->typeActe=='Opposition') @else hidden @endif>
+            
+            
+            <div class="row mrg-0" id="formOpposition" @if($actes[0]->typeActe!='Opposition') @else hidden @endif>
+                <div class="row col-md-12">
+                   <div class="row mrg-0" id="formOpposition" >
                 <div class="col-md-12" style="text-align:center ;">
                     <h2>Opposition / Tierce Opposition</h2>
                     <hr>
@@ -752,8 +794,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="inputPr" class="control-label">N° RG :</label>
-                            <input type="text" class="form-control" id="numRgOpp" data-error=" veillez saisir le N° RG"
-                                name="numRgOpp" value="{{$acteDetail[0]->numRg}}">
+                            <input type="text" class="form-control" id="numRg" data-error=" veillez saisir le N° RG" name="numRg"  value="{{$acteDetail[0]->numRg ?? ''}}">
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
@@ -762,10 +803,8 @@
                             <label for="client" class="control-label">Huissier
                                 :</label>
 
-                            <select class="form-control select2" data-placeholder="Rechercher..." style="width: 100%;"
-                                name="idHuissierOpp" id="idHuissierOpp">
-                                <option value={{$acteDetail[0]->idHuissier}} selected>{{$acteDetail[0]->prenomHss}}
-                                    {{$acteDetail[0]->nomHss}}</option>
+                            <select class="form-control select2" data-placeholder="Rechercher..." style="width: 100%;" name="idHuissierOpp" id="idHuissierOpp" value="{{$acteDetail[0]->idHuissierOpp ?? ''}}">
+                                <option value="" selected disabled>-- Choisissez --</option>
                                 @foreach ($huissiers as $h)
                                 <option value={{ $h->idHss }}>
                                     {{ $h->prenomHss }}
@@ -779,28 +818,22 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="inpuRC" class="control-label">Réçue par :</label>
-                            <input type="text" class="form-control" id="recepteurAssOpp"
-                                data-error=" veillez saisir le nom du receveur" name="recepteurAssOpp"
-                                value="{{$acteDetail[0]->recepteurAss}}">
+                            <input type="text" class="form-control" id="recepteurOpp" data-error=" veillez saisir le nom du receveur" name="recepteurOpp" value="{{$acteDetail[0]->recepteurAss ?? ''}}" >
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="inputPr" class="control-label">Date de l'acte :</label>
-                            <input type="date" class="form-control" onchange="validateDatesOpp()" id="dateActe"
-                                data-error=" veillez saisir la date" name="dateActe"
-                                value="{{$acteDetail[0]->dateActe}}">
+                            <input type="date" class="form-control" onchange="validateDatesOpp()" id="dateActe" data-error=" veillez saisir la date" name="dateActe"   value="{{$acteDetail[0]->dateActe ?? ''}}" >
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
-
+                    
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="inputENAS" class="control-label">Date enrôlement :</label>
-                            <input type="date" class="form-control" onchange="validateDatesOpp()"
-                                id="dateEnrollementOpp" data-error=" veillez saisir la date d'enroulement"
-                                name="dateEnrollementOpp" value="{{$acteDetail[0]->dateEnrollement}}">
+                            <input type="date" class="form-control" onchange="validateDatesOpp()" id="dateEnrollementOpp" data-error=" veillez saisir la date d'enroulement" name="dateEnrollementOpp" value="{{$acteDetail[0]->dateEnrollement ?? ''}}" >
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
@@ -808,9 +841,7 @@
                         <div class="form-group">
                             <label for="inputFDAT" class="control-label">Date de la 1ère comparution
                                 :</label>
-                            <input type="date" class="form-control" onchange="validateDatesOpp()"
-                                id="datePremiereCompOpp" data-error=" veillez saisir la Date de la première comparution"
-                                name="datePremiereCompOpp" value="{{$acteDetail[0]->datePremiereComp}}">
+                            <input type="date" class="form-control" onchange="validateDatesOpp()" id="datePremiereCompOpp" data-error=" veillez saisir la Date de la première comparution" name="datePremiereCompOpp" value="{{$acteDetail[0]->datePremiereComp ?? ''}}" >
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
@@ -818,17 +849,14 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="" class="control-label">Date de la prochaine audience :</label>
-                            <input type="date" class="form-control" id="dateProchaineAud"
-                                data-error=" veillez saisir la date" name="dateProchaineAud"
-                                value="{{$acteDetail[0]->dateProchaineAud}}">
+                            <input type="date" class="form-control" id="dateProchaineAud" data-error=" veillez saisir la date" name="dateProchaineAud" value="{{$acteDetail[0]->dateProchaineAud ?? ''}}" readonly>
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="" class="control-label">N° Décision concernée :</label>
-                            <input type="text" class="form-control" id="numDecision" data-error=" veillez saisir le N°"
-                                name="numDecisConcerner" value="{{$acteDetail[0]->numDecision}}">
+                            <input type="text" class="form-control" id="numDecision" data-error=" veillez saisir le N°" name="numDecision" value="{{$acteDetail[0]->numDecision ?? ''}}">
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
@@ -836,12 +864,20 @@
                         <div class="form-group">
                             <label for="mentionP" class="control-label">Mention particulière
                                 :</label>
-                            <textarea id="mentionParticuliereOpp" cols="4" rows="2" class="form-control"
-                                data-error=" veillez saisir la mention particulière"
-                                name="mentionParticuliereOpp">{{$acteDetail[0]->mentionParticuliere}}</textarea>
+                            <textarea id="mentionParticuliere" cols="4" rows="2" class="form-control" data-error=" veillez saisir la mention particulière" name="mentionParticuliere"  value="{{$acteDetail[0]->mentionParticuliere ?? ''}}"></textarea>
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="inputRPAV" class="control-label">Copie de l'oposition :</label>
+                            <input type="file" class="fichiers form-control" id="pieceOPP" data-error=" veillez joindre la pièce de l'assignation" name="pieceASOpp" accept=".pdf" value="{{$acteDetail[0]->pieceASOpp ?? ''}}" >
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+
+                </div>
+
                     <!-- <div class="col-sm-6">
                         <div class="form-group">
                             <label for="inputRPAV" class="control-label">Remplacer la pièce (Facultatif) :</label>
@@ -852,7 +888,7 @@
 
                 </div>
             </div>
-            @endif
+           
 
         </div>
     </div>
@@ -860,8 +896,7 @@
 
 <div class="form-group">
     <div class="text-center">
-        <button type="submit" id="submitButton" class="theme-bg btn btn-rounded btn-block"
-            style="width:50%;">Enregistrer les modifications</button>
+        <button type="submit" id="submitButton" class="theme-bg btn btn-rounded btn-block"><i class="fa fa-save"></i> Enregistrer les modifications</button>
     </div>
 </div>
 
@@ -896,6 +931,118 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             }
         });
+    }
+});
+</script>
+
+<script>
+    function personneOption(id) {
+        document.getElementById("adversePersonne-" + id).hidden = false;
+        document.getElementById("adverseEntreprise-" + id).hidden = true;
+    }
+
+    function entrepriseOption(id) {
+        document.getElementById("adversePersonne-" + id).hidden = true;
+        document.getElementById("adverseEntreprise-" + id).hidden = false;
+    }
+</script>
+
+<script>
+// Fonctions pour afficher les formulaires
+function formAssignation() {
+    // Activer tous les boutons radio
+    enableAllRadioButtons();
+    
+    // Afficher le formulaire Assignation
+    document.getElementById("formAssignation").hidden = false;
+    
+    // Masquer les autres formulaires
+    document.getElementById("formCitation").hidden = true;
+    document.getElementById("formOpposition").hidden = true;
+    
+    // Réinitialiser les autres formulaires
+    resetOtherForms('formAssignation');
+}
+
+function formCitation() {
+    // Activer tous les boutons radio
+    enableAllRadioButtons();
+    
+    // Afficher le formulaire Requête
+    document.getElementById("formCitation").hidden = false;
+    
+    // Masquer les autres formulaires
+    document.getElementById("formAssignation").hidden = true;
+    document.getElementById("formOpposition").hidden = true;
+    
+    // Réinitialiser les autres formulaires
+    resetOtherForms('formCitation');
+}
+
+function formOpposition() {
+    // Activer tous les boutons radio
+    enableAllRadioButtons();
+    
+    // Afficher le formulaire Opposition
+    document.getElementById("formOpposition").hidden = false;
+    
+    // Masquer les autres formulaires
+    document.getElementById("formAssignation").hidden = true;
+    document.getElementById("formCitation").hidden = true;
+    
+    // Réinitialiser les autres formulaires
+    resetOtherForms('formOpposition');
+}
+
+// Activer tous les boutons radio
+function enableAllRadioButtons() {
+    document.getElementById("assignation").disabled = false;
+    document.getElementById("Citation").disabled = false;
+    document.getElementById("requisitoire").disabled = false;
+}
+
+// Réinitialise complètement les formulaires non affichés (vide tous les champs)
+function resetOtherForms(showFormId) {
+    const forms = ['formAssignation', 'formCitation', 'formOpposition'];
+    forms.forEach(formId => {
+        if (formId !== showFormId) {
+            const form = document.getElementById(formId);
+            if (form) {
+                form.querySelectorAll('input, textarea, select').forEach(el => {
+                    if(el.type === 'checkbox' || el.type === 'radio') return;
+                    
+                    if(el.type === 'text' || el.type === 'date' || el.tagName.toLowerCase() === 'textarea') {
+                        el.value = '';
+                    }
+                    else if(el.tagName.toLowerCase() === 'select') {
+                        el.selectedIndex = 0;
+                    }
+                });
+            }
+        }
+    });
+}
+
+// Initialisation au chargement de la page
+document.addEventListener('DOMContentLoaded', function() {
+    // Activer tous les boutons radio au chargement
+    enableAllRadioButtons();
+    
+    // S'assurer que seul le formulaire correspondant au type d'acte est affiché
+    const typeActe = "{{$actes[0]->typeActe}}";
+    
+    if(typeActe === 'Assignation') {
+        document.getElementById("formAssignation").hidden = false;
+        document.getElementById("formCitation").hidden = true;
+        document.getElementById("formOpposition").hidden = true;
+    } else if(typeActe === 'Citation') {
+        document.getElementById("formAssignation").hidden = true;
+        document.getElementById("formCitation").hidden = false;
+        document.getElementById("formOpposition").hidden = true;
+    } else if(typeActe === 'Opposition') {
+        document.getElementById("formAssignation").hidden = true;
+        document.getElementById("formCitation").hidden = true;
+        document.getElementById("formOpposition").hidden = false;
     }
 });
 </script>

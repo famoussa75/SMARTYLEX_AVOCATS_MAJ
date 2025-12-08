@@ -2,29 +2,97 @@
 @section('title','Les affaires')
 @section('content')
 
+<style>
+.erp-card {
+    background: #ffffff;
+    border: 1px solid #e6eaef;
+    border-radius: 10px;
+    padding: 0.9rem;
+    height: 100%;
+    transition: all 0.25s ease;
+}
+
+.erp-card:hover {
+    border-color: #009CAA;
+    background: #fbfefe;
+}
+
+/* Header */
+.erp-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 0.8rem;
+}
+
+/* Icône */
+.erp-icon {
+    min-width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    background: rgba(0, 156, 170, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #009CAA;
+    font-size: 18px;
+}
+
+/* Titres */
+.erp-client {
+    font-size: 0.87rem;
+    font-weight: 600;
+    color: #1f2937;
+    line-height: 1.3;
+}
+
+.erp-subtitle {
+    font-size: 0.78rem;
+    color: #6b7280;
+}
+
+/* Footer */
+.erp-footer {
+    padding-top: 0.5rem;
+    border-top: 1px dashed #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #009CAA;
+}
+
+.erp-footer i {
+    font-size: 0.8rem;
+}
+</style>
+
 
 <div class="container-fluid @if(Auth::user()->role=='Client') bg-secondary @else @endif">
     <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"><i class="ti-bag"></i> Affaires > @if(Auth::user()->role=='Client') <span class="label bg-info"><b>Mes affaires</b></span> @else <span class="label bg-info"><b>Liste des affaires</b></span> @endif</h4>
-        </div>
-        <div class="col-md-7 text-right">
-       
-            <div class="btn-group mr-lg-2 ">
-                <a  href="{{ route('affaireListe') }}" class="cl-white theme-bg btn  tooltips">
-                    <i class="ti-flix ti-view-list-alt"></i>
-                </a>
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+        <div class="d-flex align-items-center mb-2 mb-md-0">
+            <div class="icon-wrapper">
+                <i class="ti ti-briefcase"></i>
             </div>
-            <div class="btn-group">
-                <a  href="{{ route('createAffaire') }}" class="cl-white theme-bg btn  btn-rounded" title="Creer une Affaire">
-                    <i class="ti-wand"></i>
-                    Creer une affaire
-                </a>
+            <div>
+                <h4 class="page-title">
+                    Affaires <span class="page-subtitle">› Liste des affaires</span>
+                </h4>
+                <small class="page-description">Gérez toutes les affaires juridiques enregistrées.</small>
             </div>
         </div>
-       
+
+        <div class="d-flex align-items-center">
+            <a href="{{ route('affaireListe') }}" class="btn btn-outline-primary-custom me-2" title="Vue liste">
+                <i class="ti ti-view-list-alt"></i>
+            </a>&nbsp;
+            <a href="{{ route('createAffaire') }}" class="btn btn-gradient-custom" title="Créer une affaire">
+                <i class="ti ti-plus me-1"></i> Nouvelle affaire
+            </a>
+        </div>
     </div>
+
    
     @if (sizeof($affaire) == 0 && Auth::user()->role=='Client')
     <div class="alert alert-warning alert-dismissable">
@@ -50,28 +118,40 @@
    
     <div class="paginate 1">
         <div class="items row">
-            @foreach ($affaire as $affaires)
-            <div class="col-md-4 col-sm-6">
-                <div class="card outline-primary mb-3 text-center" style="height: 10em;">
-                    <a class="theme-cl" href="{{ route('showAffaire', [$affaires->idAffaire,$affaires->slug]) }}">
-                        <div class="card-detail-block">
-                            <i class="ti ti-bag theme-cl" style="font-size: 20px;"></i>
-                            <blockquote class="card-detail-blockquote">
-                                <h6 style="text-transform: uppercase;">
-                                    <b style="font-family: Gill Sans, sans-serif; ">
-                                        {{ $affaires->idClient }} - {{ $affaires->prenom }}
-                                        {{ $affaires->nom }} {{ $affaires->denomination }} 
-                                        - {{ $affaires->nomAffaire }}
-                                    </b>
-                                </h6>
+        @foreach ($affaire as $affaires)
+        <div class="col-md-4 col-sm-6 mb-3">
+            <a href="{{ route('showAffaire', [$affaires->idAffaire, $affaires->slug]) }}" class="text-decoration-none">
+                <div class="erp-card">
 
-                            </blockquote>
+                    <!-- En-tête -->
+                    <div class="erp-header">
+                        <div class="erp-icon">
+                            <i class="ti ti-briefcase"></i>
                         </div>
-                    </a>
-                </div>
-            </div>
+                        <div class="erp-title">
+                            <div class="erp-client">
+                                {{ $affaires->idClient }} – {{ $affaires->prenom }} {{ $affaires->nom }} {{ $affaires->denomination }}
+                            </div>
+                            <div class="erp-subtitle">
+                                {{ $affaires->nomAffaire }}
+                            </div>
+                        </div>
+                    </div>
 
-            @endforeach
+                    <!-- Footer -->
+                    <div class="erp-footer">
+                        <span class="erp-link">
+                            Ouvrir l’affaire
+                        </span>
+                        <i class="ti ti-chevron-right"></i>
+                    </div>
+
+                </div>
+            </a>
+        </div>
+
+        @endforeach
+
         </div>
         <div class="pager">
             <div class="firstPage">&laquo;</div>

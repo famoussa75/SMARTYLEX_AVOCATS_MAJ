@@ -1,160 +1,65 @@
 <style>
-    .pub-container {
-        width: 200px;
-        height: 30vh;
-        overflow: hidden;
-        position: relative;
-        margin: 20px;
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    /* Lien principal du menu */
+    .navbar-side .nav-item > .nav-link {
+        color: white !important;
+        transition: all 0.3s;
     }
 
-    .slider {
-        display: flex;
-        flex-wrap: nowrap;
-        width: 300%;
-        height: 100%;
-        animation: slide 15s infinite ease-in-out;
+    /* Hover : background bleu-vert */
+    .navbar-side .nav-item > .nav-link:hover {
+        background-color: #009CAA !important; /* bleu-vert */
+        color: #fff !important;               /* texte blanc pour contraste */
+        transform: translateX(5px);           /* effet léger */
     }
 
-    .slide {
-        flex: 0 0 33.333%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        transition: transform 0.2s ease;
+    /* Sous-menu */
+    .sidenav-second-level li a:hover {
+        background-color: #009CAA !important;
+        color: #fff !important;
+        transform: translateX(5px);
     }
 
-    .slide:hover {
-        transform: scale(0.80);
+    /* Toutes les icônes restent dorées */
+    .navbar-side i {
+        color: #D7AE00 !important;
+        transition: color 0.3s;
     }
 
-    .slide img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        transition: transform 0.2s ease;
+    /* Optionnel : changer la couleur de l'icône au hover du lien */
+    .navbar-side .nav-item > .nav-link:hover i {
+        color: #fff !important; /* contraste avec le bleu-vert */
     }
 
-    /* Animation professionnelle avec transitions douces */
-    @keyframes slide {
-        0% {
-            transform: translateX(0);
-            animation-timing-function: ease-out;
-        }
-        26% {
-            transform: translateX(0);
-            animation-timing-function: ease-in;
-        }
-        33% {
-            transform: translateX(-33.333%);
-            animation-timing-function: ease-out;
-        }
-        59% {
-            transform: translateX(-33.333%);
-            animation-timing-function: ease-in;
-        }
-        66% {
-            transform: translateX(-66.666%);
-            animation-timing-function: ease-out;
-        }
-        92% {
-            transform: translateX(-66.666%);
-            animation-timing-function: ease-in;
-        }
-        100% {
-            transform: translateX(0);
-        }
+    /* Transition fluide pour liens et sous-menu */
+    .navbar-side .nav-link, 
+    .sidenav-second-level li a {
+        transition: all 0.3s ease;
     }
 
-    /* Indicateurs de progression */
-    .pub-container::before {
-        content: '';
-        position: absolute;
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80px;
-        height: 4px;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 2px;
-        z-index: 10;
+    /* Classe active pour les liens du menu */
+    .navbar-side .nav-item > .nav-link.active,
+    .navbar-side .nav-item.active > .nav-link {
+        background-color: #D7AE00 !important; /* doré */
+        color: #fff !important;               /* texte blanc */
+        border-radius: 8px;                   /* coins arrondis pour effet moderne */
     }
 
-    /* Barre de progression animée */
-    .progress-bar {
-        position: absolute;
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80px;
-        height: 4px;
-        background: rgba(255, 255, 255, 0.8);
-        border-radius: 2px;
-        z-index: 11;
-        animation: progress 25s infinite linear;
-        transform-origin: left center;
-    }
-
-    @keyframes progress {
-        0% {
-            width: 0;
-            left: 50%;
-        }
-        33% {
-            width: 80px;
-            left: 50%;
-        }
-        33.1% {
-            width: 0;
-            left: 50%;
-        }
-        66% {
-            width: 80px;
-            left: 50%;
-        }
-        66.1% {
-            width: 0;
-            left: 50%;
-        }
-        99% {
-            width: 80px;
-            left: 50%;
-        }
-        100% {
-            width: 0;
-            left: 50%;
-        }
-    }
-
-    /* Overlay pour meilleure lisibilité */
-    .slide::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 30%;
-        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
-        pointer-events: none;
-    }
-
-    /* Effet de flou pendant la transition */
-    .slider {
-        backdrop-filter: blur(0px);
-        transition: backdrop-filter 0.3s ease;
-    }
-
-    .slider:active {
-        backdrop-filter: blur(2px);
+    /* Icône de l'élément actif */
+    .navbar-side .nav-item.active > .nav-link i,
+    .navbar-side .nav-link.active i {
+        color: #fff !important; /* icône blanche pour contraste */
     }
 </style>
 
+
+
 <div class="navbar-side">
-    <ul class="navbar-nav side-navbar" id="exampleAccordion" style="background: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url('/assets/dist/img/sidebar-bg.png');background-size:cover;background-position:20%">
+    <ul class="navbar-nav side-navbar" id="exampleAccordion" style="
+    background:
+        radial-gradient(circle at top left, rgba(0, 180, 255, 0.15), transparent 50%),
+        radial-gradient(circle at bottom right, rgba(255, 0, 120, 0.15), transparent 45%),
+        linear-gradient(135deg, #0f102d, #1a1b4b, #2a135f);
+    ">
 
         <!-- Start Dashboard-->
         <li class="nav-item" title="Accueil" id="hm">
@@ -227,11 +132,11 @@
                 <li>
                     <a class="load" href="{{ route('createCourierArriver') }}"><span class="submenu"> Courriers - Arrivée</span></a>
                 </li>
-
+              
                 <li>
                     <a class="load" href="{{ route('allCouriers') }}"><span class="submenu">Tous les courriers</span></a>
                 </li>
-
+              
             </ul>
         </li>
          <!-- Start UI Elements -->
@@ -297,7 +202,7 @@
                 <li>
                     <a class="load" href="{{ route('clientPersonnel') }}"><span class="submenu">Affecter un client au personnel</span></a>
                 </li>
-
+                
             </ul>
 
         </li>
@@ -321,30 +226,66 @@
             </ul>
 
         </li>
+      
+        <li>
 
-        <div class="pub-container ">
-            <div class="slider">
-                <div class="slide"><img src="/assets/dist/img/29.png" alt="Pub 1"></div>
-                <div class="slide"><img src="/assets/dist/img/43.png" alt="Pub 2"></div>
-                <div class="slide"><img src="/assets/dist/img/123.png" alt="Pub 3"></div>
+            <div class="pub-container" id="pubContainer">
+
+                <button id="closePubBtn" class="close-pub-btn">X</button>
+
+                <div class="slider">
+                    <div class="slide"><img src="/assets/dist/img/pube1.jpeg" alt="Pub 1"></div>
+                    <div class="slide"><img src="/assets/dist/img/pube2.jpeg" alt="Pub 2"></div>
+                    <div class="slide"><img src="/assets/dist/img/pube3.jpeg" alt="Pub 3"></div>
+                </div>
+
             </div>
-        </div>
 
-
+            <!-- Icône en dehors ➜ visible même quand pubContainer est caché -->
+            <div id="openPubIcon" class="open-pub-icon btn btn-white" hidden>📢</div>
+        </li>
     </ul>
 </div>
-
 
 <script>
   const slider = document.querySelector(".slider");
     let paused = false;
 
     document.querySelector(".pub-container").addEventListener("mouseenter", () => {
-    slider.style.animationPlayState = "paused"; // pause au survol
+        slider.style.animationPlayState = "paused"; // pause au survol
     });
 
     document.querySelector(".pub-container").addEventListener("mouseleave", () => {
-    slider.style.animationPlayState = "running"; // reprend après
+        slider.style.animationPlayState = "running"; // reprend après
     });
 
+</script>
+
+
+<script>
+    const pubContainer = document.getElementById("pubContainer");
+    const closeBtn = document.getElementById("closePubBtn");
+    const openIcon = document.getElementById("openPubIcon");
+
+    // Vérifier état enregistré
+    const pubClosed = localStorage.getItem("pubClosed");
+
+    if (pubClosed === "true") {
+        pubContainer.style.display = "none";
+        openIcon.hidden = false;
+    }
+
+    // Fermer la pub
+    closeBtn.addEventListener("click", () => {
+        pubContainer.style.display = "none";
+        openIcon.hidden = false;
+        localStorage.setItem("pubClosed", "true"); // Sauvegarde
+    });
+
+    // Ouvrir la pub
+    openIcon.addEventListener("click", () => {
+        pubContainer.style.display = "block";
+        openIcon.hidden = true;
+        localStorage.setItem("pubClosed", "false"); // Sauvegarde
+    });
 </script>

@@ -118,7 +118,7 @@
                                     <label for="affaire" class="control-label">Affaire du client
                                         concerné*
                                         :</label>
-                                    <select data-placeholder="Affaire du client concerné" style="width: 100%;height:28px" name="formset[0][idAffaire]" id="affaireClient-0" >
+                                    <select data-placeholder="Affaire du client concerné" style="width: 100%;height:28px" name="formset[0][idAffaire]" id="affaireClient-0" class="form-select select2">
 
                                     </select>
                                     <div class="help-block with-errors"></div>
@@ -285,7 +285,7 @@
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="representantLegal" class="control-label">Répresentant
-                                            légale
+                                            légal
                                             :</label>
                                         <input type="text" class="form-control" id="representantLegal-0" data-error=" veillez saisir le nom du répresentant légal" name="formset[0][representantLegal]">
                                         <div class="help-block with-errors"></div>

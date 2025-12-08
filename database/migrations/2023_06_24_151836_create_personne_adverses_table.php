@@ -23,12 +23,12 @@ class CreatePersonneAdversesTable extends Migration
             $table->string('prenom');
             $table->string('nom');
             $table->string('telephone')->nullable();
-            $table->string('nationalite');
+            $table->string('nationalite')->nullable();
             $table->string('profession')->nullable();
             $table->string('dateNaissance')->nullable();
             $table->string('lieuNaissance')->nullable();
-            $table->string('pays');
-            $table->string('domicile');
+            $table->string('pays')->nullable();
+            $table->string('domicile')->nullable();
             $table->text('slug')->nullable();
             $table->timestamps();
         });

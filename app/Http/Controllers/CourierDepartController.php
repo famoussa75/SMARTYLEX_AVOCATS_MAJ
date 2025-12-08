@@ -10,7 +10,6 @@ use App\Models\CourierFiles;
 use App\Models\Fichiers;
 use App\Models\Personnels;
 use DateTime;
-use Fpdf\Fpdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -20,7 +19,7 @@ use PhpOffice\PhpWord\IOFactory;
 use Dompdf\Dompdf;
 use Illuminate\Support\Facades\Response;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use Illuminate\Support\Facades\Mail;
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -618,45 +617,53 @@ class CourierDepartController extends Controller
                     $courierFile->nomOriginal = $fichier->getClientOriginalName();
                     $courierFile->slugSource = $courierSent->slug;
                     $courierFile->filename = $filename;
-                    $courierFile->slug = config('app.slug');
+                    $courierFile->slug = $request->_token . "" . rand(1234, 3458);
                     $courierFile->path = 'assets/upload/fichiers/courier-departs/' . $filename;
                     $fichier->move(public_path('assets/upload/fichiers/courier-departs'), $filename);
                     $courierFile->save();
                 }
             }
-            
 
-            $admins = DB::select("select * from users where role='Administrateur'");
+            //personnel connecter
+            if (Session::has('idPersonnel')) {
+                foreach (Session::get('idPersonnel') as $Personnel) {
+                    $idPersonConnected = $Personnel->idPersonnel;
+                }
+                $admins = DB::select("select * from users where role='Administrateur'");
 
-            foreach ($admins as $a) {
+                    foreach ($admins as $a) {
+                        DB::select(
+                            'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
+                            [
+                                'Courriers - Départ',
+                                "Un courrier départ a été enregistré.",
+                                'masquer',
+                                'admin',
+                                $request->_token . "" . rand(1234, 3458),
+                                'non',
+                                "infoCourierDepart",
+                                $courierSent->slug,
+                                $a->id
+                            ]
+                        );
+                    }
+            } else {
+                $assistantSelect = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
+                if (empty($assistantSelect)) {
+                    $assistant = 'Assistant';
+                } else {
+                    $assistant = $assistantSelect[0]->idPersonnel;
+                }
+
                 DB::select(
-                    'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
+                    'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
                     [
                         'Courriers - Départ',
-                        "Un courrier arrivé a été enregistré.",
+                        "Un courrier départ a été enregistré.",
                         'masquer',
-                        'admin',
+                        $assistant,
+                        $request->_token . "" . rand(1234, 3458),
                         'non',
-                        config('app.slug'),
-                        "infoCourierDepart",
-                        $courierSent->slug,
-                        $a->id
-                    ]
-                );
-            }
-
-            $assistantSelect = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
-           
-            foreach($assistantSelect as $assistant){
-                DB::select(
-                    'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
-                    [
-                        'Courriers - Départ',
-                        "Un courrier arrivé a été enregistré.",
-                        'masquer',
-                        $assistant->idPersonnel,
-                        'non',
-                        config('app.slug'),
                         "infoCourierDepart",
                         $courierSent->slug
                     ]
@@ -669,12 +676,12 @@ class CourierDepartController extends Controller
             // Enregistrement du courrier
             $courierSent->save();
 
-            $cleCommune = config('app.slug');
+            $cleCommune = $request->_token . "" . rand(1234, 3458);
 
             courierLiers::create([
                 'slugCourierLier' => $slug,
                 'cleCommune' => $cleCommune,
-                'slug' => config('app.slug'),
+                'slug' => $request->_token . "" . rand(1234, 3458),
             ]);
 
             foreach ($request->idCourierLier as $key => $value) {
@@ -684,7 +691,7 @@ class CourierDepartController extends Controller
                  courierLiers::create([
                      'slugCourierLier' => $value,
                      'cleCommune' => $cleCommune,
-                     'slug' => config('app.slug'),
+                     'slug' => $request->_token . "" . rand(1234, 3458),
                  ]);
                 }
                 
@@ -762,8 +769,6 @@ class CourierDepartController extends Controller
         }
 
        
-
-       
     }
 
     /**
@@ -805,7 +810,7 @@ class CourierDepartController extends Controller
                             'masquer',
                             'admin',
                             'non',
-                            config('app.slug'),
+                            $request->_token . "" . rand(1234, 3458),
                             "infoCourierDepart",
                             $slug,
                             $a->id
@@ -823,7 +828,7 @@ class CourierDepartController extends Controller
                     'masquer',
                     $assistant[0]->idPersonnel,
                     'non',
-                    config('app.slug'),
+                    $request->_token . "" . rand(1234, 3458),
                     "infoCourierDepart",
                     $slug
                 ]
@@ -868,45 +873,6 @@ class CourierDepartController extends Controller
             ]
         );
 
-        $admins = DB::select("select * from users where role='Administrateur'");
-
-        foreach ($admins as $a) {
-            DB::select(
-                'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
-                [
-                    'Courriers - Départ',
-                    "Un courrier arrivé a été enregistré.",
-                    'masquer',
-                    'admin',
-                    'non',
-                    config('app.slug'),
-                    "infoCourierDepart",
-                    $slug ,
-                    $a->id
-                ]
-            );
-        }
-
-        $assistantSelect = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
-       
-        foreach($assistantSelect as $assistant){
-            DB::select(
-                'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
-                [
-                    'Courriers - Départ',
-                    "Un courrier arrivé a été enregistré.",
-                    'masquer',
-                    $assistant->idPersonnel,
-                    'non',
-                    config('app.slug'),
-                    "infoCourierDepart",
-                    $slug ,
-                ]
-            );
-        }
-
-
-
         // $courierSent = DB::select('select * from courier_departs where slug = ?', array($slug));
 
         // $courierFile =  DB::select('select * from courier_files where idCourier = ?', array($courierSent[0]->id));
@@ -925,7 +891,7 @@ class CourierDepartController extends Controller
     public function accuserCourier(Request $request)
     {
         $slugCourier  = $request->slugCourier;
-        $slugAccuser  = config('app.slug');
+        $slugAccuser  = $request->_token . "" . rand(1234, 3458);
         // Creation des fichiers
         // dossiers : affaires,taches,audiences,courier-departs,courier-arrivers
         if ($request->file('fichiers') != null) {
@@ -1014,7 +980,6 @@ class CourierDepartController extends Controller
 
                 $courierDepartLiers = array_merge($courierDepartLiers, $courierDepartLiersItem);
                 $courierArriverLiers = array_merge($courierArriverLiers, $courierArriverLiersItem);
-                
             }
          
         }
@@ -1025,40 +990,35 @@ class CourierDepartController extends Controller
 
         $clientAffaire = DB::select("select clients.idClient, affaires.idAffaire, prenom, nom, denomination,nomAffaire, clients.slug as slugClient, affaires.slug as slugAffaire from courier_departs,clients,affaires where courier_departs.idClient=clients.idClient and courier_departs.idAffaire=affaires.idAffaire and courier_departs.slug=?",[$slug]);
 
-        //$courierArrivers = DB::select("select * from courier_arrivers where statut !='Annulé' ");
-       // $courierDeparts = DB::select("select * from courier_departs where statut !='Annulé' ");
+        $courierArrivers = DB::select("select * from courier_arrivers where statut !='Annulé' ");
+        $courierDeparts = DB::select("select * from courier_departs where statut !='Annulé' ");
 
-       $courierArrivers = DB::select("select * from courier_arrivers where  statut !='Annulé' ");
-       $courierDeparts = DB::select("select * from courier_departs where  statut !='Annulé' ");
-      // dd($courierArrivers,$courierDeparts);
-      $client = DB::select("select * from clients");
+        $client = DB::select("select * from clients");
 
-      $courriersArriverCabinet = DB::select("SELECT * FROM courier_arrivers WHERE statut != 'Annulé' AND idAffaire is null  AND (? IS NULL OR courier_arrivers.slug != ?) ",[$slug,$slug] );
-    
-      $courriersDepartCabinet = DB::select("SELECT * FROM courier_departs WHERE  statut != 'Annulé' AND idAffaire is null AND (? IS NULL OR courier_departs.slug != ?) ",[$slug,$slug]);
+        $courriersArriverCabinet = DB::select("SELECT * FROM courier_arrivers WHERE statut != 'Annulé' AND idAffaire is null  AND (? IS NULL OR courier_arrivers.slug != ?) ",[$slug,$slug] );
+        
+        $courriersDepartCabinet = DB::select("SELECT * FROM courier_departs WHERE  statut != 'Annulé' AND idAffaire is null AND (? IS NULL OR courier_departs.slug != ?) ",[$slug,$slug]);
 
-        $suggeCourierDepart = DB::select("
-        SELECT ca.*, cd.slug as slugDepart, c.*, a.*
-        FROM courier_arrivers ca
-        INNER JOIN clients c ON ca.idClient = c.idClient
-        INNER JOIN courier_departs cd ON cd.idClient = c.idClient
-        INNER JOIN affaires a ON ca.idAffaire = a.idAffaire
-        WHERE ca.statut != 'Annulé'
-        AND cd.slug = ?
-    ", [$slug]);
+            $suggeCourierDepart = DB::select("
+            SELECT ca.*, cd.slug as slugDepart, c.*, a.*
+            FROM courier_arrivers ca
+            INNER JOIN clients c ON ca.idClient = c.idClient
+            INNER JOIN courier_departs cd ON cd.idClient = c.idClient
+            INNER JOIN affaires a ON ca.idAffaire = a.idAffaire
+            WHERE ca.statut != 'Annulé'
+            AND cd.slug = ?
+        ", [$slug]);
 
         $infoCourierArrivers = DB::SELECT(" SELECT * FROM courier_arrivers,clients,affaires ,courier_liers where clients.idClient = courier_arrivers.idClient and affaires.idAffaire = courier_arrivers.idAffaire and courier_liers.slugCourierLier = courier_arrivers.slug");
        
-        
-       // dd( $infoCourier);
     
         
        $infoCourierDepart = DB::SELECT(" SELECT * FROM courier_departs,clients,affaires ,courier_liers where clients.idClient = courier_departs.idClient and affaires.idAffaire = courier_departs.idAffaire and courier_liers.slugCourierLier = courier_departs.slug");
         
         
-        //dd($infoCourierDepart);
 
-        return view('couriers.depart.infoCourierDepart', compact('courierFile', 'courierSent','accuser','clientAffaire','courierDepartLiers','courierArriverLiers','courierArrivers','courierDeparts','client','courriersArriverCabinet','courriersDepartCabinet','suggeCourierDepart','infoCourierDepart'));
+
+        return view('couriers.depart.infoCourierDepart', compact('courierFile', 'courierSent','accuser','clientAffaire','courierDepartLiers','courierArriverLiers','courierArrivers','courierDeparts','suggeCourierDepart','client','courriersArriverCabinet','courriersDepartCabinet','infoCourierArrivers','infoCourierDepart'));
     }
 
     public function envoiCourier(Request $request)
@@ -1086,7 +1046,7 @@ class CourierDepartController extends Controller
                                 'masquer',
                                 'admin',
                                 'non',
-                                config('app.slug'),
+                                $request->_token . "" . rand(1234, 3458),
                                 "infoCourierDepart",
                                 $slug,
                                 $a->id
@@ -1096,22 +1056,19 @@ class CourierDepartController extends Controller
             } else {
                 $assistant = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
 
-                foreach($assistant as $a ){
-                    DB::select(
-                        'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
-                        [
-                            'Courriers - Départ',
-                            "Un courrier départ a été aprouver.",
-                            'masquer',
-                            $a->idPersonnel,
-                            'non',
-                            config('app.slug'),
-                            "infoCourierDepart",
-                            $slug
-                        ]
-                    );
-                }
-               
+                DB::select(
+                    'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
+                    [
+                        'Courriers - Départ',
+                        "Un courrier départ a été aprouver.",
+                        'masquer',
+                        $assistant[0]->idPersonnel,
+                        'non',
+                        $request->_token . "" . rand(1234, 3458),
+                        "infoCourierDepart",
+                        $slug
+                    ]
+                );
             }
             return redirect()->route('infoCourierDepart', $slug)->with('success', 'Le courrier a été approuvé avec succès !');
         }
@@ -1153,7 +1110,7 @@ class CourierDepartController extends Controller
                             'masquer',
                             'admin',
                             'non',
-                            config('app.slug'),
+                            $request->_token . "" . rand(1234, 3458),
                             "infoCourierDepart",
                             $slug,
                             $a->id
@@ -1161,28 +1118,21 @@ class CourierDepartController extends Controller
                         );
                     }
             } else {
-               // $assistant = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
                 $assistant = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
 
-                foreach( $assistant as $a){
-                    DB::select(
-                        'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
-                        [
-                            'Courriers - Départ',
-                            "Un courrier départ a été desaprouver.",
-                            'masquer',
-                            $a->idPersonnel,
-                            'non',
-                            config('app.slug'),
-                            "infoCourierDepart",
-                            $slug
-                        ]
-                    );
-                }
-
-               
-
-                
+                DB::select(
+                    'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
+                    [
+                        'Courriers - Départ',
+                        "Un courrier départ a été desaprouver.",
+                        'masquer',
+                        $assistant[0]->idPersonnel,
+                        'non',
+                        $request->_token . "" . rand(1234, 3458),
+                        "infoCourierDepart",
+                        $slug
+                    ]
+                );
             }
             $updateStatut = DB::update("update courier_departs set statut='Désapprouvé',niveau='Approbation',consignes=? where slug=? ", [$consigne, $slug]);
             return redirect()->route('infoCourierDepart', $slug)->with('success', 'Le courier a été desaprouver ');
@@ -1302,7 +1252,7 @@ class CourierDepartController extends Controller
                 $enCharge = Auth::user()->name;
                 $today = date('Y-m-d H:i:s'); // date du jour
                 $slugCourier  = $request->slugCourier;
-                $slugAccuser  = config('app.slug');
+                $slugAccuser  = $request->_token . "" . rand(1234, 3458);
                 $courierDepart = CourierDepart::where('slug', $slugCourier);
                 $courierDepart->update(
                     [
@@ -1315,50 +1265,10 @@ class CourierDepartController extends Controller
                         'statut' => 'Terminé',
                     ]
                 );
-
-                $admins = DB::select("select * from users where role='Administrateur'");
-
-                foreach ($admins as $a) {
-                    DB::select(
-                        'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
-                        [
-                            'Courriers - Départ',
-                            "ce courrier a été envoyé par mail.",
-                            'masquer',
-                            'admin',
-                            'non',
-                            config('app.slug'),
-                            "infoCourierDepart",
-                            $slugCourier,
-                            $a->id
-                        ]
-                    );
-                }
-    
-                $assistantSelect = DB::select("select personnels.idPersonnel as idPersonnel,personnels.email,users.email from personnels,users where personnels.email = users.email and users.role='Assistant'");
-               
-                foreach($assistantSelect as $assistant){
-                    DB::select(
-                        'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam) VALUES(?,?,?,?,?,?,?,?)',
-                        [
-                            'Courriers - Départ',
-                            "ce courrier a été envoyé par mail.",
-                            'masquer',
-                            $assistant->idPersonnel,
-                            'non',
-                            config('app.slug'),
-                            "infoCourierDepart",
-                            $slugAccuser
-                        ]
-                    );
-                }
                 
 
                 return back()->with("success", "Email envoyé avec succès...");
             }
-
-           
-
         } catch (Exception $e) {
            
 
@@ -1387,6 +1297,7 @@ class CourierDepartController extends Controller
     
         // Récupération des fichiers liés par slugSource = $slug
         $courierFiles = DB::select("SELECT * FROM fichiers WHERE slugSource = ?", [$slug]);
+        //dd($courierFiles);
         
     
         // Configuration cabinet et serveur mail
@@ -1478,8 +1389,4 @@ class CourierDepartController extends Controller
             return back()->with('error', "Erreur interne lors de l'envoi du mail : " . $e->getMessage());
         }
     }
-    
-    
-    
-    
 }

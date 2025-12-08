@@ -77,7 +77,7 @@
                                         style="width:100%" data-placeholder="Choisissez...">
                                         <option value="" selected disabled>-- Choisissez --</option>
                                         <option value='in'>Intervenant</option>
-                                        <option value='pc'>Partie civile</option>
+                                       Répresentant légal
                                         <option value='mp'>Ministère public</option>
                                     </select>
                                 </div>
@@ -135,7 +135,7 @@
                                         :</label>
                                     <select data-placeholder="Affaire du client concerné"
                                         style="width: 100%;height:28px" name="formset[0][idAffaire]"
-                                        id="affaireClient-0">
+                                        id="affaireClient-0" class="form-select select2">
 
                                     </select>
                                     <div class="help-block with-errors"></div>

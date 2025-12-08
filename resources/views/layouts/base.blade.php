@@ -174,6 +174,107 @@ div,p,span,td,th,label,a,b {
     transform: translateY(-50%);
     cursor: pointer;
 }
+
+.cabinet-name {
+    font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 600;           /* semi-bold pour un aspect professionnel */
+    color: #ffffff;             /* blanc, peut être remplacé par #009CAA pour thème */
+    margin-left: 10px;
+    line-height: 1.4;           /* meilleure lisibilité */
+    white-space: normal;
+    word-wrap: break-word;      /* gérer les noms longs */
+    overflow-wrap: break-word;
+}
+
+.logo-container {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;               /* arrondi plus élégant */
+    background-color: #ffffff;          /* couleur de fond neutre */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-right: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* ombre légère pour profondeur */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* hover optionnel */
+}
+
+/* Optionnel : effet hover */
+.logo-container:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================
+   SEARCH BAR PRO — CSS ONLY
+===============================*/
+
+/* élargir sans toucher au HTML */
+.navbar-nav .form-inline {
+    width: 420px !important;   /* ✅ largeur augmentée */
+}
+
+/* input-group premium */
+.navbar-nav .input-group {
+    height: 40px;
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.08),
+        rgba(255,255,255,0.18)
+    );
+    border-radius: 22px !important;
+    border: 1px solid rgba(255,255,255,0.35) !important;
+    transition: all 0.3s ease;
+}
+
+/* effet focus élégant */
+.navbar-nav .input-group:focus-within {
+    background: linear-gradient(
+        135deg,
+        rgba(0,156,170,0.12),
+        rgba(255,255,255,0.22)
+    );
+    border-color: rgba(0,156,170,0.9) !important;
+    box-shadow: 0 0 0 4px rgba(0,156,170,0.18);
+}
+
+/* bouton search discret */
+.navbar-nav .input-group-btn .btn {
+    background: transparent !important;
+    border: none !important;
+    color: rgba(255,255,255,0.8);
+    padding: 6px 12px;
+}
+
+/* icône */
+.navbar-nav .input-group-btn i {
+    font-size: 14px;
+}
+
+/* input */
+.navbar-nav input.form-control {
+    background: transparent !important;
+    border: none !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+
+/* placeholder */
+.navbar-nav input.form-control::placeholder {
+    color: rgba(255,255,255,0.65);
+}
+
+/* focus clean */
+.navbar-nav input.form-control:focus {
+    background: transparent;
+    box-shadow: none;
+}
+
+
 </style>
 
 <script>
@@ -245,8 +346,14 @@ function horloge() {
     <!-- ===============================
                 Navigation Start
 		====================================-->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav"
-        style="background: linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.1)), url('/assets/dist/img/sidebar-bg.png');background-size:cover;">
+ <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav"
+        style="
+            background:
+                radial-gradient(circle at left, rgba(0, 180, 255, 0.15), transparent 50%),
+                radial-gradient(circle at right, rgba(255, 0, 120, 0.15), transparent 45%),
+                linear-gradient(135deg, #0f102d, #1a1b4b, #2a135f);
+            " >
+
         <!-- Start Header -->
         <header class="header-logo" style="background-color:transparent">
             @if(Auth::user()->role =='Client')
@@ -257,13 +364,15 @@ function horloge() {
             <a class="load navbar-brand" href="{{ route('home') }}" style="display: flex; align-items: center;">
                 @if(Session::has('cabinetLogo'))
                     @foreach (Session::get('cabinetLogo') as $logo)
-                        <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background-image: url('{{ URL::to('/') }}/{{$logo->logo}}'); background-size: cover; background-position: center; background-repeat: no-repeat; background-color: white; border-radius: 5%; margin-right: 5px;">
-                        </div>
+                    <div class="logo-container" style="background-image: url('{{ URL::to('/') }}/{{$logo->logo}}');"></div>
                     @endforeach
                 @endif
                 @if(Session::has('cabinetSession'))
                     @foreach (Session::get('cabinetSession') as $cabinet)
-                        <b style="font-size: 16px; color: white; margin-left: 10px;">{{$cabinet->nomCourt}}</b>
+                    <b class="cabinet-name">
+                        {{ $cabinet->nomCourt }}
+                    </b>
+
                     @endforeach
                 @endif
             </a>
@@ -358,7 +467,6 @@ function horloge() {
             @else
             @endif
             <!-- =============== End Side Menu ============== -->
-            <!-- =============== Search Bar ============== -->
             <ul class="navbar-nav ml-left" style="padding-left:10PX ;">
                 <li class="row nav-item">
                     <div class="col-md-9">
@@ -373,17 +481,19 @@ function horloge() {
                             </div>
                         </form>
                     </div>
-
-
-
                 </li>
-
-
-
             </ul>
+
             <!-- =============== End Search Bar ============== -->
             <!-- =============== Header Rightside Menu ============== -->
             <ul class="navbar-nav ml-auto">
+
+                <!-- Nouveau bouton plein écran -->
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="fullscreenToggle" title="Plein écran">
+                        <i class="fa fa-expand"></i>
+                    </a>
+                </li>
 
                 <!-- Notification -->
                 <li class="nav-item dropdown">
@@ -578,26 +688,106 @@ function horloge() {
             <a href="#modal-success" class="btn-modal" data-toggle="modal" data-target="#modal-success"
                 id="btnSuccess">Reuissie</a>
         </div>
-        <!-- modal-operation success -->
-        <div class="modal modal-box-2 fade" id="modal-success" tabindex="-1" role="dialog"
-            aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content" id="myModalLabel">
+        <!-- Modal Success Pro -->
+        <div class="modal fade" id="modal-success" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content success-modal">
+                    <button type="button" class="close btn-close" data-dismiss="modal">&times;</button>
 
-                    <div class="modal-body" style="height: 350px; background-color:whitesmoke">
-                        <button type="button" class="close" id="btnClose" data-dismiss="modal"
-                            aria-hidden="true">&times;</button>
+                    <div class="modal-body text-center px-4 py-5">
+                        <!-- Success Icon -->
+                        <div class="success-icon mb-4">
+                            <svg viewBox="0 0 52 52">
+                                <circle class="circle" cx="26" cy="26" r="25" fill="none"/>
+                                <path class="check" fill="none"
+                                    d="M14 27l7 7 17-17"/>
+                            </svg>
+                        </div>
 
-                        <!-- <div class="" style="text-align: center;">
-                            <h4><span style="color:#23B574" id="spanMessageSuccess"></span></h4>
-                        </div> -->
+                        <h4 class="mb-2 text-success font-weight-bold">
+                            Opération réussie !
+                        </h4>
 
-                        <img src="{{URL::to('/')}}/assets/dist/img/success.gif" alt="...">
+                        <p class="text-muted mb-4" id="spanMessageSuccess">
+                            Votre demande a été traitée avec succès.
+                        </p>
+
+                        <button type="button"
+                                class="btn btn-success btn-rounded px-4"
+                                data-dismiss="modal">
+                            Continuer
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- End modal-success -->
+        <style>
+            /* Modal container */
+            .success-modal {
+                border-radius: 16px;
+                border: none;
+                box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+                animation: fadeInUp 0.4s ease-in-out;
+                background: #ffffff;
+            }
+
+            /* Close button */
+            .btn-close {
+                position: absolute;
+                top: 15px;
+                right: 18px;
+                font-size: 1.5rem;
+                color: #999;
+            }
+
+            /* Success icon */
+            .success-icon svg {
+                width: 90px;
+                height: 90px;
+            }
+
+            .success-icon .circle {
+                stroke: #28a745;
+                stroke-width: 2;
+                stroke-dasharray: 157;
+                stroke-dashoffset: 157;
+                animation: stroke 0.6s forwards;
+            }
+
+            .success-icon .check {
+                stroke: #28a745;
+                stroke-width: 3;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke-dasharray: 48;
+                stroke-dashoffset: 48;
+                animation: stroke 0.4s 0.6s forwards;
+            }
+
+            /* Button */
+            .btn-rounded {
+                border-radius: 30px;
+            }
+
+            /* Animations */
+            @keyframes stroke {
+                to {
+                    stroke-dashoffset: 0;
+                }
+            }
+
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(25px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+        </style>
 
         <!-- declacheur modal error -->
         <div class="modal modal-box" hidden>
@@ -626,16 +816,59 @@ function horloge() {
         <!-- End modal-error -->
 
         <!-- modal-loading -->
-        <div id="loadingModal" class="modal-box-2 modal" style="background-color: rgba(7, 8, 7, 0.6);" tabindex="-1"
-            role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content" id="myModalLabel3"
-                    style="height: 350px; background-color:transparent;padding-top:150px">
-                    <img src="{{URL::to('/')}}/assets/dist/img/loading.gif" alt="...">
-                    <h2 style="text-align: center;color: white">Chargement en cours...</h2>
+        <!-- GLOBAL PAGE LOADER -->
+        <div id="pageLoader" class="modal fade show" tabindex="-1"
+            style="display:block;background:rgba(7,8,7,0.65);z-index:99999;">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content loader-content">
+                    <div class="loader-wrapper text-center">
+
+                        <!-- SVG Loader -->
+                        <div class="spinner"></div>
+
+                        <h4 class="mt-4 text-white font-weight-semibold">
+                            Chargement en cours...
+                        </h4>
+                    </div>
                 </div>
             </div>
         </div>
+        <style>
+            /* Loader Modal */
+            #pageLoader {
+                backdrop-filter: blur(3px);
+                align-items: center;
+                justify-content: center;
+            }
+            
+
+            /* Content */
+            .loader-content {
+                background: transparent;
+                margin-top:100%;
+                border: none;
+                box-shadow: none;
+            }
+
+            /* Spinner animé */
+            .spinner {
+                width: 80px;
+                height: 80px;
+                border: 5px solid rgba(255, 255, 255, 0.2);
+                border-top: 5px solid #28a745;
+                border-radius: 50%;
+                animation: spin 0.9s linear infinite;
+                margin: auto;
+            }
+
+            @keyframes spin {
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+        </style>
+
         <!-- End modal-loading -->
         <div hidden>
         <a href="" data-toggle="modal" id="lanceModal" data-target="#updatePassword" onclick=""><i class="fa fa-trash" style="color:brown ;"></i></a>
@@ -714,6 +947,7 @@ function horloge() {
 
 
         <div id="defaultContent">
+            <div id="alertAbonnement"></div>
             @yield('content')
         </div>
         @include('layouts.footer')
@@ -746,47 +980,6 @@ function horloge() {
         $('#lanceModal').click();
        }
 
-        // Afficher le modal de chargement
-        function showLoadingModal() {
-            var modal = document.getElementById('loadingModal');
-            modal.style.display = 'block';
-
-            setTimeout(() => {
-                modal.style.display = 'none';
-            }, 5000);
-        }
-
-        // Masquer le modal de chargement
-        function hideLoadingModal() {
-            var modal = document.getElementById('loadingModal');
-            modal.style.display = 'none';
-        }
-
-
-        window.addEventListener('beforeunload', function(event) {
-
-            // Les champs ne sont pas valides.
-            showLoadingModal();
-
-        });
-
-        window.addEventListener('load', function() {
-            // Masquer le modal de chargement
-            hideLoadingModal();
-        });
-
-        window.addEventListener('popstate', function(event) {
-
-            if (event.state && event.state.page === 'previous') {
-
-                hideLoadingModal();
-            }
-            if (event.state && event.state.page === 'next') {
-
-                hideLoadingModal();
-            }
-
-        });
 
         function voir(param, idNotif) {
 
@@ -1135,24 +1328,24 @@ function horloge() {
 
                         errorStatus = false;
                         $('#dataSearch5').append(`
-                        <div class="col-md-4 col-sm-6">
-                            <div class="card outline-primary mb-3 text-center" style="height: 10em;">
-                            <a class="load" href = "/client/view/${value.idClient}/${value.slug}">
-                                    <div class="card-detail-block">
-                                        <i class="ti i-cl-5 fa fa-user" style="font-size: 20px;"></i>
-                                        <blockquote class="card-detail-blockquote">
-                                            <h6 style="text-transform: uppercase;">
-                                                <b style="font-family: Gill Sans, sans-serif; ">
-                                                   ${[value.prenom, value.nom, value.denomination].filter(Boolean).join(' ')}
+                <div class="col-md-4 col-sm-6">
+                    <div class="card outline-primary mb-3 text-center" style="height: 10em;">
+                    <a class="load" href = "/client/view/${value.idClient}/${value.slug}">
+                            <div class="card-detail-block">
+                                <i class="ti i-cl-5 fa fa-user" style="font-size: 20px;"></i>
+                                <blockquote class="card-detail-blockquote">
+                                    <h6 style="text-transform: uppercase;">
+                                        <b style="font-family: Gill Sans, sans-serif; ">
+                                           ${[value.prenom, value.nom, value.denomination].filter(Boolean).join(' ')}
 
-                                                </b>
-                                            </h6>
+                                        </b>
+                                    </h6>
 
-                                        </blockquote>
-                                    </div>
-                                </a>
+                                </blockquote>
                             </div>
-                        </div>`)
+                        </a>
+                    </div>
+                </div>`)
 
                     });
 
@@ -1338,8 +1531,41 @@ function horloge() {
     @endif
 
     <script>
+        document.getElementById('fullscreenToggle').addEventListener('click', function(e) {
+            const fsIcon = document.querySelector('#fullscreenToggle i');
+
+            e.preventDefault();
+            if (!document.fullscreenElement) {
+                
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert(`Erreur: ${err.message}`);
+                });
+                fsIcon.classList.remove('fa-expand');
+                fsIcon.classList.add('fa-compress');
+            } else {
+                document.exitFullscreen();
+                fsIcon.classList.remove('fa-compress');
+                fsIcon.classList.add('fa-expand');
+            }
+
+        });
 
     </script>
+
+    <script>
+        // Quand la page est COMPLETEMENT chargée
+        window.addEventListener('load', function () {
+            const loader = document.getElementById('pageLoader');
+            if (loader) {
+                loader.classList.remove('show');
+
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 300);
+            }
+        });
+    </script>
+
 
 </body>
 

@@ -34,7 +34,6 @@ return new class extends Migration
             $table->text('totalComptes')->nullable();
             $table->text('emailAudience')->nullable();
             $table->text('cleAudience')->nullable();
-            $table->text('piedPage')->nullable();
             $table->text('emailFinance')->nullable();
             $table->text('cleFinance')->nullable();
             $table->text('signature')->nullable();

@@ -2,14 +2,27 @@
 @section('title','Nouvelle affectation')
 @section('content')
 <div class="container-fluid">
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"><i class="fa fa-users"></i> RH > <span class="label bg-info"><b>Affectation</b></span></h4>
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+        <!-- Bloc gauche : icône + titre -->
+        <div class="d-flex align-items-center mb-2 mb-md-0">
+            <div class="icon-wrapper theme-bg">
+                <i class="fa fa-users text-white"></i>
+            </div>
+            <div class="ms-3">
+                <h4 class="page-title mb-1 fw-bold">
+                    RH
+                    <span class="page-subtitle">› Affectation</span>
+                    
+                </h4>
+                <small class="page-description text-secondary">
+                    Gerez les affectations de vos clients à vos collaborateurs.
+                </small>
+            </div>
         </div>
 
-
     </div>
+
 
 
    
@@ -27,8 +40,8 @@
                     <div class="row mrg-0">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Selectionner le client</label>
-                                <select class="form-control select2" name="idClient" required>
+                                <label>Selectionner le client</label><br>
+                                <select class="form-control select2" name="idClient" style="width:100%;" required>
                                      <option value="" selected disabled>-- Choisissez --</option>
                                     @foreach ($client as $data )
                                     <option value={{ $data->idClient }}>{{ $data->prenom }} {{ $data->nom }}{{ $data->denomination }}
@@ -40,8 +53,8 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Selectionner un personnel</label>
-                                <select class="form-control select2" name="idPersonnel" required>
+                                <label>Selectionner un personnel</label><br>
+                                <select class="form-control select2" name="idPersonnel" style="width:100%;" required>
                                      <option value="" selected disabled>-- Choisissez --</option>
                                     @foreach ($personnel as $p )
                                     <option value={{ $p->idPersonnel }}>{{ $p->prenom }} {{ $p->nom }}
@@ -56,7 +69,7 @@
                         <div class="col-12" style="margin-top:20px">
                             <div class="form-group">
                                 <div class="text-center">
-                                    <button type="submit" class="theme-bg btn btn-rounded btn-block " style="width:50%;"> Enregistrer</button>
+                                    <button type="submit" class="theme-bg btn btn-rounded btn-block "><i class="fa fa-save"></i> Enregistrer</button>
                                 </div>
                             </div>
                         </div>

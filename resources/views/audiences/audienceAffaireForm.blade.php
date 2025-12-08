@@ -263,7 +263,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label for="representantLegal" class="control-label">Répresentant légale
+                                                <label for="representantLegal" class="control-label">Répresentant légal
                                                     :</label>
                                                 <input type="text" class="form-control" id="representantLegal" placeholder="répresentant légal" data-error=" veillez saisir le nom du répresentant légal" name="representantLegal" required>
                                                 <div class="help-block with-errors"></div>

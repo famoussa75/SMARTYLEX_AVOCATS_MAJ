@@ -1,67 +1,73 @@
 @extends('layouts.base')
 @section('title','Information de l\'affaire')
 @section('content')
-<div class="container-fluid" >
+<div class="container-fluid">
     <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs" id="pdfContent">
-        <div class="col-md-10 align-self-center">
-            <h5 class="theme-cl">
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+{{-- Breadcrumb --}}
+<div class="d-flex flex-column flex-md-row align-items-md-center mb-2 mb-md-0">
+    <div class="d-flex align-items-center me-3">
+        <div class="icon-wrapper">
+            <i class="ti ti-user"></i>
+        </div>
+        <div class="ms-2">
+            <h4 class="page-title">
+                DETAILS
+                {{-- Clients --}}
                 @foreach ($infoClient as $client)
-                <a class="load theme-cl" href="{{route('clientInfos', [$client->idClient,$client->slug])}}">
-                    {{ $client->idClient }}
-                </a>
+                    <a class="load page-subtitle text-decoration-none me-1" href="{{ route('clientInfos', [$client->idClient, $client->slug]) }}">
+                     › {{ $client->idClient }}
+                    </a>
                 @endforeach
-                >
+                 
                 @foreach ($infoClient as $client)
-                <a class="load theme-cl" href="{{route('clientInfos', [$client->idClient,$client->slug])}}">
-                    {{ $client->prenom }} {{ $client->nom }} {{ $client->denomination }}
-                </a>
+                    <a class="load page-subtitle text-decoration-none me-1" href="{{ route('clientInfos', [$client->idClient, $client->slug]) }}">
+                        › {{ $client->prenom }} {{ $client->nom }} {{ $client->denomination }}
+                    </a>
                 @endforeach
-                >
+                
+                {{-- Affaires --}}
                 @foreach ($affaire as $affaire)
-                <a class="load theme-cl" href="{{ route('showAffaire', [$affaire->idAffaire,$affaire->slug]) }}">
-                    {{ $affaire->idAffaire }} {{ $affaire->nomAffaire }}
-                </a>
+                <span class="page-subtitle me-1">&nbsp;› {{ $affaire->idAffaire }} {{ $affaire->nomAffaire }} </span>
                 @endforeach
-                >
-                <span class="label bg-info"><b>Affaire</b></span>
-
-
-            </h5>
-            <br>
-            Ouvert le : <span
-                class="label bg-danger-light">{{ date('d-m-Y', strtotime($affaire->dateOuverture)) }}</span>
+                
+            </h4>
+            <small>
+                Ouvert le : <span class="label bg-danger-light">{{ $affaire->dateOuverture?  date('d-m-Y', strtotime($affaire->dateOuverture)) :'N/A' }}</span>
+            </small>
         </div>
-
-        <div class="col-md-2 text-right">
-            <div class="dropdown" style="float: right ;">
-                <button class="btn btn-rounded theme-bg dropdown-toggle" type="button" id="dropdownMenuButton1"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Options
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1" x-placement="top-start"
-                    style="position: absolute; transform: translate3d(0px, -18px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <a class="load dropdown-item" href="{{ route('createAffaire') }}"><i
-                            class=" ti-wand mr-2"></i>Créer</a>
-                    <a class="load dropdown-item" href="#" data-toggle="modal" data-target="#update"><i
-                            class="ti-pencil mr-2"></i>
-                        Editer</a>
-
-                    <a class="load dropdown-item" href="{{ route('allAfaires') }}"><i class="ti-list mr-2"></i>
-                        Liste</a>
-                    <a class="load dropdown-item" href="#" data-toggle="modal" data-target="#deleteAffaire"
-                        style="color:red"><i class="ti-close mr-2"></i>Supprimer</a>
-
-                    <div class="dropdown-item text-center">
-                            <button class="btn btn-sm btn-primary hidden-print" onclick="exportDivToPDF2()">
-                                <i class="ti-download mr-1"></i> Télécharger PDF
-                            </button>
-                        </div>   
-                </div>
-            </div>
-        </div>
-
     </div>
+</div>
+
+{{-- Dropdown Options --}}
+<div class="d-flex align-items-center mt-2 mt-md-0">
+    <div class="dropdown">
+        <button class="btn btn-gradient-custom dropdown-toggle" 
+            type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Options
+        </button>
+
+        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+            <a class="dropdown-item load" href="{{ route('createAffaire') }}">
+                <i class="ti ti-wand me-2"></i>Créer
+            </a>
+            <a class="dropdown-item load" href="#" data-toggle="modal" data-target="#update">
+                <i class="ti-pencil me-2"></i>Editer
+            </a>
+            <a class="dropdown-item load" href="{{ route('allAfaires') }}">
+                <i class="ti-list me-2"></i>Liste
+            </a>
+            <a class="dropdown-item load text-danger" href="#" data-toggle="modal" data-target="#deleteAffaire">
+                <i class="ti-close me-2"></i>Supprimer
+            </a>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
     <!-- Title & Breadcrumbs-->
 
     <div class="col-md-12 col-sm-12">
@@ -76,15 +82,11 @@
 
 
                     @if(Auth::user()->role=='Administrateur')
-                    <!--  <li role="presentation" class="" onclick="changeTab3()" id="t3"><a href="#Section3" role="tab"
-                            data-toggle="tab"> <i class="fa fa-balance-scale"></i> Audiences</a></li> -->
-                        <li role="presentation" class="" onclick="changeTab3()" id="t3"><a href="#Section3" role="tab"
+                    <li role="presentation" class="" onclick="changeTab3()" id="t3"><a href="#Section3" role="tab"
                             data-toggle="tab"> <i class="fa fa-balance-scale"></i> Procédures</a></li>
                     <li role="presentation" class="" onclick="changeTab4()" id="t4"><a href="#Section4" role="tab"
                             data-toggle="tab"> <i class="ti i-cl-0 fa fa-money"></i> Factures</a></li>
-                    <!-- <li role="presentation" class="" onclick="changeTab5()" id="t5"><a href="#Section5" role="tab"
-                            data-toggle="tab"> <i class="ti i-cl-0  ti-alarm-clock"></i> Temps</a></li> -->
-
+                 
                     @else
                     @endif
                     <li role="presentation" onclick="changeTab6()" id="t6"><a href="#Section6" role="tab"
@@ -97,7 +99,7 @@
                         <!-- Title & Breadcrumbs-->
                         <div class="row page-breadcrumbs">
                             <div class="col-md-5 align-self-center">
-                               <!-- <h4 class="theme-cl"><i class="ti i-cl-0 ti-layers-alt"></i> Tâche du client</h4> -->
+                                <!-- <h4 class="theme-cl"><i class="ti i-cl-0 ti-layers-alt"></i> Tâche du client</h4> -->
                             </div>
                             @if(Auth::user()->role=='Administrateur' || Auth::user()->role=='Assistant')
                             <div class="col-md-7 text-right">
@@ -157,22 +159,8 @@
                                                                 href="{{ route('infosTask', [$row->slug]) }}">
                                                                 {{ $row->titre }}</a></td>
                                                         <td>{{ $row->description }}</td>
-                                                        @if(empty($row->dateDebut ))
-                                                            <td>N/A</td>
-                                                        @else
-
-                                                            <td>{{ date('d-m-Y', strtotime($row->dateDebut)) }}</td>
-                                                        @endif
-
-                                                        @if(empty($row->dateFin ))
-                                                            <td>N/A</td>
-                                                        @else
-                                                        
-                                                        <td>{{ date('d-m-Y', strtotime($row->dateFin)) }}</td>
-                                                        @endif
-                                                            
-                                                       <!-- <td>{{ date('d-m-Y', strtotime($row->dateDebut)) }}</td>
-                                                        <td>{{ date('d-m-Y', strtotime($row->dateFin)) }}</td> -->
+                                                        <td>{{$row->dateDebut? date('d-m-Y', strtotime($row->dateDebut)) :'N/A' }}</td>
+                                                        <td>{{$row->dateFin? date('d-m-Y', strtotime($row->dateFin)) :'N/A'}}</td>
                                                         <td>
                                                             <div class="label cl-success bg-success-light">
                                                                 {{ $row->statut }}
@@ -201,7 +189,7 @@
                         <!-- Title & Breadcrumbs-->
                         <div class="row page-breadcrumbs">
                             <div class="col-md-5 align-self-center">
-                              <!--  <h4 class="theme-cl"><i class="fa fa-envelope"></i> Courriers de l'affaire</h4> -->
+                               <!-- <h4 class="theme-cl"><i class="fa fa-envelope"></i> Courriers de l'affaire</h4> -->
                             </div>
                             <div class="col-md-7 text-right">
                                 <div class="btn-group">
@@ -314,7 +302,7 @@
                                                                                     {{ $row->expediteur }}
                                                                                 </td>
                                                                                 <td>
-                                                                                    {{ date('d-m-Y', strtotime($row->dateCourier))}}
+                                                                                    {{$row->dateCourier? date('d-m-Y', strtotime($row->dateCourier)) :'N/A' }}
                                                                                 </td>
 
                                                                                 <td><a
@@ -380,7 +368,7 @@
                                                 <div class="panel-body">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <div class="card">
+                                                            <div class="">
                                                                 <div class="card-body">
                                                                     <div class="table-responsive">
                                                                         <div class="category-filter">
@@ -419,7 +407,7 @@
                                                                                     </td>
 
                                                                                     <td>
-                                                                                        {{ date('d-m-Y', strtotime($row->dateCourier)) }}
+                                                                                        {{$row->dateCourier? date('d-m-Y', strtotime($row->dateCourier)) :'N/A'}}
                                                                                     </td>
                                                                                     <td style="text-align:center ;">
 
@@ -513,7 +501,7 @@
                                                                                     </td>
 
                                                                                     <td>
-                                                                                        {{ date('d-m-Y', strtotime($row->dateCourier))}}
+                                                                                        {{ $row->dateCourier? date('d-m-Y', strtotime($row->dateCourier)) :'N/A'}}
                                                                                     </td>
                                                                                     <td style="text-align:center ;">
 
@@ -604,12 +592,12 @@
                         <!-- Title & Breadcrumbs-->
                         <div class="row page-breadcrumbs">
                             <div class="col-md-5 align-self-center">
-                               <!-- <h4 class="theme-cl"><i class="fa fa-balance-scale"></i> Audiences du client</h4> -->
+                               <!-- <h4 class="theme-cl"><i class="fa fa-balance-scale"></i> Procédures du client</h4>-->
                             </div>
                             <div class="col-md-7 text-right">
                                 <div class="btn-group">
                                     <a href="{{ route('listAudience', 'generale') }}" class="load btn btn-secondary">
-                                        <i class="ti-eye i-cl-5"></i> Voir les audiences
+                                        <i class="ti-eye i-cl-5"></i> Voir les procédures
                                     </a>
                                 </div>
                                 <!--
@@ -621,284 +609,223 @@
                             </div>
                         </div>
                         <!-- Title & Breadcrumbs-->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card padd-15">
+                                    <div class="card-body">
 
-                        <div class="panel-group accordion-stylist" id="accordion" role="tablist"
-                            aria-multiselectable="true">
-                            <!-- Title & Breadcrumbs-->
-                            <div class="panel panel-default">
-                                <div class="panel-heading" role="tab" id="headingone">
-                                    <h4 class="panel-title">
-                                        <a class="collapsed" role="button" data-toggle="collapse"
-                                            data-parent="#accordion" href="#collapseone" aria-expanded="false"
-                                            aria-controls="collapseone">
-                                            <h4 class="theme-cl"> Procédures contraditoires</h4>
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="collapseone" class="panel-collapse collapse" role="tabpanel"
-                                            aria-labelledby="heading3">
-                                    <div class="panel-body">
-                                        <div class="row"  >
-                                            <div class="col-md-12">
-                                                <div class="card padd-15">
-                                                    <div class="card-body">
+                                        <div class="table-responsive">
 
-                                                        <div class="table-responsive">
+                                           
+                                            <table id="filterTable"
+                                                class="filterTable dataTableExport table table-bordered table-hover"
+                                                style="width:100%">
+                                                <thead>
+                                                <tr>
+                                                    <th>N°</th>
+                                                    <th>N°RG</th>
+                                                    <th>Parties</th>
+                                                    <th>Objet</th>
+                                                    <th>Niveau Procedural</th>
+                                                    <th>Prochaine audience</th>
+                                                    <th>Statut</th>
+                                                </tr> 
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($formattedAudiences as $row)
+                                                <tr onclick="window.location='{{ route('detailAudience', ['id' => $row['idAudience'], 'slug' => $row['slugAud'] ,$row['niveauProcedural'] ]) }}'" style="cursor:pointer;">
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $row['numRg'] ?? 'N/A' }}</td>
+                                                    <td>
+                                                            <span>{{ $row['ministerePublic'] }}</span>
+                                                            <span>
+                                                                @if(is_array($row['parties']) && !empty($row['parties']))
+                                                                    {{ implode(', ', $row['parties']) }}
+                                                                @else
+                                                                {{ $row['parties'] }}
+                                                                @endif
+                                                            </span>
+                                                            
+                                                            <span>
+                                                                @if(is_array($row['partieCivile']) && !empty($row['partieCivile']))
+                                                                    Partie civile : {{ implode(', ', $row['partieCivile']) }}
+                                                                @else
+                                                                    {{ $row['partieCivile'] }}
+                                                                @endif
+                                                            </span>
+                                                            <span>
+                                                                @if(is_array($row['intervenant']) && !empty($row['intervenant']))
+                                                                    Intervenant : {{ implode(', ', $row['intervenant']) }}
+                                                                @else
+                                                                {{ $row['intervenant'] }}
+                                                                @endif
+                                                            </span>
+                                                            
+                                                    </td>
 
+                                                    <td>
+                                                            {{ $row['objet'] }}
+                                                    </td>
+                                                    <td>
+                                                        <span>
+                                                            @if($row['niveauProcedural']=='1ère instance')
+                                                            <small class="label bg-success">{{ $row['niveauProcedural'] }}</small>
+                                                            @elseif($row['niveauProcedural']=='Appel')
+                                                            <small class="label bg-warning">{{ $row['niveauProcedural'] }}</small>
+                                                            @else
+                                                            <small class="label bg-danger">{{ $row['niveauProcedural'] }}</small>
+                                                            @endif
+                                                        </span>
+                                                    </td>
+                                                    <td>
                                                         
-                                                            <table id="filterTable"
-                                                                class="filterTable dataTableExport table table-bordered table-hover"
-                                                                style="width:100%">
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>N°</th>
-                                                                    <th>N°RG</th>
-                                                                    <th>Parties</th>
-                                                                    <th>Objet</th>
-                                                                    <th>Niveau Procedural</th>
-                                                                    <th>Prochaine audience</th>
-                                                                    <th>Statut</th>
-                                                                </tr> 
-                                                            </thead>
-                                                            <tbody>
-                                                                @foreach ($formattedAudiences as $row)
-                                                                <tr>
-                                                                    <td>{{ $loop->iteration }}</td>
-                                                                    <td>{{ $row['numRg'] ?? 'N/A' }}</td>
-                                                                    <td>
-                                                                        <a href="{{ route('detailAudience', ['id' => $row['idAudience'], 'slug' => $row['slugAud'], 'niveau' => $row['niveauProcedural']]) }}"
-                                                                        data-toggle="tooltip" title="Voir plus de cette audience">
-                                                                            <span>{{ $row['ministerePublic'] }}</span>
-                                                                            <span>
-                                                                                @if(is_array($row['parties']) && !empty($row['parties']))
-                                                                                    {{ implode(', ', $row['parties']) }}
-                                                                                @else
-                                                                                {{ $row['parties'] }}
-                                                                                @endif
-                                                                            </span>
-                                                                            
-                                                                            <span>
-                                                                                @if(is_array($row['partieCivile']) && !empty($row['partieCivile']))
-                                                                                    Partie civile : {{ implode(', ', $row['partieCivile']) }}
-                                                                                @else
-                                                                                    {{ $row['partieCivile'] }}
-                                                                                @endif
-                                                                            </span>
-                                                                            <span>
-                                                                                @if(is_array($row['intervenant']) && !empty($row['intervenant']))
-                                                                                    Intervenant : {{ implode(', ', $row['intervenant']) }}
-                                                                                @else
-                                                                                {{ $row['intervenant'] }}
-                                                                                @endif
-                                                                            </span>
-                                                                            
-                                                                        </a>
-                                                                    </td>
+                                                        @if ($row['dateAudience']=='' || $row['dateAudience']=='N/A')
+                                                            N/A
+                                                        @else
+                                                        {{ date('d/m/Y', strtotime( $row['dateAudience'] ))}}
+                                                        @endif
+                                                            
+                                                    </td>
+                                                    <td>
+                                                        <span>
+                                                            @if($row['statutAud']=='Terminée')
+                                                            <small class="label bg-success-light">{{ $row['statutAud'] }}</small>
+                                                            @elseif($row['statutAud']=='Jonction')
+                                                            <small class="label bg-blue">{{ $row['statutAud'] }}</small>
+                                                            @else
+                                                            <small class="label bg-warning-light">{{ $row['statutAud'] }}</small>
+                                                            @endif
+                                                        </span>
+                                                    </td>
 
-                                                                    <td>
-                                                                        <a href="{{ route('detailAudience', ['id' => $row['idAudience'], 'slug' => $row['slugAud'] ,$row['niveauProcedural'] ]) }}"
-                                                                            data-toggle="tooltip" title="Voir plus de cette audience">
-                                                                            {{ $row['objet'] }}
-                                                                        </a>
-                                                                    </td>
-                                                                    <td>
-                                                                        <span>
-                                                                            @if($row['niveauProcedural']=='1ère instance')
-                                                                            <small class="label bg-success">{{ $row['niveauProcedural'] }}</small>
-                                                                            @elseif($row['niveauProcedural']=='Appel')
-                                                                            <small class="label bg-warning">{{ $row['niveauProcedural'] }}</small>
-                                                                            @else
-                                                                            <small class="label bg-danger">{{ $row['niveauProcedural'] }}</small>
-                                                                            @endif
-                                                                        </span>
-                                                                    </td>
-                                                                    <td>
 
-                                                                    @php
-                                                                        $dateAudience= $row['dateAudience'];
-                                                                    @endphp
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card padd-15">
+                                    <div class="card-title">Procédures sur requêtes</div>
+                                        <div class="card-body">
 
-                                                                        
-                                                                        
-                                                                        @if ($row['dateAudience']=='' || $row['dateAudience']=='N/A')
-                                                                            N/A
-                                                                        @else
-                                                                             @if (strtotime($dateAudience) < strtotime(date('Y-m-d')))
-                                                                                <span class="label bg-danger">suivi incomplet</span>
-                                                                            @else
+                                            <div class="table-responsive">
+                                                <div class="category-filter">
+                                                    <select id="categoryFilter7" class="categoryFilter7 form-control">
+                                                        <option value="">Tous</option>
+                                                    </select>
+                                                </div>
+                                            
+                                                <table id="filterTable7"
+                                                    class="filterTable7 dataTableExport table table-bordered table-hover"
+                                                    style="width:100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>N°</th>
+                                                            <th>Objet</th>
+                                                            <th>Type de requête</th>
+                                                            <!--<th>Juridiction présidentielle</th>-->
+                                                            <th>demande</th>
+                                                            <th>Parties</th>
+                                                            <th>Date requête</th>
+                                                            <th>Statut</th>
+                                                        </tr> 
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($requetes1 as $row)
+                                                        <tr  onclick="window.location='{{ route('detailRequete', $row->slug) }}'" style="cursor:pointer;">
+                                                            
+                                                            <td>{{ $loop->iteration }}</td>
+                                                            <td>{{ $row->objet }}</td>
+                                                            <td>{{ $row->typeRequete }}</td>
+                                                        <!-- <td>{{ $row->juridictionPresidentielle }}</td> -->
+                                                            <td>{{ $row->demandeRequete }}</td> 
 
-                                                                                {{ date('d/m/Y', strtotime( $row['dateAudience'] ))}}
-                                                                            @endif
+                                                            <td>
+                                                                <!-- Affichage du cabinet -->
+                                                                @foreach($cabinet1 as $c)
+                                                                        @if($row->idProcedure === $c->idRequete)
+                                                                            <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
+                                                                            @break <!-- Sortir de la boucle une fois que le match est trouvé -->
                                                                         @endif
-                                                                            
-                                                                    </td>
-                                                                    <td>
-                                                                        <span>
-                                                                            @if($row['statutAud']=='Terminée')
-                                                                            <small class="label bg-success-light">{{ $row['statutAud'] }}</small>
-                                                                            @elseif($row['statutAud']=='Jonction')
-                                                                            <small class="label bg-blue">{{ $row['statutAud'] }}</small>
-                                                                            @else
-                                                                            <small class="label bg-warning-light">{{ $row['statutAud'] }}</small>
-                                                                            @endif
-                                                                        </span>
-                                                                    </td>
-
-
-                                                                </tr>
-                                                                @endforeach
-                                                            </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="panel-group accordion-stylist" id="accordion" role="tablist"
-                            aria-multiselectable="true">
-                            <!--  Procédure non contraditoire  -->
-                            <div class="panel panel-default">
-                                <div class="panel-heading" role="tab" id="headingone">
-                                    <h4 class="panel-title">
-                                        <a class="collapsed" role="button" data-toggle="collapse"
-                                            data-parent="#accordion" href="#collapsetwo" aria-expanded="false"
-                                            aria-controls="collapsetwo">
-                                            <h4 class="theme-cl"> Procédures non  contraditoires</h4>
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="collapsetwo" class="panel-collapse collapse" role="tabpanel"
-                                            aria-labelledby="heading3">
-                                    <div class="panel-body">
-                                        <div class="row"  >
-                                            <div class="col-md-12">
-                                                <div class="card">
-                                                    <div class="card-body">
-
-                                                        <div class="table-responsive">
-                                                            <div class="category-filter">
-                                                                <select id="categoryFilter7" class="categoryFilter7 form-control">
-                                                                    <option value="">Tous</option>
-                                                                </select>
-                                                            </div>
-                                                        
-                                                            <table id="filterTable7"
-                                                                class="filterTable7 dataTableExport table table-bordered table-hover"
-                                                                style="width:100%">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>N°</th>
-                                                                        <th>Objet</th>
-                                                                        <th>Type de requête</th>
-                                                                        <!--<th>Juridiction présidentielle</th>-->
-                                                                        <th>demande</th>
-                                                                        <th>Parties</th>
-                                                                        <th>Date requête</th>
-                                                                        <th>Statut</th>
-                                                                    </tr> 
-                                                                </thead>
-                                                                <tbody>
-                                                                    @foreach ($requetes1 as $row)
-                                                                    <tr>
-                                                                        
-                                                                        <td>{{ $loop->iteration }}</td>
-                                                                        <td><a href="{{ route('detailRequete', $row->slug) }}">{{ $row->objet }}</a></td>
-                                                                        <td>{{ $row->typeRequete }}</td>
-                                                                    <!-- <td>{{ $row->juridictionPresidentielle }}</td> -->
-                                                                        <td>{{ $row->demandeRequete }}</td> 
-
-                                                                        <td>
-                                                                            <!-- Affichage du cabinet -->
-                                                                            @foreach($cabinet1 as $c)
-                                                                                    @if($row->idProcedure === $c->idRequete)
-                                                                                        <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
-                                                                                        @break <!-- Sortir de la boucle une fois que le match est trouvé -->
-                                                                                    @endif
-                                                                                @endforeach
-                                                                                <!-- Affichage de l'entreprise adverse -->
-                                                                                @foreach($entreprise_adverses1 as $e)
-                                                                                    @if($row->idProcedure === $e->idRequete)
-                                                                                        <span>c/ {{ $e->denomination }}</span>
-                                                                                        @break <!-- Sortir de la boucle une fois que le match est trouvé -->
-                                                                                    @endif
-                                                                                @endforeach
-
-                                                                                <!-- Affichage de personne adverse -->
-                                                                                @foreach($personne_adverses1 as $p)
-                                                                                    @if($row->idProcedure === $p->idRequete)
-                                                                                        <span>c/ {{ $p->prenom }} {{ $p->nom }}</span>
-                                                                                        @break <!-- Sortir de la boucle une fois que le match est trouvé -->
-                                                                                    @endif
-                                                                                @endforeach
-
-                                                                                <!-- Affichage d'autres rôles -->
-                                                                                @foreach($autreRoles1 as $r)
-                                                                                    @if($row->idProcedure === $r->idRequete)
-                                                                                        @if($r->autreRole === 'mp')
-                                                                                            <span>c/ Ministère public</span>
-                                                                                        @endif
-                                                                                        @break <!-- Sortir de la boucle une fois que le match est trouvé -->
-                                                                                    @endif
-                                                                                @endforeach
-
-                                                                        </td>
-                                                                        <td>
-                                                                            @if(empty($row->dateRequete))
-                                                                                <small>N/A</small>
-                                                                            @else
-                                                                                {{ date('d/m/Y', strtotime($row->dateRequete)) }}
-                                                                            @endif
-                                                                           <!-- {{ date('d/m/Y', strtotime($row->dateRequete)) }} -->
-                                                                        </td>
-                                                                        <td>
-                                                                            <!--
-                                                                                <span>
-                                                                                        @if($row->statut=='Terminée')
-                                                                                        <small class="label bg-success-light">{{ $row->statut }}</small>
-                                                                                        @elseif($row->statut=='Jonction')
-                                                                                        <small class="label bg-blue">{{ $row->statut }}</small>
-                                                                                        @else
-                                                                                        <small class="label bg-warning-light">{{ $row->statut }}</small>
-                                                                                        @endif
-                                                                                    </span> -->
-                                                                            <span>
-                                                                                @if($row->statut=='Terminée')
-                                                                                    <small class="label bg-success">Terminée</small>
-                                                                                @elseif($row->statut=='Déposée')
-                                                                                    <small class="label bg-primary">Déposée</small>
-                                                                                @elseif($row->statut=='Acceptée')
-                                                                                    <small class="label bg-success">Acceptée</small>
-                                                                                @elseif($row->statut=='Rejetée')
-                                                                                    <small class="label bg-danger">Rejetée</small>
-
-                                                                                @endif
-                                                                            </span>
-                                                                        </td>
-                                                                        
-                                                                    </tr>
                                                                     @endforeach
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                                    <!-- Affichage de l'entreprise adverse -->
+                                                                    @foreach($entreprise_adverses1 as $e)
+                                                                        @if($row->idProcedure === $e->idRequete)
+                                                                            <span>c/ {{ $e->denomination }}</span>
+                                                                            @break <!-- Sortir de la boucle une fois que le match est trouvé -->
+                                                                        @endif
+                                                                    @endforeach
+
+                                                                    <!-- Affichage de personne adverse -->
+                                                                    @foreach($personne_adverses1 as $p)
+                                                                        @if($row->idProcedure === $p->idRequete)
+                                                                            <span>c/ {{ $p->prenom }} {{ $p->nom }}</span>
+                                                                            @break <!-- Sortir de la boucle une fois que le match est trouvé -->
+                                                                        @endif
+                                                                    @endforeach
+
+                                                                    <!-- Affichage d'autres rôles -->
+                                                                    @foreach($autreRoles1 as $r)
+                                                                        @if($row->idProcedure === $r->idRequete)
+                                                                            @if($r->autreRole === 'mp')
+                                                                                <span>c/ Ministère public</span>
+                                                                            @endif
+                                                                            @break <!-- Sortir de la boucle une fois que le match est trouvé -->
+                                                                        @endif
+                                                                    @endforeach
+
+                                                            </td>
+                                                            <td>
+                                                                @if(empty($row->dateRequete))
+                                                                    <small>N/A</small>
+                                                                @else
+                                                                    {{ date('d/m/Y', strtotime($row->dateRequete)) }}
+                                                                @endif
+                                                                <!-- {{ date('d/m/Y', strtotime($row->dateRequete)) }} -->
+                                                            </td>
+                                                            <td>
+                                                                <!--
+                                                                    <span>
+                                                                            @if($row->statut=='Terminée')
+                                                                            <small class="label bg-success-light">{{ $row->statut }}</small>
+                                                                            @elseif($row->statut=='Jonction')
+                                                                            <small class="label bg-blue">{{ $row->statut }}</small>
+                                                                            @else
+                                                                            <small class="label bg-warning-light">{{ $row->statut }}</small>
+                                                                            @endif
+                                                                        </span> -->
+                                                                <span>
+                                                                    @if($row->statut=='Terminée')
+                                                                        <small class="label bg-success">Terminée</small>
+                                                                    @elseif($row->statut=='Déposée')
+                                                                        <small class="label bg-primary">Déposée</small>
+                                                                    @elseif($row->statut=='Acceptée')
+                                                                        <small class="label bg-success">Acceptée</small>
+                                                                    @elseif($row->statut=='Rejetée')
+                                                                        <small class="label bg-danger">Rejetée</small>
+
+                                                                    @endif
+                                                                </span>
+                                                            </td>
+                                                            
+                                                        </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
-                                    </div>
+                                     </div>
                                 </div>
-                            </div>
+                           
                         </div>
                         <hr>
                     </div>
                     <div role="tabpanel" class="tab-pane fade" id="Section4">
                         <div class="row page-breadcrumbs">
                             <div class="col-md-5 align-self-center">
-                              <!--  <h4 class="theme-cl"><i class="fa fa-money"></i> Factures du client</h4> -->
+                               <!-- <h4 class="theme-cl"><i class="fa fa-money"></i> Factures du client</h4> -->
                             </div>
                             <div class="col-md-7 text-right">
                                 @if(Auth::user()->role=='Client')
@@ -952,24 +879,8 @@
                                                     @foreach($factures as $f)
                                                     <tr>
                                                         <td>{{$f->idFacture}}</td>
-
-                                                        <td>
-                                                            @if(empty($f->dateFacture))
-                                                                <small>N/A</small>
-                                                            @else
-                                                                {{date('d-m-Y', strtotime($f->dateFacture))}}
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                            @if(empty($f->dateEcheance))
-                                                                <small>N/A</small>
-                                                            @else
-                                                                 {{date('d-m-Y', strtotime($f->dateEcheance))}}</td>
-
-                                                            @endif
-                                                        </td>
-                                                          <!--  {{date('d-m-Y', strtotime($f->dateEcheance))}}
-                                                            {{date('d-m-Y', strtotime($f->dateFacture))}} -->
+                                                        <td>{{$f->dateFacture? date('d-m-Y', strtotime($f->dateFacture)) :'N/A'}}</td>
+                                                        <td>{{ $f->dateEcheance? date('d-m-Y', strtotime($f->dateEcheance)) :'N/A'}}</td>
 
                                                         <td>{{$f->montantTTC}} {{$f->monnaie}}</td>
                                                         <td class="bg-warning-light" style="text-align:center">
@@ -1003,7 +914,7 @@
                             <div class="invoice-table">
                                 <div class="row page-breadcrumbs">
                                     <div class="col-md-5 align-self-center">
-                                      <!--  <h4 class="theme-cl"><i class="fa fa-file"></i> Pièces du client</h4>-->
+                                        <!-- <h4 class="theme-cl"><i class="fa fa-file"></i> Pièces du client</h4> -->
                                     </div>
                                     <div class="col-md-7 text-right">
                                         <div class="btn-group">
@@ -1766,14 +1677,14 @@ function changeTab1() {
     var id2 = document.getElementById("t2");
     var id3 = document.getElementById("t3");
     var id4 = document.getElementById("t4");
-    var id5 = document.getElementById("t5");
+    
     var id6 = document.getElementById("t6");
     var id7 = document.getElementById("t7");
     id1.classList.add("active");
     id2.classList.remove("active");
     id3.classList.remove("active");
     id4.classList.remove("active");
-    id5.classList.remove("active");
+    
     id6.classList.remove("active");
     id7.classList.remove("active");
 
@@ -1785,14 +1696,14 @@ function changeTab2() {
     var id2 = document.getElementById("t2");
     var id3 = document.getElementById("t3");
     var id4 = document.getElementById("t4");
-    var id5 = document.getElementById("t5");
+    
     var id6 = document.getElementById("t6");
     var id7 = document.getElementById("t7");
     id1.classList.remove("active");
     id2.classList.add("active");
     id3.classList.remove("active");
     id4.classList.remove("active");
-    id5.classList.remove("active");
+    
     id6.classList.remove("active");
     id7.classList.remove("active");
 
@@ -1804,7 +1715,7 @@ function changeTab3() {
     var id2 = document.getElementById("t2");
     var id3 = document.getElementById("t3");
     var id4 = document.getElementById("t4");
-    var id5 = document.getElementById("t5");
+    
     var id6 = document.getElementById("t6");
     var id7 = document.getElementById("t7");
 
@@ -1812,7 +1723,7 @@ function changeTab3() {
     id2.classList.remove("active");
     id3.classList.add("active");
     id4.classList.remove("active");
-    id5.classList.remove("active");
+    
     id6.classList.remove("active");
     id7.classList.remove("active");
 
@@ -1824,7 +1735,7 @@ function changeTab4() {
     var id2 = document.getElementById("t2");
     var id3 = document.getElementById("t3");
     var id4 = document.getElementById("t4");
-    var id5 = document.getElementById("t5");
+    
     var id6 = document.getElementById("t6");
     var id7 = document.getElementById("t7");
 
@@ -1832,27 +1743,7 @@ function changeTab4() {
     id2.classList.remove("active");
     id3.classList.remove("active");
     id4.classList.add("active");
-    id5.classList.remove("active");
-    id6.classList.remove("active");
-    id7.classList.remove("active");
-
-}
-
-function changeTab5() {
-
-    var id1 = document.getElementById("t1");
-    var id2 = document.getElementById("t2");
-    var id3 = document.getElementById("t3");
-    var id4 = document.getElementById("t4");
-    var id5 = document.getElementById("t5");
-    var id6 = document.getElementById("t6");
-    var id7 = document.getElementById("t7");
-
-    id1.classList.remove("active");
-    id2.classList.remove("active");
-    id3.classList.remove("active");
-    id4.classList.remove("active");
-    id5.classList.add("active");
+    
     id6.classList.remove("active");
     id7.classList.remove("active");
 
@@ -1864,7 +1755,7 @@ function changeTab6() {
     var id2 = document.getElementById("t2");
     var id3 = document.getElementById("t3");
     var id4 = document.getElementById("t4");
-    var id5 = document.getElementById("t5");
+    
     var id6 = document.getElementById("t6");
     var id7 = document.getElementById("t7");
 
@@ -1872,7 +1763,7 @@ function changeTab6() {
     id2.classList.remove("active");
     id3.classList.remove("active");
     id4.classList.remove("active");
-    id5.classList.remove("active");
+    
     id6.classList.add("active");
     id7.classList.remove("active");
 
@@ -1884,7 +1775,7 @@ function changeTab7() {
     var id2 = document.getElementById("t2");
     var id3 = document.getElementById("t3");
     var id4 = document.getElementById("t4");
-    var id5 = document.getElementById("t5");
+    
     var id6 = document.getElementById("t6");
     var id7 = document.getElementById("t7");
 
@@ -1892,7 +1783,7 @@ function changeTab7() {
     id2.classList.remove("active");
     id3.classList.remove("active");
     id4.classList.remove("active");
-    id5.classList.remove("active");
+    
     id6.classList.remove("active");
     id7.classList.add("active");
 

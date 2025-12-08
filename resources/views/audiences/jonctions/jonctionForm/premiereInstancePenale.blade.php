@@ -27,9 +27,9 @@
                             <div class="col-md-4">
                                 <div class="custom-controls-stacked">
                                     <label class="custom-control custom-radio">
-                                        <input id="roleASKa-0" name="formsetCabinet[{{ $loop->iteration }}][role]" onclick="var id=0; roleASKa(id)" value="Prevenu / Accusé" type="radio" class="custom-control-input" required   @if($c->role=='Prevenu / Accusé') checked @else  @endif>
+                                        <input id="roleASKa-0" name="formsetCabinet[{{ $loop->iteration }}][role]" onclick="var id=0; roleASKa(id)" value="Prévenu(e) / Accusé(e)" type="radio" class="custom-control-input" required   @if($c->role=='Prévenu(e) / Accusé(e)') checked @else  @endif>
                                         <span class="custom-control-indicator"></span>
-                                        <span class="custom-control-description" id="labelroleASKa-0">Prevenu / Accusé</span>
+                                        <span class="custom-control-description" id="labelroleASKa-0">Prévenu(e) / Accusé(e)</span>
                                     </label>
                                 </div>
                             </div>
@@ -180,10 +180,10 @@
                                 <div class="custom-controls-stacked">
                                     <label class="custom-control custom-radio">
                                         <input id="roleASKa-1" name="formset[{{ $loop->iteration }}][role]"
-                                            value="Prevenu / Accusé" type="radio" class="custom-control-input" required
-                                            @if($p->role=='Prevenu / Accusé') checked @else  @endif >
+                                            value="Prévenu(e) / Accusé(e)" type="radio" class="custom-control-input" required
+                                            @if($p->role=='Prévenu(e) / Accusé(e)') checked @else  @endif >
                                         <span class="custom-control-indicator"></span>
-                                        <span class="custom-control-description" id="labelroleASKa-0">Prevenu / Accusé</span>
+                                        <span class="custom-control-description" id="labelroleASKa-0">Prévenu(e) / Accusé(e)</span>
                                     </label>
                                 </div>
                             </div>

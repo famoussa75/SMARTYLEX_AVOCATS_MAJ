@@ -37,6 +37,7 @@ class CourierDepart extends Model
         'signataire',
         'confidentialite',
         'slug',
+        'statutCourierTrasmise',
     ];
     use HasFactory;
 }

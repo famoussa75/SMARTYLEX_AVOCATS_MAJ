@@ -4,84 +4,97 @@
 <div class="container-fluid">
 
 
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs ">
-        <div class="col-md-9 align-self-center">
-            <h4 class="theme-cl">
+<!-- Page Header: Tâches -->
+<div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+    <!-- Partie gauche : titre + fil d’Ariane -->
+    <div class="d-flex align-items-center flex-wrap mb-2 mb-md-0">
+        <div class="icon-wrapper theme-bg">
+            <i class="fa fa-tasks"></i>
+        </div>
+        <div class="ms-3">
+            <h4 class="page-title">
                 @if (is_null($tache[0]->idAffaire))
-                <span class="label bg-info"><b>Tâche Cabinet</b></span>
+                    <span class="page-subtitle">
+                        <b>Tâche Cabinet</b>
+                    </span>
                 @else
-                <b>
+                        Tâche
+                        @foreach ($clients as $c)
+                            <span class="page-subtitle">› {{ $c->idClient }}</span>
+                        @endforeach
 
-                    @foreach ($clients as $c)
-                    <span class="pdf-title1">{{ $c->idClient }}</span>
+                        <span class="breadcrumb-separator">›</span>
 
-                    @endforeach
-                    >
-                    @foreach ($clients as $client)
-                    <a class="load" href="{{route('clientInfos', [$client->idClient, $client->slug])}}"
-                        class="theme-cl pdf-title2">
-                        {{ $client->prenom }} {{ $client->nom }} {{ $client->denomination }}</a>
-                    @endforeach
-                    >
-                    @foreach ($affaires as $affaire)
-                    <a class="load" href="{{route('showAffaire', [$affaire->idAffaire, $affaire->slug])}}"
-                        class="theme-cl pdf-title3">
-                        {{ $affaire->nomAffaire }}</a>
-                    @endforeach
-                    >
-                    <span class="label bg-info"><b>Tâche</b></span>
-                </b>
+                        @foreach ($clients as $client)
+                            <a href="{{route('clientInfos', [$client->idClient, $client->slug])}}"
+                               class="page-subtitle">
+                                {{ $client->prenom }} {{ $client->nom }} {{ $client->denomination }}
+                            </a>
+                        @endforeach
+
+                        <span class="breadcrumb-separator">›</span>
+
+                        @foreach ($affaires as $affaire)
+                            <a href="{{route('showAffaire', [$affaire->idAffaire, $affaire->slug])}}"
+                               class="page-subtitle">
+                                {{ $affaire->nomAffaire }}
+                            </a>
+                        @endforeach
                 @endif
             </h4>
+
+            <small class="page-description text-secondary">
+                Gérez, éditez ou validez les informations liées à cette tâche.
+            </small>
         </div>
-        <div class="col-md-3">
-            @if(Auth::user()->role=="Administrateur" || Auth::user()->role=="Assistant")
-            <div class="dropdown" style="float: right ;">
-                <button class="theme-bg btn dropdown-toggle" type="button" id="dropdownMenuButton1"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Options
-                </button>
+    </div>
+
+    <!-- Partie droite : menu d’actions -->
+    <div class="position-relative">
+        @if(Auth::user()->role=="Administrateur" || Auth::user()->role=="Assistant")
+        <div class="dropdown">
+            <button class="btn btn-gradient-custom btn-rounded shadow-sm dropdown-toggle" type="button" id="dropdownMenuButton1"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-cogs me-1"></i> Actions
+            </button>
+
+            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuButton1">
                 @if($tache[0]->statut == 'suspendu')
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1" x-placement="top-start"
-                    style="position: absolute; transform: translate3d(0px, -18px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <a class="dropdown-item " href="{{route('startStask', [$slug])}}"><i
-                            class="ti-control-play mr-2"></i>Reprendre</a>
-                </div>
+                    <a class="dropdown-item load" href="{{route('startStask', [$slug])}}">
+                        <i class="ti-control-play me-2 text-success"></i> Reprendre
+                    </a>
                 @elseif($tache[0]->statut == 'validée')
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1" x-placement="top-start"
-                    style="position: absolute; transform: translate3d(0px, -18px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    <a class="dropdown-item " href="#" onclick="getPDF()"><i class="ti-file mr-2"></i>Page en PDF</a>
-                </div>
+                    <a class="dropdown-item" href="#" onclick="getPDF()">
+                        <i class="ti-file me-2 text-primary"></i> Exporter en PDF
+                    </a>
                 @else
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1" x-placement="top-start"
-                    style="position: absolute; transform: translate3d(0px, -18px, 0px); top: 0px; left: 0px; will-change: transform;">
-                    @if($tache[0]->statut =='validée')
-                    @else
-                        @if(Auth::user()->role=="Administrateur")
-                        <a class="load dropdown-item" href="{{ route('valideTask', [$slug, $tache[0]->slugFille]) }}"><i
-                                class="ti-check mr-2"></i>Valider</a>
-                        @endif
+                    @if(Auth::user()->role=="Administrateur")
+                        <a class="dropdown-item load" href="{{ route('valideTask', [$slug, $tache[0]->slugFille]) }}">
+                            <i class="ti-check me-2 text-success"></i> Valider
+                        </a>
                     @endif
-                    <a class=" dropdown-item " href="#" data-toggle="modal" data-target="#editTask"><i
-                            class="ti-pencil-alt mr-2"></i>Editer</a>
-                    <a class="load dropdown-item " href="{{ route('stopTask', [$slug]) }}"><i
-                            class="ti-control-pause mr-2"></i>Suspendre</a>
-                    <a class="dropdown-item " href="#" onclick="getPDF()"><i class="ti-file mr-2"></i>Page en PDF</a>
-                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#deleteTask"
-                        href="{{route('deleteTask',[$slug])}}" style="color:red"><i
-                            class="ti-close mr-2"></i>Supprimer</a>
 
-                </div>
-
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editTask">
+                        <i class="ti-pencil-alt me-2 text-warning"></i> Éditer
+                    </a>
+                    <a class="dropdown-item load" href="{{ route('stopTask', [$slug]) }}">
+                        <i class="ti-control-pause me-2 text-muted"></i> Suspendre
+                    </a>
+                    <a class="dropdown-item" href="#" onclick="getPDF()">
+                        <i class="ti-file me-2 text-primary"></i> Exporter en PDF
+                    </a>
+                    <a class="dropdown-item text-danger" href="#" data-toggle="modal" data-target="#deleteTask">
+                        <i class="ti-close me-2"></i> Supprimer
+                    </a>
                 @endif
             </div>
-            @else
-            @endif
-
         </div>
-
+        @endif
     </div>
+
+</div>
+
     <!-- Title & Breadcrumbs-->
 
 
@@ -140,9 +153,9 @@
                                     @endif
                                     <p>
                                         <b><i class="fa fa-calendar-plus-o"></i> Date début</b> :
-                                        {{ date('d-m-Y', strtotime($tache[0]->dateDebut))}} |
+                                        {{ $tache[0]->dateDebut ?  date('d-m-Y', strtotime($tache[0]->dateDebut)) : 'N/A' }} |
                                         <b><i class="fa fa-calendar-minus-o"></i> Date de fin</b> :
-                                        <span style="color:red">{{ date('d-m-Y', strtotime($tache[0]->dateFin))}}</span>
+                                        <span style="color:red">{{ $tache[0]->dateFin ? date('d-m-Y', strtotime($tache[0]->dateFin)) : 'N/A' }}</span>
                                         | <b><i class="fa fa-circle-o"></i> Point</b> : {{ $tache[0]->point }}
                                         &nbsp;&nbsp; <br><br>
                                         <b style="color:green ;"><i class="fa  fa-hourglass"></i> Temps passé :

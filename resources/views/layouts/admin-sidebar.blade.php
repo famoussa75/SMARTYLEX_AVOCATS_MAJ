@@ -1,6 +1,279 @@
-<div class="navbar-side" >
-    <ul class="navbar-nav side-navbar" id="exampleAccordion" style="background: linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)), url('/assets/dist/img/sidebar-bg.png');background-size:cover;background-position:20%">
+<style>
+    /* Lien principal du menu */
+    .navbar-side .nav-item > .nav-link {
+        color: white !important;
+        transition: all 0.3s;
+    }
 
+    /* Hover : background bleu-vert */
+    .navbar-side .nav-item > .nav-link:hover {
+        background-color: rgba(0, 156, 170, 0.4) !important; /* opacité faible */
+        color: #fff !important;               /* texte blanc pour contraste */
+        transform: translateX(5px);           /* effet léger */
+    }
+
+    /* Sous-menu */
+    .sidenav-second-level li a:hover {
+        background-color: #009CAA !important;
+        color: #fff !important;
+        transform: translateX(5px);
+    }
+
+    /* Toutes les icônes restent dorées */
+    .navbar-side i {
+        color: #D7AE00 !important;
+        transition: color 0.3s;
+    }
+
+    /* Optionnel : changer la couleur de l'icône au hover du lien */
+    .navbar-side .nav-item > .nav-link:hover i {
+        color: #fff !important; /* contraste avec le bleu-vert */
+    }
+
+    /* Transition fluide pour liens et sous-menu */
+    .navbar-side .nav-link, 
+    .sidenav-second-level li a {
+        transition: all 0.3s ease;
+    }
+
+    /* Classe active pour les liens du menu */
+    .navbar-side .nav-item > .nav-link.active,
+    .navbar-side .nav-item.active > .nav-link {
+        background-color: rgba(215, 174, 0, 1) !important; /* doré léger */
+        color: #fff !important;               /* texte blanc */
+        border-radius: 8px;                   /* coins arrondis pour effet moderne */
+    }
+
+    /* Icône de l'élément actif */
+    .navbar-side .nav-item.active > .nav-link i,
+    .navbar-side .nav-link.active i {
+        color: #fff !important; /* icône blanche pour contraste */
+    }
+</style>
+
+<style>
+    .pub-container {
+        width: 200px;
+        height: 30vh;
+        overflow: hidden;
+        position: relative;
+        margin: 20px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .slider {
+        display: flex;
+        flex-wrap: nowrap;
+        width: 300%;
+        height: 100%;
+        animation: slide 15s infinite ease-in-out;
+    }
+
+    .slide {
+        flex: 0 0 33.333%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        transition: transform 0.2s ease;
+    }
+
+    .slide:hover {
+        transform: scale(0.80);
+    }
+
+    .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.2s ease;
+    }
+
+    /* Animation professionnelle avec transitions douces */
+    @keyframes slide {
+        0% { 
+            transform: translateX(0);
+            animation-timing-function: ease-out;
+        }
+        26% { 
+            transform: translateX(0);
+            animation-timing-function: ease-in;
+        }
+        33% { 
+            transform: translateX(-33.333%);
+            animation-timing-function: ease-out;
+        }
+        59% { 
+            transform: translateX(-33.333%);
+            animation-timing-function: ease-in;
+        }
+        66% { 
+            transform: translateX(-66.666%);
+            animation-timing-function: ease-out;
+        }
+        92% { 
+            transform: translateX(-66.666%);
+            animation-timing-function: ease-in;
+        }
+        100% { 
+            transform: translateX(0);
+        }
+    }
+
+    /* Indicateurs de progression */
+    .pub-container::before {
+        content: '';
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+        z-index: 10;
+    }
+
+    /* Barre de progression animée */
+    .progress-bar {
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 2px;
+        z-index: 11;
+        animation: progress 25s infinite linear;
+        transform-origin: left center;
+    }
+
+    @keyframes progress {
+        0% { 
+            width: 0;
+            left: 50%;
+        }
+        33% { 
+            width: 80px;
+            left: 50%;
+        }
+        33.1% { 
+            width: 0;
+            left: 50%;
+        }
+        66% { 
+            width: 80px;
+            left: 50%;
+        }
+        66.1% { 
+            width: 0;
+            left: 50%;
+        }
+        99% { 
+            width: 80px;
+            left: 50%;
+        }
+        100% { 
+            width: 0;
+            left: 50%;
+        }
+    }
+
+    /* Overlay pour meilleure lisibilité */
+    .slide::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 30%;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+        pointer-events: none;
+    }
+
+    /* Effet de flou pendant la transition */
+    .slider {
+        backdrop-filter: blur(0px);
+        transition: backdrop-filter 0.3s ease;
+    }
+
+    .slider:active {
+        backdrop-filter: blur(2px);
+    }
+
+    
+
+</style>
+
+<style>
+
+    .close-pub-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        padding: 5px 10px;
+        z-index: 20;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .open-pub-icon {
+        position: absolute;
+        top: 600px;
+        left: 15px;
+        padding: 5px 10px;
+        z-index: 20;
+        background: white;
+        border: 1px solid #d6e84eff;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .close-pub-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 6px 12px;
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        cursor: pointer;
+        opacity: 0; 
+        transition: opacity 0.3s ease;
+        z-index: 100;
+    }
+
+    /* Apparition du bouton au survol */
+    .pub-container:hover .close-pub-btn {
+        opacity: 1;
+    }
+
+   
+    
+
+</style>
+
+
+
+
+
+<div class="navbar-side" >
+<ul class="navbar-nav side-navbar" id="exampleAccordion"
+    style="
+    background:
+        radial-gradient(circle at top left, rgba(0, 180, 255, 0.15), transparent 50%),
+        radial-gradient(circle at bottom right, rgba(255, 0, 120, 0.15), transparent 45%),
+        linear-gradient(135deg, #0f102d, #1a1b4b, #2a135f);
+    ">
+  
         <!-- Start Dashboard-->
         <li class="nav-item" title="Accueil" id="hm">
             <a class="load nav-link" href="{{route('home')}}">
@@ -13,7 +286,7 @@
         <!-- Start Messages -->
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tâche" id="tch">
             <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#taches" data-parent="#exampleAccordion">
-
+                
                 <i class="ti i-cl-0 ti-layers"></i>
                 <span class="nav-link-text" style="color:white"><b>Tâches</b></span>
             </a>
@@ -110,14 +383,14 @@
                 <li>
                     <a class="load" href="{{ route('createCourierArriver') }}"><span class="submenu"> Courriers - Arrivée</span></a>
                 </li>
-
+                
                 <li>
                     <a class="load" href="{{ route('allCouriers') }}"><span class="submenu">Tous les courriers</span></a>
                 </li>
-
+               
             </ul>
         </li>
-
+       
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Facturation" id="fact">
             <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#Facturation" data-parent="#exampleAccordion">
                 <i class="ti i-cl-0 fa fa-money"></i>
@@ -134,7 +407,7 @@
             </ul>
 
         </li>
-
+        
         <!-- End UI Elements -->
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Ressources Humaines" id="rh">
             <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#RH" data-parent="#exampleAccordion">
@@ -155,7 +428,7 @@
                 <li>
                     <a class="load" href="{{ route('clientPersonnel') }}"><span class="submenu">Affecter un client au personnel</span></a>
                 </li>
-
+                
             </ul>
 
         </li>
@@ -180,7 +453,7 @@
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="parametre avancé" id="pa">
             <a class="nav-link" href="{{route('paramAvance')}}">
                 <i class="ti i-cl-0 fa fa-wrench"></i>
-                <span class="nav-link-text" style="color:white"><b>Paramètres avancés</b></span>
+                <span class="nav-link-text" style="color:white"><b>Paramètre avancé</b></span>
             </a>
 
         </li>
@@ -209,61 +482,26 @@
             </ul>
 
         </li>
+        <li>
 
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" style="heigth: 500px">
-            <div id="publiciteCarousel" class="carousel slide" data-ride="carousel" data-interval="100000">
-                <!-- Indicateurs -->
-                <ol class="carousel-indicators">
-                    @if(Session::has('publicite') && count(Session::get('publicite')) > 0)
-                        @foreach(Session::get('publicite') as $index => $pub)
-                            <li data-target="#publiciteCarousel" data-slide-to="{{ $index }}"
-                                class="{{ $index == 0 ? 'active' : '' }}"></li>
-                        @endforeach
-                    @endif
-                </ol>
+            <div class="pub-container" id="pubContainer">
 
-                <!-- Contenu du carousel -->
-                <div class="carousel-inner">
-                    @if(Session::has('publicite') && count(Session::get('publicite')) > 0)
-                        @foreach(Session::get('publicite') as $index => $pub)
-                            <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
-                                <img class="d-block w-100" src="{{ asset('storage/publicites/' . $pub->image) }}"
-                                    alt="{{ $pub->titre }}" style="max-height: 300px; object-fit: cover;">
-                                <div class="carousel-caption d-none d-md-block">
-                                    <h5 class="text-warning">{{ $pub->titre }}</h5>
-                                    @if($pub->lien)
-                                        <a href="{{ $pub->lien }}" target="_blank" class="btn btn-sm btn-primary">Voir plus</a>
-                                    @endif
-                                </div>
-                            </div>
-                        @endforeach
-                    @else
-                        <!-- Aucune publicité -->
-                        <div class="carousel-item active">
-                            <div class="d-block w-100 bg-light" style="height: 300px; display: flex; align-items: center; justify-content: center;">
-                                <div class="text-center">
-                                    <i class="fa fa-bullhorn fa-3x text-muted mb-2"></i>
-                                    <h5 class="text-muted">Aucune publicité active</h5>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+                <button id="closePubBtn" class="close-pub-btn">X</button>
+
+                <div class="slider">
+                    <div class="slide"><img src="/assets/dist/img/pube1.jpeg" alt="Pub 1"></div>
+                    <div class="slide"><img src="/assets/dist/img/pube2.jpeg" alt="Pub 2"></div>
+                    <div class="slide"><img src="/assets/dist/img/pube3.jpeg" alt="Pub 3"></div>
                 </div>
 
-                <!-- Contrôles (uniquement si plus d'une publicité) -->
-                @if(Session::has('publicite') && count(Session::get('publicite')) > 1)
-                    <a class="carousel-control-prev" href="#publiciteCarousel" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Précédent</span>
-                    </a>
-                    <a class="carousel-control-next" href="#publiciteCarousel" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Suivant</span>
-                    </a>
-                @endif
             </div>
+
+            <!-- Icône en dehors ➜ visible même quand pubContainer est caché -->
+            <div id="openPubIcon" class="open-pub-icon btn btn-white" hidden>📢</div>
         </li>
 
+
+        
     </ul>
 
 
@@ -275,11 +513,40 @@
     let paused = false;
 
     document.querySelector(".pub-container").addEventListener("mouseenter", () => {
-    slider.style.animationPlayState = "paused"; // pause au survol
+        slider.style.animationPlayState = "paused"; // pause au survol
     });
 
     document.querySelector(".pub-container").addEventListener("mouseleave", () => {
-    slider.style.animationPlayState = "running"; // reprend après
+        slider.style.animationPlayState = "running"; // reprend après
     });
 
+</script>
+
+
+<script>
+    const pubContainer = document.getElementById("pubContainer");
+    const closeBtn = document.getElementById("closePubBtn");
+    const openIcon = document.getElementById("openPubIcon");
+
+    // Vérifier état enregistré
+    const pubClosed = localStorage.getItem("pubClosed");
+
+    if (pubClosed === "true") {
+        pubContainer.style.display = "none";
+        openIcon.hidden = false;
+    }
+
+    // Fermer la pub
+    closeBtn.addEventListener("click", () => {
+        pubContainer.style.display = "none";
+        openIcon.hidden = false;
+        localStorage.setItem("pubClosed", "true"); // Sauvegarde
+    });
+
+    // Ouvrir la pub
+    openIcon.addEventListener("click", () => {
+        pubContainer.style.display = "block";
+        openIcon.hidden = true;
+        localStorage.setItem("pubClosed", "false"); // Sauvegarde
+    });
 </script>

@@ -4,22 +4,35 @@
 
 <div class="container-fluid">
 
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"><i class="fa fa-plus"></i> Changement du niveau d'audience</h4>
-        </div>
+ <!-- Page Header: Changement du niveau d'audience -->
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
 
-        <div class="col-md-7 text-right">
-
-            <div class="btn-group">
-                <a href="{{ route('listAudience', 'generale') }}" class="cl-white theme-bg btn btn-default btn-rounded"
-                    title="Voir la liste des audiences">
-                    <i class="fa fa-navicon"></i> Liste des audiences
-                </a>
+        <!-- Partie gauche : titre -->
+        <div class="d-flex align-items-center flex-wrap mb-2 mb-md-0">
+            <div class="icon-wrapper theme-bg">
+                <i class="fa fa-level-up"></i>
+            </div>
+            <div class="ms-3">
+                <h4 class="page-title">
+                    Audience
+                    <span class="page-subtitle">› Changement du niveau d’audience</span>
+                </h4>
+                <small class="page-description text-secondary">
+                    Modifier le niveau ou le statut d’une audience existante.
+                </small>
             </div>
         </div>
+
+        <!-- Partie droite : bouton d’action -->
+        <div class="text-end">
+            <a href="{{ route('listAudience', 'generale') }}"
+            class="btn btn-gradient-custom btn-rounded shadow-sm"
+            title="Voir la liste des audiences">
+                <i class="fa fa-navicon me-2"></i> Liste des audiences
+            </a>
+        </div>
     </div>
+
     <!-- Title & Breadcrumbs-->
 
 
@@ -954,7 +967,7 @@
                     <div class="form-group">
                         <div class="text-center">
                             <button type="submit" class="theme-bg btn btn-rounded btn-block"
-                                style="width:50%;">Enregistrer</button>
+                                style="width:20%;">Enregistrer</button>
                         </div>
                     </div>
 

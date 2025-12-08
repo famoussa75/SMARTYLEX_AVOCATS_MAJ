@@ -2,22 +2,34 @@
 @section('title','Nouvelle Affaire')
 @section('content')
 <div class="container-fluid">
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"><i class="ti-bag"></i> Affaires > <span class="label bg-info"><b>Création</b></span></h4>
-        </div>
+    <!-- Title & Breadcrumbs -->
+<div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
 
-        <div class="col-md-7 text-right">
-            <div class="btn-group">
-                <a type="button" href="{{ route('allAfaires') }}" class="cl-white theme-bg btn btn-rounded" title="Liste des Affaires">
-                    <i class="fa fa-navicon"></i>
-                    Liste des Affaires
-                </a>
-            </div>
-
-        </div>
+<!-- Bloc gauche : icône + titre -->
+<div class="d-flex align-items-center mb-2 mb-md-0">
+    <div class="icon-wrapper theme-bg">
+        <i class="ti-bag"></i>
     </div>
+    <div class="ms-2">
+        <h4 class="page-title mb-1">
+            Affaires
+            <span class="page-subtitle">› Création</span>
+        </h4>
+        <small class="page-description text-secondary">
+            Enregistrez une nouvelle affaire et renseignez les informations principales du dossier.
+        </small>
+    </div>
+</div>
+
+<!-- Bloc droit : boutons d’action -->
+<div class="d-flex align-items-center flex-wrap gap-2">
+    <a href="{{ route('allAfaires') }}" class="btn btn-gradient-custom shadow-sm btn-rounded" title="Liste des Affaires">
+        <i class="fa fa-navicon me-1"></i> Liste des Affaires
+    </a>
+</div>
+
+</div>
+
     <!-- Title & Breadcrumbs-->
     @if (sizeof($client) == 0)
     <div class="alert alert-warning alert-dismissable">
@@ -92,7 +104,7 @@
                         <div class="col-12 mt-5">
                             <div class="theme-cl form-group">
                                 <div class="text-center">
-                                    <button type="submit" class="theme-bg btn btn-rounded" style="width:50%;"> Enregistrer</button>
+                                    <button type="submit" class="theme-bg btn btn-rounded"><i class="fa fa-save"></i> Enregistrer</button>
                                 </div>
                             </div>
                         </div>

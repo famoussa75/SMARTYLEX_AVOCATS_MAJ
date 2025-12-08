@@ -1,70 +1,63 @@
 @extends('layouts.base')
-@section('title','Liste des audiences')
+@section('title','Audiences Contradictoires')
 @section('content')
+
+
 <div class="container-fluid">
     <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+        {{-- Titre et icône --}}
+        <div class="d-flex align-items-center mb-2 mb-md-0">
+            <div class="icon-wrapper me-3">
+                <i class="fa fa-balance-scale"></i>
+            </div>
+            <div>
+                @if($typeListe == 'a_venir')
+                    <h4 class="page-title mb-1">
+                        Procédures <span class="page-subtitle">› À venir</span>
+                    </h4>
+                @elseif($typeListe == 'filtrer')
+                    <h4 class="page-title mb-1">
+                        Procédures <span class="page-subtitle">› Contradictoires</span>
+                    </h4>
+                @else
+                    <h4 class="page-title mb-1">
+                        Procédures <span class="page-subtitle">› Contradictoires</span>
+                    </h4>
+                @endif
+            </div>
+        </div>
+
+        {{-- Boutons --}}
+        <div class="d-flex align-items-center mt-2 mt-md-0">
+            <a href="{{ route('addAudience') }}" title="Créer une audience" class="btn btn-gradient-custom me-2">
+                <i class="fa fa-plus me-1"></i> Créer une nouvelle procédure
+            </a>&nbsp;
+
             @if($typeListe == 'a_venir')
-            <h4 class="theme-cl"><i class="fa fa-balance-scale"></i> Procédures > <span class="label bg-info"><b>À
-                        venir</b></span></h4>
+                <a href="{{ route('listAudience', 'generale') }}" title="Toutes les audiences" class="btn btn-outline-primary-custom">
+                    <i class="fa fa-list me-1"></i> Toutes les audiences
+                </a>
             @elseif($typeListe == 'filtrer')
-            <h4 class="theme-cl"><i class="fa fa-balance-scale"></i> Procédures > <span
-                    class="label bg-info"><b>Contradictoires</b></span></h4>
+                <a href="{{ route('listAudience', 'generale') }}" title="Toutes les audiences" class="btn btn-outline-primary-custom">
+                    <i class="fa fa-list me-1"></i> Toutes les audiences
+                </a>
             @else
-            <h4 class="theme-cl"><i class="fa fa-balance-scale"></i> Procédures > <span
-                    class="label bg-info"><b>Contradictoires</b></span></h4>
+                <a href="{{ route('listAudience', 'a_venir') }}" title="Audiences à venir" class="btn btn-outline-primary-custom">
+                    <i class="fa fa-calendar me-1"></i> Audiences à venir
+                </a>
             @endif
         </div>
 
-        <div class="col-md-7 text-right">
-
-            <div class="btn-group">
-                <a href="{{ route('addAudience') }}" title="Créer une audience"
-                    class="cl-white theme-bg btn  btn-rounded">
-                    <i class="fa fa-plus"></i> Créer une nouvelle procédure
-                </a>
-            </div>
-            @if($typeListe == 'a_venir')
-            <div class="btn-group">
-                <a href="{{ route('listAudience', 'generale') }}" title="Audiences à venir"
-                    class="cl-white theme-bg btn  btn-rounded">
-                    <i class="fa fa-list"></i> Toutes les audiences
-                </a>
-            </div>
-            @elseif($typeListe == 'filtrer')
-            <div class="btn-group">
-                <a href="{{ route('listAudience', 'generale') }}" title="Audiences à venir"
-                    class="cl-white theme-bg btn  btn-rounded">
-                    <i class="fa fa-list"></i> Toutes les audiences
-                </a>
-            </div>
-
-            @else
-            <div class="btn-group">
-                <a href="{{ route('listAudience', 'a_venir') }}" title="Toutes les audiences"
-                    class="cl-white theme-bg btn  btn-rounded">
-                    <i class="fa fa-date"></i> Audiences à venir
-                </a>
-            </div>
-            @endif
-
-            <!-- <div class="btn-group">
-                <a href="{{ route('createJonctionEtape1') }}" title="Créer une audience"
-                    class="cl-white theme-bg btn  btn-rounded">
-                    <i class="fa fa-plus"></i> Créer une jonction
-                </a>
-            </div> -->
-        </div>
     </div>
-
-
 
     <div class="card col-md-12" style="margin-top:30px;padding:10px;display:grid;min-height:70vh">
         @if (empty($formattedAudiences))
         <div class="alert alert-warning alert-dismissable" style="height: 100px;">
             <div class="card-body">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <button type="button" class="close" data-dismiss="alert"
+                    aria-hidden="true">×</button>
                 <div class="text-center">
                     <span>Aucune audience trouvée,
                     </span>
@@ -79,8 +72,7 @@
         <div class="table-responsive">
 
             <div class="col-md-12 align-self-center mb-4">
-                <form method="post" action="{{route('filtreAudience')}}" accept-charset="utf-8"
-                    enctype="multipart/form-data">
+                <form method="post" action="{{route('filtreAudience')}}" accept-charset="utf-8" enctype="multipart/form-data">
                     @csrf
 
                     <div class="btn-group mr-lg-2">
@@ -91,24 +83,22 @@
                     <div class="btn-group mr-lg-2">
                         <div class="input-group">
                             <span class="input-group-addon" id="basic-addon3">Du</span>
-                            <input type="date" name="dateDebut" class="form-control" id="basic-url"
-                                value="{{ $dateDebut ?? $dateDernierVendredi ?? '' }}" aria-describedby="basic-addon3"
-                                required>
+                            <input type="date" name="dateDebut" class="form-control" id="basic-url" value="{{ $dateDebut ?? $dateDernierVendredi ?? '' }}"
+                                aria-describedby="basic-addon3" required>
                         </div>
 
                     </div>
-
+                    
 
                     <div class="btn-group mr-lg-2">
                         <div class="input-group">
                             <span class="input-group-addon" id="basic-addon3">Au</span>
-                            <input type="date" name="dateFin" class="form-control" id="basic-url"
-                                value="{{ $dateFin ?? $dateProchainVendredi ?? '' }}" aria-describedby="basic-addon3"
-                                required>
+                            <input type="date" name="dateFin" class="form-control" id="basic-url" value="{{ $dateFin ?? $dateProchainVendredi ?? '' }}"
+                                aria-describedby="basic-addon3" required>
                         </div>
 
                     </div>
-
+                    
 
                     <div class="btn-group mr-lg-2">
                         <button type="submit" title="Filtrer" class="btn btn-default">
@@ -119,12 +109,10 @@
                 </form>
 
             </div>
-            @if(isset($dateDernierVendredi) && $dateDernierVendredi != '' && isset($dateProchainVendredi) &&
-            $dateProchainVendredi != '')
-            <p><b>NB:</b> Les procédures à venir sont dans l'interval du dernier vendredi à <b>12:00:00</b> au prochain
-                vendredi à <b>11:59:59</b>.</p>
+            @if(isset($dateDernierVendredi) && $dateDernierVendredi != '' && isset($dateProchainVendredi) && $dateProchainVendredi != '')
+                <p><b>NB:</b> Les procédures à venir se déroulent entre le dernier vendredi à <b> 12h :00min :00s</b> et le vendredi suivant à  <b>11h :59 min :59s</b></p>
             @endif
-
+   
             <div class="category-filter">
                 <select id="categoryFilter1" class="categoryFilter1 form-control">
                     <option value="">Filtre par niveau</option>
@@ -142,7 +130,8 @@
 
                 </select>
             </div>
-            <table id="filterTable2" class="filterTable2 dataTableExport table table-bordered table-hover"
+            <table id="filterTable2"
+                class="filterTable2 dataTableExport table table-bordered table-hover"
                 style="width:100%">
                 <thead>
                     <tr>
@@ -153,56 +142,43 @@
                         <th>Niveau Procedural</th>
                         <th>Prochaine audience</th>
                         <th>Statut</th>
-                    </tr>
+                    </tr> 
                 </thead>
                 <tbody>
- 
                     @foreach ($formattedAudiences as $row)
-                    @php
-                    $dateAudience = $row['prochaineAudience'] ?? null;
-                    @endphp
-                    <tr>
+                    <tr onclick="window.location='{{ route('detailAudience', ['id' => $row['idAudience'], 'slug' => $row['slugAud'], 'niveau' => $row['niveauProcedural']]) }}'" style="cursor:pointer;">
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $row['numRg'] ?? 'N/A' }}</td>
                         <td>
-                            <a href="{{ route('detailAudience', [
-                                'id' => $row['idAudience'],
-                                'slug' => $row['slugAud'],
-                                'niveau' =>$row['niveauProcedural']
-                            ]) }}"
-                                data-toggle="tooltip" title="Voir plus de cette audience">
                                 <span>{{ $row['ministerePublic'] }}</span>
                                 <span>
                                     @if(is_array($row['parties']) && !empty($row['parties']))
-                                    {{ implode(', ', $row['parties']) }}
+                                        {{ implode(', ', $row['parties']) }}
                                     @else
-                                    {{ $row['parties'] }}
+                                       {{ $row['parties'] }}
                                     @endif
                                 </span>
-
+                                
                                 <span>
                                     @if(is_array($row['partieCivile']) && !empty($row['partieCivile']))
-                                    Partie civile : {{ implode(', ', $row['partieCivile']) }}
+                                        Partie civile : {{ implode(', ', $row['partieCivile']) }}
                                     @else
-                                    {{ $row['partieCivile'] }}
+                                        {{ $row['partieCivile'] }}
                                     @endif
                                 </span>
                                 <span>
                                     @if(is_array($row['intervenant']) && !empty($row['intervenant']))
-                                    Intervenant : {{ implode(', ', $row['intervenant']) }}
+                                        Intervenant : {{ implode(', ', $row['intervenant']) }}
                                     @else
-                                    {{ $row['intervenant'] }}
+                                       {{ $row['intervenant'] }}
                                     @endif
                                 </span>
-
-                            </a>
+                                
                         </td>
 
                         <td>
-                            <a href="{{ route('detailAudience', ['id' => $row['idAudience'], 'slug' => $row['slugAud'] ,$row['niveauProcedural'] ]) }}"
-                                data-toggle="tooltip" title="Voir plus de cette audience">
-                                {{ $row['objet'] }}
-                            </a>
+
+                            {{ $row['objet'] }}
                         </td>
                         <td>
                             <span>
@@ -216,13 +192,13 @@
                             </span>
                         </td>
                         <td>
-                            @if (empty($dateAudience) || $dateAudience == 'N/A')
-                            <small class="label bg-warning-light">suivi à compléter</small>
+                            @if (empty($row['dateAudience']) || $row['dateAudience'] == 'N/A')
+                                <small class="label bg-light text-dark">Suivi à compléter</small>
                             @else
-                                @if(strtotime($dateAudience) < strtotime(date('Y-m-d')))
-                            <small class="label bg-warning-light">suivi à compléter</small>
+                                @if(strtotime($row['dateAudience']) < strtotime(date('Y-m-d')))
+                                    <small class="label bg-light text-dark">Suivi à compléter</small>
                                 @else
-                            {{ date('d/m/Y', strtotime($dateAudience)) }}
+                                    {{ date('d/m/Y', strtotime($row['dateAudience'])) }}
                                 
                                 @endif
                             @endif
@@ -238,6 +214,8 @@
                                 @endif
                             </span>
                         </td>
+
+
                     </tr>
                     @endforeach
                 </tbody>
@@ -245,9 +223,14 @@
         </div>
         @endif
     </div>
+
+
+
+
 </div>
 <!-- /.row -->
+
 <script>
-    document.getElementById('aud').classList.add('active');
+document.getElementById('aud').classList.add('active');
 </script>
 @endsection

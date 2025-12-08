@@ -19,7 +19,6 @@ class Cabinets extends Model
         'cleAudience',
         'emailFinance',
         'cleFinance',
-        'piedPage',
         'adresseCabinet',
         'tel1',
         'tel2',

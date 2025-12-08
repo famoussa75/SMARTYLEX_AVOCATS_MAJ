@@ -3,28 +3,40 @@
 @section('content')
 <div class="container-fluid">
 
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"> <i class="fa fa-users"></i>&nbsp;&nbsp;Clients > <span class="label bg-info"><b>Nouveau</b></span></h4>
-        </div>
-        <div class="col-md-7 text-right">
+<!-- Page Header -->
+<div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
 
-            <div class="btn-group">
-                @if(Auth::user()->role=='Collaborateur')
-                <a href="{{ route('CollabClient') }}" title="Liste des clients"
-                    class="cl-white theme-bg btn  btn-rounded">
-                    <i class="fa fa-navicon"></i> Liste des clients
-                </a>
-                @else
-                <a href="{{ route('clientListe') }}" title="Liste des clients"
-                    class="cl-white theme-bg btn  btn-rounded">
-                    <i class="fa fa-navicon"></i> Liste des clients
-                </a>
-                @endif
-            </div>
+    <!-- Bloc gauche : icône + titre -->
+    <div class="d-flex align-items-center mb-2 mb-md-0">
+        <div class="icon-wrapper theme-bg">
+            <i class="fa fa-users"></i>
+        </div>
+        <div class="ms-2">
+            <h4 class="page-title mb-1">
+                Clients 
+                <span class="page-subtitle">› Nouveau</span>
+            </h4>
+            <small class="page-description text-secondary">
+                Enregistrez un nouveau client dans la base de données du cabinet.
+            </small>
         </div>
     </div>
+
+    <!-- Bloc droit : bouton d’action -->
+    <div class="d-flex align-items-center flex-wrap gap-2">
+        @if(Auth::user()->role == 'Collaborateur')
+            <a href="{{ route('CollabClient') }}" class="btn btn-gradient-custom shadow-sm btn-rounded" title="Liste des clients">
+                <i class="fa fa-navicon me-1"></i> Liste des clients
+            </a>
+        @else
+            <a href="{{ route('clientListe') }}" class="btn btn-gradient-custom shadow-sm btn-rounded" title="Liste des clients">
+                <i class="fa fa-navicon me-1"></i> Liste des clients
+            </a>
+        @endif
+    </div>
+
+</div>
+
     <!-- Title & Breadcrumbs-->
     <div class="row">
         <div class="col-md-12 col-sm-12">
@@ -106,7 +118,7 @@
                                     <label for="inputTelephone" class="control-label">Téléphone</label><br>
                                     <input type="tel" class="form-control phone" value="+224"
                                         data-inputmask="'mask': ['+99[9] 999-99-99-99']" data-mask
-                                        data-inputmask="'mask': ['+99[9] 999-99-99-99']" data-mask style="width: 228%;"
+                                        data-inputmask="'mask': ['+99[9] 999-99-99-99']" data-mask 
                                         id="inputTelephone" name="telephone" required>
                                     <div class="help-block with-errors"></div>
                                 </div>
@@ -159,9 +171,9 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <div class="text-center">
-                                    <a href="#" type="button" class="theme-bg btn btn-rounded btn-block"
-                                        onclick="fechAClientExist2();" style="width:50%; color:white">
-                                        Enregistrer</a>
+                                    <button type="submit" class="theme-bg btn btn-rounded btn-block"
+                                        onclick="fechAClientExist2();">
+                                        <i class="fa fa-save"></i> Enregistrer</button>
                                 </div>
                             </div>
                         </div>
@@ -246,7 +258,7 @@
                         </div>
 
                     </div>
-                    <div class="row mrg-0">
+                     <div class="row mrg-0">
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="inputSt" class="control-label">NIF</label>
@@ -282,14 +294,14 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="inputAd" class="control-label">Téléphone</label><br>
-                                <input type="tel" class="form-control phone1" style="width: 228%;" value="+224"
+                                <input type="tel" class="form-control phone1" value="+224"
                                     data-inputmask="'mask': ['+99[9] 999-99-99-99']" data-mask
                                     name="telephoneEntreprise" id="inputAd" required>
                             </div>
                         </div>
                     </div>
                     <div class="row mrg-0">
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="type" class="control-label">Logo du client ( Facultatif )</label>
                                 <input type="file" class="fichiers form-control" name="logo" accept="image/*">
@@ -330,7 +342,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="inputA" class="control-label">Téléphone</label><br>
-                                <input type="text" class="form-control phone2" style="width: 228%;" value="+224"
+                                <input type="text" class="form-control phone2"  value="+224"
                                     data-inputmask="'mask': ['+99[9] 999-99-99-99']" data-mask id="inputA"
                                     name="telephoneRepresentant" required>
                             </div>
@@ -385,9 +397,9 @@
                     <div class="col-12">
                         <div class="form-group">
                             <div class="text-center">
-                                <a href="#" type="button" class="theme-bg btn btn-rounded btn-block"
-                                    onclick="fechAClientExist();" style="width:50%; color:white">
-                                    Enregistrer</a>
+                            <button type="submit" class="theme-bg btn btn-rounded btn-block"
+                                        onclick="fechAClientExist();">
+                                        <i class="fa fa-save"></i> Enregistrer</button>
                             </div>
                         </div>
                     </div>
@@ -475,6 +487,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
-
+</script>
 
 @endsection

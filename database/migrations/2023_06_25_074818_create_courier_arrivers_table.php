@@ -31,9 +31,9 @@ class CreateCourierArriversTable extends Migration
             $table->string('niveau');
             $table->string('confidentialite')->nullable();
             $table->text('slug');
-            $table->unsignedInteger('signifie')->nullable();
-            $table->string('statutCourierTrasmise');
-            
+            $table->text('signifie')->nullable();
+            $table->string('statutCourierTrasmise');  //nouveau 
+
             $table->timestamps();
         });
     }

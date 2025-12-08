@@ -19,7 +19,6 @@ return new class extends Migration
             $table->unsignedInteger('idCabinet');
             $table->foreign('idCabinet')->references('id')->on('cabinets');
             $table->text('nomBank')->nullable();
-            $table->text('devise')->nullable();
             $table->text('codeBank')->nullable();
             $table->text('codeGuichet')->nullable();
             $table->text('numCompte')->nullable();

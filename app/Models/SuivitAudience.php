@@ -26,7 +26,6 @@ class SuivitAudience extends Model
         'email',
         'suiviPar',
         'slug',
-        'rappelProchaineAudience',
     ];
     use HasFactory;
 }

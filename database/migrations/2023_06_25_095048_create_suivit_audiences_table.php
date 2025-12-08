@@ -22,7 +22,7 @@ class CreateSuivitAudiencesTable extends Migration
             $table->foreign('idAudience')->references('idAudience')->on('audiences')->onDelete('cascade');
             $table->string('dateAudience')->nullable();
             $table->string('dateProchaineAudience')->nullable();
-            $table->time('heure')->nullable();
+           $table->time('heure')->nullable();
             $table->string('TypeDecision')->nullable();
             $table->text('decision')->nullable();
             $table->text('extrait')->nullable();
@@ -35,7 +35,6 @@ class CreateSuivitAudiencesTable extends Migration
             $table->string('email')->nullable();
             $table->text('suiviPar')->nullable();
             $table->text('slug')->nullable();
-            $table->string('rappelProchaineAudience')->nullable();
             $table->timestamps();
         });
     }

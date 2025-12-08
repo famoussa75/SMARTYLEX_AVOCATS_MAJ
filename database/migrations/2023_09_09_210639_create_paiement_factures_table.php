@@ -26,6 +26,8 @@ return new class extends Migration
             $table->text('numeroCheque')->nullable();
             $table->text('dateVirement')->nullable();
             $table->text('statut')->nullable();
+            $table->text('emoney')->nullable();
+            $table->text('ref_emoney')->nullable();
             $table->text('slug')->nullable();
             $table->timestamps();
         });

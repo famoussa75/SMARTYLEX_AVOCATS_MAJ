@@ -28,80 +28,92 @@
 
  <div class="container-fluid @if (Auth::user()->role=='Client') bg-secondary @else  @endif ">
 
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="row col-md-12 align-self-center">
-            <div class="col-md-8">
-                @empty($cabinet)
-                <h4 class="theme-cl"><i class="fa fa-balance-scale"></i> Details de la requête</h4>
-                @else
-                <h5 class="theme-cl">
-                    <b> {{ $cabinet[0]->idClient }}</b>
-                    >
-                    <a class="load theme-cl"
-                        href="{{route('clientInfos', [$cabinet[0]->idClient, $cabinet[0]->clientslug])}}">
-                        {{ $cabinet[0]->prenom }} {{ $cabinet[0]->nom }} {{ $cabinet[0]->denomination }}
-                    </a>
+ <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+    {{-- Breadcrumb & Titre --}}
+    <div class="d-flex align-items-center mb-2 mb-md-0 break-text">
+        <div class="icon-wrapper me-3">
+            <i class="fa fa-balance-scale"></i>
+        </div>
+        <div class="ms-2 d-flex flex-column">
+            @empty($cabinet)
+                <h5 class="page-title mb-1">Details de la requête</h5>
+            @else
+                <h4 class="page-title">
+                    Requête
+                    <span class="me-1 fw-bold">› {{ $cabinet[0]->idClient }} ›</span>
                     
-                    >
-                    @if (Auth::user()->role=='Client')
-                        <a class="load theme-cl" href="#">
-                            {{ $cabinet[0]->idAffaire }} {{ $cabinet[0]->nomAffaire }}
+                    @if(Auth::user()->role=='Administrateur')
+                        <a class="load page-subtitle text-decoration-none me-1"
+                            href="{{route('clientInfos', [$cabinet[0]->idClient, $cabinet[0]->clientslug])}}">
+                            {{ $cabinet[0]->prenom }} {{ $cabinet[0]->nom }} {{ $cabinet[0]->denomination }} ›
                         </a>
                     @else
-                        <a class="load theme-cl"
-                            href="{{ route('showAffaire', [$cabinet[0]->idAffaire,$cabinet[0]->affaireslug]) }}">
-                            {{ $cabinet[0]->idAffaire }} {{ $cabinet[0]->nomAffaire }}
-                        </a>
-                       
+                        <span class="page-subtitle me-1">
+                            {{ $cabinet[0]->prenom }} {{ $cabinet[0]->nom }} {{ $cabinet[0]->denomination }} ›
+                        </span>
                     @endif
-                    >
-                    <span class="label bg-info"><b>Requête</b></span>
 
-                </h5>
-                @endif
-            </div>
-       
-            <div class="col-md-4 text-right" style="float:right">
-                <div class=" btn-group">
-                    <a href="{{ route('listRequete') }}" class="load btn btn-secondary">
-                        <i class="fa fa-eye"></i> Voir les requêtes
-                    </a>
-                </div>
-                &nbsp;&nbsp;
-                <div class="dropdown" style="float: right ;">
-                    <button class="btn btn-rounded theme-bg dropdown-toggle @if($requete[0]->statut=='Jonction') non-cliquable bg-secondary @endif" type="button" id="dropdownMenuButton1"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Options
-                    </button>
+                    @if(Auth::user()->role=='Client')
+                        <span class="page-subtitle me-1">
+                            {{ $cabinet[0]->idAffaire }} {{ $cabinet[0]->nomAffaire }} ›
+                        </span>
+                    @else
+                        @if(Auth::user()->role=='Administrateur')
+                            <a class="load page-subtitle text-decoration-none me-1"
+                                href="{{ route('showAffaire', [$cabinet[0]->idAffaire,$cabinet[0]->affaireslug]) }}">
+                                {{ $cabinet[0]->idAffaire }} {{ $cabinet[0]->nomAffaire }}
+                            </a>
+                        @else
+                            <span class="page-subtitle me-1">
+                                {{ $cabinet[0]->idAffaire }} {{ $cabinet[0]->nomAffaire }}
+                            </span>
+                        @endif
+                    @endif
+                </h4>
+            @endempty
 
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1" x-placement="top-start"
-                        style="position: absolute; transform: translate3d(0px, -18px, 0px); top: 0px; left: 0px; will-change: transform;">
-                        <a class=" dropdown-item " href="{{ route('addAudience') }}" title="Nouvelle requête"><i
-                                class="ti-plus mr-2"></i>Créer une procédure</a>
-                        <!-- <a class=" dropdown-item " href="#" title="Modifier cette requête"><i
-                                class="ti-pencil mr-2"></i>Editer</a> -->
-                        <a class=" dropdown-item " href="{{route('deleteReq',[$requete[0]->idProcedure])}}"
-                            title="Reprendre cet audience"><i class="ti-trash mr-2"></i>Supp & Reprendre</a>
-
-                       <!-- <a class="dropdown-item" href="{{route('terminerRequete',[$requete[0]->slug])}}"
-                            title="Terminé la requête"><i class="fa fa-check"></i> Terminé la requête</a> -->
-
-                            <div class="dropdown-item text-center">
-                                <button class="btn btn-sm btn-primary hidden-print" onclick="exportDivToPDF()">
-                                    <i class="ti-download mr-1"></i> Télécharger PDF
-                                </button>
-                            </div>
-                       
-                    </div>
-                </div>
-            </div>
-
+            {{-- Statut / Info --}}
+            @if(!empty($requete))
+                <small class="text-muted mt-1">
+                    Statut : <span class="label bg-warning-light">{{ $requete[0]->statut }}</span>
+                </small>
+            @endif
         </div>
-
     </div>
 
-    <div class="row" id="pdfContent1">
+    {{-- Actions --}}
+    <div class="d-flex align-items-center mt-2 mt-md-0">
+        <a href="{{ route('listRequete') }}" class="btn btn-outline-primary-custom me-2">
+            <i class="fa fa-eye me-1"></i> Voir les requêtes
+        </a>
+
+        &nbsp;
+
+        <div class="dropdown">
+            <button class="btn btn-gradient-custom dropdown-toggle @if(!empty($requete) && $requete[0]->statut=='Jonction') non-cliquable bg-secondary @endif"
+                type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Options
+            </button>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                <a class="dropdown-item" href="{{ route('addAudience') }}">
+                    <i class="ti-plus me-2"></i>Créer une procédure
+                </a>
+                @if(!empty($requete))
+                    <!-- <a class="dropdown-item" href="#"><i class="ti-pencil me-2"></i>Editer</a> -->
+                    <a class="dropdown-item text-danger" href="{{route('deleteReq',[$requete[0]->idProcedure])}}" onclick="event.preventDefault(); confirmDelete(this.href)">
+                        <i class="ti-trash me-2"></i>Supp & Reprendre
+                    </a>
+                    <!-- <a class="dropdown-item" href="#"><i class="fa fa-check me-2"></i>Terminer la requête</a> -->
+                @endif
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+    <div class="row">
         <div class="col-md-12">
 
             <div class="card box">
@@ -113,8 +125,8 @@
                         <span class="bg-success"><b>Acceptée</b></span>
                     @elseif($requete[0]->statut == 'Déposée')
                         <span class="bg-primary"><b>Déposée</b></span>
-                    @elseif($requete[0]->statut == 'Terminée')
-                        <span class="text-white"><b>Terminée</b></span>
+                    @else
+                        <span class="text-muted"><b>Statut inconnu</b></span>
                     @endif
                 @else
                     <span class="text-muted"><b>Statut non défini</b></span>
@@ -157,29 +169,23 @@
                         </div>
                         <hr />
                     </div>
-                   
-                    <div class="row mrg-0 mb-5">
+                    <div class="row mrg-0">
                         <div class="col-md-5 col-sm-5 col-xs-5">
                         </div>
                         <div class="col-md-2 col-sm-2 col-xs-2 mb-5">
-                          <!--  <a href="#" class="fa fa-angle-double-up" style="font-size:7ch; text-align:center;"
+                            <!--
+                            <a href="#" class="fa fa-angle-double-up" style="font-size:7ch; text-align:center;"
                                 id="up"></a>
                             <a href="#" class="fa fa-angle-double-down" style="font-size:7ch; text-align:center;"
                                 id="down"></a> -->
-                            <a href="" class="" style="font-size:7ch; text-align:center;"
-                                id=""></a>
-                            <a href="" class="" style="font-size:7ch; text-align:center;"
-                                id=""></a>
                         </div>
                         <div class="col-md-5 col-sm-5 col-xs-5">
                         </div>
                     </div>
-                    
-                    
                 </div>
             </div>
           
-            <div class="card">
+            <div class="card" id="audienceInfos">
                 <div class="col-md-12 mt-4 mb-4">
                    
                     @if($requete[0]->createur=='')
@@ -251,31 +257,17 @@
                                                             @elseif($suivi->reponse=='Rejetée')
                                                             <small
                                                                 class="label bg-danger">Rejetée</small>
-                                                           
-                                                            @elseif($suivi->reponse=='Terminée')
-                                                            <small
-                                                                class="label bg-success">Terminée</small>
                                                             @else
-                                                                <small
+                                                            <small
                                                                 class="label bg-primary">Déposée</small>
                                                             @endif
                                                         </td>
                                                         <td> {{ $suivi->reference }} </td>
                                                         <td>
-                                                            @if(empty($suivi->dateDecision))
-                                                                N/A
-                                                            @else
-                                                            <small class="">{{ date('d/m/Y', strtotime($suivi->dateDecision))}}</small>
-                                                            @endif
-                                                           
+                                                            <small class="">{{$suivi->dateDecision? date('d/m/Y', strtotime($suivi->dateDecision)) :'N/A'}}</small>
                                                         </td>
                                                         <td>
-                                                            @if(empty($suivi->dateReception))
-                                                                N/A
-                                                            @else
-                                                            <small class="">{{ date('d/m/Y', strtotime($suivi->dateReception))}}</small>
-                                                            @endif
-                                                                
+                                                            <small class="">{{$suivi->dateReception? date('d/m/Y', strtotime($suivi->dateReception)) : 'N/A'}}</small>
                                                         </td>
                                                         <td>
                                                             @foreach($pieceOrd as $p)
@@ -320,8 +312,8 @@
                                                             @else
                                                                 @if($suivi->suiviPar==Auth::user()->name)
                                                                 <small>
-                                                                    <a href="{{route('deleteSuiviRequete',$suivi->slug)}}"
-                                                                        type="" class="" title="supprimer"   onclick="event.preventDefault(); confirmDelete(this.href)"
+                                                                    <a href="{{route('deleteSuiviRequete',$suivi->slug)}}" onclick="event.preventDefault(); confirmDelete(this.href)"
+                                                                        type="" class="" title="supprimer"
                                                                         style="font-size:5px;color:red"><i
                                                                             class="ti-trash"></i></a>
                                                                 </small>
@@ -606,8 +598,8 @@
                                                         </div>
                                                         <div class="col-md-2">
                                                             <small>
-                                                                <a href="{{route('deletePiece',$p->slug)}}"
-                                                                    type="button"   onclick="event.preventDefault(); confirmDelete(this.href)"
+                                                                <a href="{{route('deletePiece',$p->slug)}}" onclick="event.preventDefault(); confirmDelete(this.href)"
+                                                                    type="button"
                                                                     class="btn btn-outline-danger  btn-sm"><i
                                                                         class="ti-trash"></i></a>
                                                             </small>
@@ -644,12 +636,12 @@
                                 </div>
                             </li>
                             <li>
-                                <div class="timeline-item">
+                                 <div class="timeline-item">
                                     <div class="timeline-body">
                                         <div class="col-md-12">
                                             <br>
                                            
-                                            <h4 class=" text text-center bg-primary  text-white m-2 p-2" >Procédures non contraditoires </h4>
+                                            <h4 class=" text text-center bg-primary-light   text-white m-2 p-2" >Procédures non contraditoires </h4>
                                             <br>
                                         @if(empty($procedure_requete) && empty($procedure_requete2))
                                             <h4 class="text-center">
@@ -663,7 +655,7 @@
                                                         class="toggle"
                                                         title="Cliquer pour afficher le contenu du fichier">{{ $r->objet }} - {{ date('d/m/Y', strtotime($r->dateRequete))}}</a>  -->
                                                         
-                                                    <a class="" href="{{ route('detailRequete', $r->slugProcedure) }}"
+                                                    <a class="" href="{{ route('detailRequete', $r->slugProcedure ?? '') }}"
                                                         class="toggle"
                                                         title="Cliquer pour afficher le contenu du fichier">
 
@@ -737,7 +729,7 @@
                                                             @foreach($procedure_requete_client2 as $client)
                                                             
                                                             @if($client->idProcedure == $r->idProcedure)
-                                                                {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}
+                                                                {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }} 
 
                                                                 
                                                                 @foreach($procedure_autreRole1 as $p1)
@@ -790,7 +782,7 @@
                                                 
                                         
                                               <br>
-                                            <h4 class=" text text-center bg-primary  text-white m-2 p-2" > Procédures contraditoires </h4>
+                                            <h4 class=" text text-center bg-primary-light  text-white m-2 p-2" > Procédures contraditoires </h4>
                                             <br>
 
                                             @if(empty($audience_contraditoire2) && empty($audience_contraditoire))
@@ -816,7 +808,7 @@
                                                                 @foreach($audience_contraditoire_client2 as $client)
                                                                 
                                                                     @if($client->idAudience == $r->idAudience)
-                                                                        {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}
+                                                                        {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }} {{ $client->denomination ?? '' }}
                                                                         
                                                                         c/
 
@@ -882,7 +874,7 @@
                                                             @foreach($audience_contraditoire_client as $client)
 
                                                                 @if($client->idAudience == $audience->idAudience)
-                                                                    {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}
+                                                                    {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}  {{ $client->denomination ?? '' }}
 
                                                                     c/
                                                                     @foreach($procedure_autreRole1 as $p1)
@@ -983,8 +975,8 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <div class="text-center">
-                                    <button type="" class="theme-bg btn btn-rounded btn-block " style="width:50%;">
-                                        Enregistrer</button>
+                                    <button type="submit" class="theme-bg btn btn-rounded btn-block ">
+                                       <i class="fa fa-save"></i> Enregistrer</button>
                                 </div>
                             </div>
                         </div>
@@ -1076,8 +1068,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="text-center">
-                                                <button type="submit" class="theme-bg btn btn-rounded btn-block"
-                                                    style="width:50%;"> Enregistrer</button>
+                                                <button type="submit" class="theme-bg btn btn-rounded btn-block"><i class="fa fa-save"></i> Enregistrer</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1115,16 +1106,17 @@
                                 <label for="client" class="control-label">Selectionner le
                                     client*
                                     :</label>
-                                    <select class="form-control select2" name="idClient" id="client"  onchange="var idclient=$(this).val(); clientReqFunction(idclient)" style="width:100%" data-placeholder="Selectionner le client">
-                                        <option value=""> </option>
-                                        @foreach ($clients as $client)
-                                        <option value="{{ $client->idClient }}">
-                                            {{ $client->prenom }}
-                                            {{ $client->nom }}
-                                            {{ $client->denomination }}
-                                        </option>
-                                        @endforeach
-                                    </select>
+                                <select name="" id="clientReq" onchange="var idclient=$(this).val(); clientReqFunction(idclient)" class="form-control select2" style="width:100%" data-placeholder="Selectionner le client" >
+                                    <option value="" selected disabled>-- Choisissez --</option>
+                                    @foreach ($clients as $client)
+                                    <option value={{ $client->idClient }}>
+                                        {{ $client->prenom }}
+                                        {{ $client->nom }}
+                                        {{ $client->denomination }}
+                                    </option>
+                                    @endforeach
+                                </select>
+
                             </div>
 
                         </div>
@@ -1143,14 +1135,14 @@
                         </div>
                         <div class="col-md-12 col-sm-12">
                             <div class="form-group">
-                                <label for="affaire" class="control-label">Procédure(s)
+                                <label for="affaire" class="control-label">Procédure(s) sur requête
                                     concernant le client*
                                     :</label>
-                                <select multiple class="form-control select2" data-placeholder=""  style="width: 100%;height:28px" name="contraditoireLier[]" id="requeteClient" required>
+                                <select multiple class="form-control select2" data-placeholder="" style="width: 100%;height:28px" name="contraditoireLier[]" id="requeteClient" required>
                                     <option value="" disabled>-- Choisissez --</option>
                                    
                                 </select>
-                                <input type="hidden" name="slugProcedure"  id="currentSlug" value="{{$requete[0]->slug}}">
+                                <input type="hidden" name="slugProcedure" value="{{$requete[0]->slug}}">
 
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -1160,8 +1152,8 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <div class="text-center">
-                                    <button type="" class="theme-bg btn btn-rounded btn-block " style="width:50%;">
-                                        Enregistrer</button>
+                                    <button type="submit" class="theme-bg btn btn-rounded btn-block">
+                                       <i class="fa fa-save"></i> Enregistrer</button>
                                 </div>
                             </div>
                         </div>

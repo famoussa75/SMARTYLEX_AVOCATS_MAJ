@@ -6,14 +6,26 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
-                <div class="row card-header">
-                    <div class="col-md-5 align-self-center">
-                        <h4 class="theme-cl"><i class="fa fa-envelope"></i> Courriers > <span class="label bg-info"><b>Tous les courriers</b></span></h4>
-                    </div>
-                </div>
+        <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
 
+            <!-- Bloc gauche : icône + titre -->
+            <div class="d-flex align-items-center mb-2 mb-md-0">
+                <div class="icon-wrapper theme-bg">
+                    <i class="fa fa-envelope"></i>
+                </div>
+                <div class="ms-2">
+                    <h4 class="page-title mb-1">
+                        Courriers
+                        <span class="page-subtitle text-muted">› Tous les courriers</span>
+                    </h4>
+                    <small class="page-description text-secondary">
+                        Consultez l’ensemble des courriers enregistrés dans le système.
+                    </small>
+                </div>
             </div>
+
+        </div>
+
 
             <div class="row">
                 <div class="col-md-12 col-sm-12">
@@ -77,12 +89,7 @@
                                                                             {{ $row->expediteur }}
                                                                     </td>
                                                                     <td>
-                                                                        @if(empty($row->dateCourier))
-                                                                            <small>N/A</small>
-                                                                        @else
-                                                                            {{ date('d-m-Y', strtotime($row->dateCourier))}}
-                                                                        @endif
-                                                                        
+                                                                        {{ date('d-m-Y', strtotime($row->dateCourier))}}
                                                                     </td>
 
                                                                     <td><a  href="{{ route('detailCourierArriver', [$row->slug]) }}">{{ $row->objet }}</a></td>
@@ -132,7 +139,7 @@
                                     <div class="panel-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div class="card">
+                                                <div class="">
                                                     <div class="card-body">
                                                         <div class="table-responsive">
                                                                 <div class="category-filter">
@@ -166,12 +173,7 @@
                                                                             </td>
 
                                                                             <td>
-                                                                                @if(empty($row->dateCourier))
-                                                                                    <small>N/A</small>
-                                                                                @else
-                                                                                    {{ date('d-m-Y', strtotime($row->dateCourier)) }}
-                                                                                @endif
-                                                                                
+                                                                                {{ date('d-m-Y', strtotime($row->dateCourier)) }}
                                                                             </td>
                                                                             <td style="text-align:center ;">
 
@@ -225,12 +227,7 @@
                                                                             </td>
 
                                                                             <td>
-                                                                                @if(empty($row->dateCourier))
-                                                                                    <small>N/A</small>
-                                                                                @else
-                                                                                    {{ date('d-m-Y', strtotime($row->dateCourier))}}
-                                                                                @endif
-                                                                                
+                                                                                {{ date('d-m-Y', strtotime($row->dateCourier))}}
                                                                             </td>
                                                                             <td style="text-align:center ;">
 

@@ -2,68 +2,223 @@
 @section('title','Facture')
 @section('content')
 
+
+
 <style>
-    table {
-        width: 100%;
-        border-collapse: collapse; /* Supprime les espaces entre les cellules */
+    /* =========================
+   CONTENEUR FACTURE
+========================= */
+#factureDiv {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,.08);
+    position: relative;
+    font-family: "Inter", "Open Sans", sans-serif;
+}
+
+/* =========================
+   FILIGRANE
+========================= */
+.filigrane-facture {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    font-size: 90px;
+    font-weight: 700;
+    color: rgba(220, 53, 69, 0.12);
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+    border : 5px solid rgba(220, 53, 69, 0.12);
+}
+
+/* =========================
+   ENTETE
+========================= */
+.factureImage {
+    max-height: 90px;
+}
+
+#labelFacture {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #2c3e50;
+}
+
+#invoice-info span {
+    font-size: 13px;
+    color: #555;
+}
+
+/* =========================
+   BLOCS INFOS
+========================= */
+.detail-invoice h5 {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.detail-invoice p span {
+    font-size: 13px;
+    color: #555;
+}
+
+/* =========================
+   TABLE FACTURE
+========================= */
+.invoice-table table {
+    margin-top: 10px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.invoice-table thead {
+    background: #f4f6f9;
+}
+
+.invoice-table thead th {
+    font-size: 13px;
+    color: #555;
+    border: none;
+}
+
+.invoice-table tbody td {
+    font-size: 14px;
+    border-color: #eee;
+}
+
+/* =========================
+   TOTAUX
+========================= */
+.invoice-table h5,
+.invoice-table h4 {
+    text-align: right;
+    color: #2c3e50;
+}
+
+.invoice-table h4 {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+/* =========================
+   HISTORIQUE PAIEMENT
+========================= */
+.methodePaiemet {
+    font-size: 13px;
+    color: #444;
+}
+
+/* =========================
+   SECTIONS BAS
+========================= */
+label span {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+    #factureDiv {
+        padding: 20px;
     }
-    tr {
-        height: 17px; /* Hauteur de la ligne */
+
+    .filigrane-facture {
+        font-size: 60px;
+        border : 1px solid red;
     }
-    td, th {
-        height: 17px; /* Hauteur maximale des cellules */
-        padding: 0px; /* Diminue le padding */
-        line-height: 1; /* Ajuste la hauteur de ligne du texte */
-    }
+}
+
 </style>
+
+@if(isset($facture[0]) && $facture[0]->statut == 'Annulée')
+<style>
+    .filigrane-facture {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-60deg);
+        font-size: 150px;
+        font-weight: bold;
+        color: rgba(255, 0, 0, 0.15);
+        text-transform: uppercase;
+        z-index: 5;
+        pointer-events: none;
+        user-select: none;
+        white-space: nowrap;
+        border : 5px solid rgba(220, 53, 69, 0.12);
+    }
+
+    </style>
+@endif
 
 
 <div class="container-fluid  @if (Auth::user()->role=='Client') bg-secondary @else  @endif">
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            @empty($factureBreadcrumbs)
-            @else
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
 
-            <h5 class="theme-cl">
-                <b> {{ $factureBreadcrumbs[0]->idClient }}</b>
-                >
-                <a class="load theme-cl"
-                    href="{{route('clientInfos', [$factureBreadcrumbs[0]->idClient, $factureBreadcrumbs[0]->slugClient])}}">
-                    {{ $factureBreadcrumbs[0]->prenom }} {{ $factureBreadcrumbs[0]->nom }}
-                    {{ $factureBreadcrumbs[0]->denomination }}
-                </a>
-                >
-                <a class="load theme-cl"
-                    href="{{ route('showAffaire', [$factureBreadcrumbs[0]->idAffaire,$factureBreadcrumbs[0]->slugAffaire]) }}">
-                    {{ $factureBreadcrumbs[0]->idAffaire }} {{ $factureBreadcrumbs[0]->nomAffaire }}
-                </a>
-                >
-                <span class="label bg-info"><b>Facture</b></span>
+        {{-- Bloc gauche : Icône + Breadcrumb --}}
+        <div class="d-flex align-items-center flex-wrap">
+            <div class="icon-wrapper me-3">
+                <i class="fa fa-file-text"></i>
+            </div>
 
-            </h5>
-            @endif
+            <div>
+                @empty($factureBreadcrumbs)
+                @else
+                    <div class="page-title mb-1 fw-semibold">
+                        Facture
+
+                        <b>› {{ $factureBreadcrumbs[0]->idClient }}</b>
+                        <span class="text-muted mx-1">›</span>
+
+                        <a class="load page-subtitle text-decoration-none me-1"
+                        href="{{ route('clientInfos', [
+                                $factureBreadcrumbs[0]->idClient,
+                                $factureBreadcrumbs[0]->slugClient
+                        ]) }}">
+                            {{ $factureBreadcrumbs[0]->prenom }}
+                            {{ $factureBreadcrumbs[0]->nom }}
+                            {{ $factureBreadcrumbs[0]->denomination }}
+                        </a>
+
+                        <a class="load page-subtitle text-decoration-none me-1"
+                        href="{{ route('showAffaire', [
+                            $factureBreadcrumbs[0]->idAffaire,
+                            $factureBreadcrumbs[0]->slugAffaire
+                        ]) }}">
+                            {{ $factureBreadcrumbs[0]->idAffaire }}
+                            {{ $factureBreadcrumbs[0]->nomAffaire }}
+                        </a>
+
+                        <span class="text-muted mx-1">›</span>
+
+                    </div>
+                @endif
+            </div>
         </div>
 
-        @if (Auth::user()->role=='Client')
+        {{-- Bloc droit : Bouton --}}
+        @if (Auth::user()->role!='Client')
+            <div class="d-flex align-items-center mt-2 mt-md-0">
 
-        @else
-
-        <div class="col-md-7 text-right">
-
-            <div class="btn-group">
-                <a type="button" href="{{route('histoFacture')}}" class="cl-white theme-bg btn btn-rounded"
-                    title="Liste des factures">
-                    <i class="fa fa-navicon"></i>
+                <a href="{{ route('histoFacture') }}"
+                class="btn btn-gradient-custom shadow-sm"
+                title="Historique des factures">
+                    <i class="fa fa-list me-1"></i>
                     Historique des factures
                 </a>
+
             </div>
-          
-        </div>
         @endif
 
-
     </div>
+
 
 
     <div class="row">
@@ -99,6 +254,12 @@
                         <span style="color:gray">&nbsp;{{$facture[0]->statut}}</span>&nbsp;&nbsp;
                     </h5>
                 </div>
+                @elseif($facture[0]->statut=='Remboursée')
+                <div class="col-md-12 mb-5 bg-purple-light padd-5">
+                    <h5 style="text-align:right; padding-top:10px;"><i class="fa fa-times-circle cl-danger"></i>
+                        <span style="color:gray">&nbsp;{{$facture[0]->statut}}</span>&nbsp;&nbsp;
+                    </h5>
+                </div>
                 @else
 
                 @endif
@@ -113,7 +274,7 @@
                             <p><i class="fa fa-info-circle"></i> Voulez vous confirmer le paiement de
                                 <b>{{number_format($p->montantPayer, 0, ' ', ' ')}} {{$facture[0]->monnaie}}</b> ?
                             </p>
-                            <P>Paiement par : {{$p->methodePaiement}}</P>
+                            <P>Paiement par : {{$p->methodePaiement}} @if($p->emoney) ({{$p->emoney }}) @endif</P>
                             <P>Reste à payer : {{number_format($p->montantRestant, 0, ' ', ' ')}} {{$facture[0]->monnaie}}</P>
                             <P> Date de paiement : {{date('d-m-Y', strtotime($p->datePaiement))}}</P>
                             <div class="row mrg-0">
@@ -150,7 +311,7 @@
                     </div>
                     <div class="col-md-8" style="padding-top:30px">
                         <div class="dropdown" style="float: right ;">
-                            <button class="btn btn-rounded theme-bg dropdown-toggle" type="button" id="dropdownMenuButton1"
+                            <button class="btn btn-gradient-custom dropdown-toggle" type="button" id="dropdownMenuButton1"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-info-circle"></i>
                                 Options
                             </button>
@@ -167,6 +328,15 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1" x-placement="top-start"
                                     style="position: absolute; transform: translate3d(0px, -18px, 0px); top: 0px; left: 0px; will-change: transform;">
                                     @if($facture[0]->statut=='Payée')
+                                    <a class=" dropdown-item " href="#" data-toggle="modal" data-target="#rembourserFacture"
+                                        title="Rembourser"><i class="fa fa-history mr-2"></i>Rembourser</a>
+                                    @elseif($facture[0]->statut=='Remboursée')
+
+                                    @elseif($facture[0]->typeFacture=='Pro forma')
+                                    <a class="dropdown-item " href="#" title="Valider la facture pro forma" data-toggle="modal"
+                                        data-target="#validerProforma">✅ Valider le pro forma</a>
+                                    <a class="dropdown-item " href="#" title="Rejeter la facture pro forma" data-toggle="modal"
+                                        data-target="#rejeterProforma">❌ Rejeter le pro forma</a>
                                     @else
                                     <a class="dropdown-item " href="#" title="Payer la facture" data-toggle="modal"
                                         data-target="#paiement"><i class="ti-wallet mr-2"></i>Paiement</a>
@@ -179,9 +349,12 @@
 
                                     <a class=" dropdown-item " href="#" onclick="telechargerFacture()" title="telecharger la facture"><i
                                         class="fa fa-download mr-2"></i>Telecharger</a>
-                                
+
+                                    @if($facture[0]->statut=='Remboursée')
+                                    @else
                                     <a class=" dropdown-item " href="#" data-toggle="modal" data-target="#deleteFacture"
                                         title="Annuler la facture"><i class="ti-close mr-2"></i>Annuler</a>
+                                    @endif
 
                                 </div>
 
@@ -195,10 +368,25 @@
                 <div class="detail-wrapper padd-50 factureDiv " style="background-color:#f5f5f5;display: flex;justify-content: center;align-items: center; " >
                     <div
                         class="ruban left @if ($facture[0]->notification=='envoyer') rubanEnvoyer @else rubanNonEnvoyer @endif ">
+                        
                         <span><b>@if ($facture[0]->notification=='envoyer') <i class="fa fa-envelope"></i> Envoyée @else
                                 <i class="fa fa-envelope"></i> Non envoyée @endif</b></span>
                     </div>
                     <div id="factureDiv" class="contact-grid-box">
+                        @if($facture[0]->statut == 'Remboursée')
+                        <p><b>MOTIF DE REMBOURSEMENT : </b>{{ $facture[0]->motif_remboursement }}</p>
+                        @endif
+
+                        @if($facture[0]->statut == 'Annulée' AND $facture[0]->typeFacture == 'Pro forma')
+                        <p><b>MOTIF DE REMBOURSEMENT : </b>{{ $facture[0]->motif_rejetProforma }}</p>
+                        @endif
+
+                        {{-- ✅ Filigrane si la facture est annulée --}}
+                        @if(isset($facture[0]) && $facture[0]->statut == 'Annulée')
+                            <div class="filigrane-facture">ANNULÉE</div>
+                        @elseif(isset($facture[0]) && $facture[0]->statut == 'Remboursée')
+                            <div class="filigrane-facture">REMBOURSÉE</div>
+                        @endif
                         <div class="row mrg-0">
                             <div class="col-md-6">
                                 <img src="{{URL::to('/')}}/{{$cabinets[0]->logo}}" alt="" class="factureImage" />
@@ -206,25 +394,21 @@
 
                             <div class="col-md-6">
                                 <h2
-                                    style="font-size: 21px; letter-spacing: -1px; font-family: 'Open Sans', sans-serif; line-height: 1; vertical-align: top; text-align: right;">
-                                    <span id="labelFacture">FACTURE</span>
+                                    style="letter-spacing: -1px; font-family: 'Open Sans', sans-serif; line-height: 1; vertical-align: top; text-align: right;">
+                                    <span id="labelFacture">
+                                        @if($facture[0]->typeFacture=='Pro forma')
+                                        FACTURE PRO FORMA
+                                        @else
+                                        FACTURE
+                                        @endif
+                                    </span>
                                 </h2>
                                 <p id="invoice-info">
                                     <span><strong>No:</strong> {{$facture[0]->idFacture}}-{{ date('m/Y', strtotime($facture[0]->dateFacture))}}</span> <br>
                                     <span><strong id="labelDateInvoice">Fait le :</strong>
-                                    @if(empty($facture[0]->dateFacture))
-                                        <small>N/A</small>
-                                    @else
-                                        {{ date('d-m-Y', strtotime($facture[0]->dateFacture))}}
-                                    @endif
-                                       </span> <br>
+                                        {{ date('d-m-Y', strtotime($facture[0]->dateFacture))}}</span> <br>
                                     <span><strong id="labelDateEcheance">Date d'écheance :</strong>
-                                        @if(empty($facture[0]->dateEcheance))
-                                            <small>N/A</small>
-                                        @else
-                                             {{ date('d-m-Y', strtotime($facture[0]->dateEcheance))}}
-                                        @endif
-                                    </span> <br>
+                                        {{ date('d-m-Y', strtotime($facture[0]->dateEcheance))}}</span> <br>
 
                                 </p>
                             </div>
@@ -336,6 +520,8 @@
                                                                 {{$row->methodePaiement}} / {{$row->banqueCheque}} / {{$row->numeroCheque}}
                                                                 @elseif($row->methodePaiement=='Virement bancaire')
                                                                 {{$row->methodePaiement}} / viré le: {{date('d-m-Y', strtotime($row->dateVirement))}}
+                                                                @elseif($row->methodePaiement=='E-Money')
+                                                                {{$row->methodePaiement}} / {{$row->emoney}} / Ref: {{$row->ref_emoney}}
                                                                 @else
                                                                 {{$row->methodePaiement}}
                                                                 @endif
@@ -442,6 +628,28 @@
                                         <option value="E-Money">E-Money</option>
 
                                     </select>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6" id="divEmoney" hidden>
+                                <div class="form-group">
+                                    <label for="inputPName" class="control-label">E-money :</label>
+                                    <select name="e_money" id="emoney" class="form-select select2" style="width:100%"
+                                        required onchange="chequeEtVirement()">
+                                        <option value="" selected disabled>-- Choisissez --</option>
+                                        <option value="Orange Money">Orange Money</option>
+                                        <option value="PayCard">PayCard</option>
+                                        <option value="Mobile Money">Mobile Money</option>
+                                        <option value="Autre">Autre</option>
+                                    </select>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6" id="divRefEmoney" hidden>
+                                <div class="form-group">
+                                    <label for="inputPName" class="control-label">Reference de paiement :</label>
+                                    <input type="text" class="form-control" id="ref_emoney" placeholder=""
+                                        data-error=" veillez saisir le nom expéditeur" name="ref_emoney">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -609,6 +817,226 @@
     </div>
 </div>
 
+<div class="add-popup modal fade" id="rembourserFacture" tabindex="-1" role="dialog" aria-labelledby="rembourserFacture">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            {{-- HEADER --}}
+            <div class="modal-header" style="background-color:#0d6efd;">
+                <ul class="card-actions icons right-top">
+                    <li>
+                        <a href="javascript:void(0)" class="text-white" data-dismiss="modal" aria-label="Close">
+                            <i class="ti-close"></i>
+                        </a>
+                    </li>
+                </ul>
+                <h4 class="modal-title text-white">
+                    <i class="fa fa-undo"></i> Confirmer le remboursement
+                </h4>
+            </div>
+
+            {{-- BODY --}}
+            <div class="modal-body">
+
+                <h5 class="header-title m-t-0 text-primary">
+                    <i class="fa fa-info-circle"></i> Information importante
+                </h5>
+
+                <p>
+                    Vous êtes sur le point de <strong>rembourser cette facture</strong>.
+                </p>
+
+                <ul>
+                    <li>✅ La facture sera marquée comme <strong>remboursée</strong></li>
+                    <li>✅ Une trace sera conservée dans l’historique</li>
+                    <li>❌ Cette action est irréversible</li>
+                </ul>
+
+                {{-- CHAMP MOTIF --}}
+                <div class="form-group mt-3">
+                    <label for="motifRemboursement">
+                        <strong>Motif du remboursement <span class="text-danger">*</span></strong>
+                    </label>
+                    <textarea id="motifRemboursement"
+                              name="motifRemboursement"
+                              class="form-control"
+                              rows="3"
+                              placeholder="Ex : double facturation, erreur de montant, client insatisfait..."
+                              required></textarea>
+                </div>
+
+                {{-- ACTIONS --}}
+                <div class="row mrg-0 mt-4">
+                    <div class="col-md-12 text-end">
+                        <a href="javascript:void(0)" class="btn btn-secondary" data-dismiss="modal">
+                            Annuler
+                        </a>
+
+                        <form action="{{ route('rembourserFacture', [$facture[0]->idFacture, $facture[0]->slug] ) }}"
+                              method="POST"
+                              class="d-inline">
+                            @csrf
+                            <input type="hidden" name="motif" id="motifRemboursementHidden">
+
+                            <button type="submit" class="btn btn-success ms-2"
+                                    onclick="document.getElementById('motifRemboursementHidden').value =
+                                    document.getElementById('motifRemboursement').value;
+                                    if(!document.getElementById('motifRemboursement').value.trim()){
+                                        alert('Veuillez renseigner le motif du remboursement');
+                                        return false;
+                                    }">
+                                <i class="fa fa-check"></i> Confirmer le remboursement
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="add-popup modal fade" id="validerProforma" tabindex="-1" role="dialog" aria-labelledby="validerProforma">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            {{-- HEADER --}}
+            <div class="modal-header" style="background-color:#16a34a;">
+                <ul class="card-actions icons right-top">
+                    <li>
+                        <a href="javascript:void(0)" class="text-white" data-dismiss="modal" aria-label="Close">
+                            <i class="ti-close"></i>
+                        </a>
+                    </li>
+                </ul>
+                <h4 class="modal-title text-white">
+                    <i class="fa fa-check-circle"></i> Valider la facture pro forma
+                </h4>
+            </div>
+
+            {{-- BODY --}}
+            <div class="modal-body">
+
+                <h5 class="header-title m-t-0 text-success">
+                    <i class="fa fa-info-circle"></i> Confirmation
+                </h5>
+
+                <p>
+                    Vous êtes sur le point de <strong>valider cette facture pro forma</strong>.
+                </p>
+
+                <ul>
+                    <li>✅ Elle sera transformée en <strong>facture définitive</strong></li>
+                    <li>✅ Elle deviendra <strong>exigible au paiement</strong></li>
+                    <li>✅ Une trace sera conservée dans l’historique</li>
+                </ul>
+
+                <p>
+                    <strong>Souhaitez-vous vraiment continuer ?</strong>
+                </p>
+
+                {{-- ACTIONS --}}
+                <div class="row mrg-0 mt-4">
+                    <div class="col-md-12 text-end">
+                        <a href="#" class="btn btn-secondary" data-dismiss="modal">
+                            Annuler
+                        </a>
+
+                        <form action="{{ route('validerProforma', [$facture[0]->idFacture, $facture[0]->slug] ) }}"
+                              method="POST"
+                              class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-success ms-2">
+                                <i class="fa fa-check"></i> Valider
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="add-popup modal fade" id="rejeterProforma" tabindex="-1" role="dialog" aria-labelledby="rejeterProforma">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            {{-- HEADER --}}
+            <div class="modal-header" style="background-color:#dc2626;">
+                <ul class="card-actions icons right-top">
+                    <li>
+                        <a href="javascript:void(0)" class="text-white" data-dismiss="modal" aria-label="Close">
+                            <i class="ti-close"></i>
+                        </a>
+                    </li>
+                </ul>
+                <h4 class="modal-title text-white">
+                    <i class="fa fa-times-circle"></i> Rejeter la facture pro forma
+                </h4>
+            </div>
+
+            {{-- BODY --}}
+            <div class="modal-body">
+
+                <h5 class="header-title m-t-0 text-danger">
+                    <i class="fa fa-exclamation-triangle"></i> Attention
+                </h5>
+
+                <p>
+                    Vous êtes sur le point de <strong>rejeter cette facture pro forma</strong>.
+                </p>
+
+                <ul>
+                    <li>❌ Elle ne pourra pas être validée sans modification</li>
+                    <li>✅ Le rejet sera enregistré dans l’historique</li>
+                </ul>
+
+                {{-- MOTIF --}}
+                <div class="form-group mt-3">
+                    <label for="motifRejet">
+                        <strong>Motif du rejet <span class="text-danger">*</span></strong>
+                    </label>
+                    <textarea id="motifRejet"
+                              name="motifRejet"
+                              class="form-control"
+                              rows="3"
+                              placeholder="Ex : erreur de montant, prestation non confirmée..."
+                              required></textarea>
+                </div>
+
+                {{-- ACTIONS --}}
+                <div class="row mrg-0 mt-4">
+                    <div class="col-md-12 text-end">
+                        <a href="#" class="btn btn-secondary" data-dismiss="modal">
+                            Annuler
+                        </a>
+
+                        <form action="{{ route('rejeterProforma', [$facture[0]->idFacture, $facture[0]->slug]) }}"
+                              method="POST"
+                              class="d-inline">
+                            @csrf
+                            <input type="hidden" name="motif">
+                            <button type="submit" class="btn btn-danger ms-2"
+                                    onclick="this.closest('form').querySelector('input[name=motif]').value =
+                                    document.getElementById('motifRejet').value;
+                                    if(!document.getElementById('motifRejet').value.trim()){
+                                        alert('Veuillez renseigner le motif du rejet');
+                                        return false;
+                                    }">
+                                <i class="fa fa-times"></i> Rejeter
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 
@@ -681,12 +1109,28 @@ function chequeEtVirement(){
 
         $('#dateVirement').removeAttr('required');
         $('#divDateVirement').attr('hidden', true);
+        $('#divEmoney').attr('hidden', true);
+        $('#divRefEmoney').attr('hidden', true);
 
 
     }else if(methodePaiement=='Virement bancaire'){
 
         $('#dateVirement').attr('required', true);
         $('#divDateVirement').removeAttr('hidden');
+
+        $('#banqueCheque').removeAttr('required');
+        $('#numeroCheque').removeAttr('required');
+        $('#divBanqueCheque').attr('hidden', true);
+        $('#divNumeroCheque').attr('hidden', true);
+        $('#divEmoney').attr('hidden', true);
+        $('#divRefEmoney').attr('hidden', true);
+
+    }else if(methodePaiement=='E-Money'){
+
+        $('#emoney').attr('required', true);
+        $('#ref_emoney').attr('required', true);
+        $('#divEmoney').removeAttr('hidden');
+        $('#divRefEmoney').removeAttr('hidden');
 
         $('#banqueCheque').removeAttr('required');
         $('#numeroCheque').removeAttr('required');
@@ -702,6 +1146,8 @@ function chequeEtVirement(){
         $('#numeroCheque').removeAttr('required');
         $('#divBanqueCheque').attr('hidden', true);
         $('#divNumeroCheque').attr('hidden', true);
+        $('#divEmoney').attr('hidden', true);
+        $('#divRefEmoney').attr('hidden', true);
     }
    
 }

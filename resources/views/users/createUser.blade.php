@@ -3,16 +3,31 @@
 @section('content')
 <div class="container-fluid">
 
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"><i class="fa fa-users"></i> RH > <span class="label bg-info"><b>Comptes utilisateurs</b></span></h4>
+<div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+    <!-- Bloc gauche : icône + titre -->
+    <div class="d-flex align-items-center mb-2 mb-md-0">
+        <div class="icon-wrapper theme-bg">
+            <i class="fa fa-users"></i>
         </div>
-
-        <div class="col-md-7 text-right">
-
+        <div class="ms-2">
+            <h4 class="page-title mb-1">
+                RH
+                <span class="page-subtitle text-muted">› Comptes utilisateurs</span>
+            </h4>
+            <small class="page-description text-secondary">
+                Gestion des comptes utilisateurs du personnel.
+            </small>
         </div>
     </div>
+
+    <!-- Bloc droit : aucun bouton pour ce header -->
+    <div class="d-flex align-items-center flex-wrap gap-2">
+        <!-- Ici on peut ajouter des boutons si nécessaire -->
+    </div>
+
+</div>
+
     <!-- Title & Breadcrumbs-->
 
     <div class="row">
@@ -129,8 +144,8 @@
                             <div class="form-group">
                                 <label for="password" class="control-label">Mot de passe par defaut :</label><br>
                             
-                                    <div class="password-container">
-                                        <input type="password" class="form-control" name="password"  id="passwordField" style="width:40em" data-error=" veillez saisir le mot de passe" placeholder="" required>
+                                    <div class="password-container" style="width:100%">
+                                        <input type="password" class="form-control" name="password"  id="passwordField" data-error=" veillez saisir le mot de passe" placeholder="" required>
                                         <i class="pass-view fa fa-eye" id="togglePasswordField"></i>
                                     </div>
                                 </div>
@@ -139,8 +154,8 @@
                             <div class="form-group">
                                 <label for="passwordConf" class="control-label">Confirmation du mot de passe :</label><br>
                                
-                                    <div class="password-container">
-                                        <input type="password" class="form-control" name="confirmation_password"  id="passwordField2" style="width:40em" data-error="veillez saisir la confirmation du mot de passe" placeholder="" required>
+                                    <div class="password-container" style="width:100%">
+                                        <input type="password" class="form-control" name="confirmation_password"  id="passwordField2" data-error="veillez saisir la confirmation du mot de passe" placeholder="" required>
                                         <i class="pass-view fa fa-eye" id="togglePasswordField2"></i>
                                     </div>
                             </div>
@@ -153,15 +168,14 @@
                             <div class="form-group">
                                 <div class="text-center">
                                     @if($nbreCompte[0]->totalComptes=='Illimité')
-                                    <input type="submit" class="cl-white theme-bg btn btn-rounded" style="width:20%;"
-                                        value="Enregistrer" />
+                                    <button type="submit" class="cl-white theme-bg btn btn-rounded"><i class="fa fa-save"></i> Enregistrer</button>
 
                                     @else
                                     @if(intval($nbreCompte[0]->totalComptes) < count($users)) 
                                     <button type="button" class="btn waves-effect waves-light btn-rounded btn-secondary" style="width:20%;">Enregistrer</button>
                                         @else
-                                        <input type="submit" class="cl-white theme-bg btn btn-rounded"
-                                            style="width:20%;" value="Enregistrer" />
+                                        <button type="submit" class="cl-white theme-bg btn btn-rounded"><i class="fa fa-save"></i> Enregistrer</button>
+
                                         @endif
                                         @endif
                                        

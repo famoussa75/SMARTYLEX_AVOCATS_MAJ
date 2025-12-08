@@ -2,22 +2,35 @@
 @section('title','Nouveau personnel')
 @section('content')
 <div class="container-fluid">
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"><i class="fa fa-user-plus"></i> RH > <span class="label bg-info"><b>Nouveau</b></span></h4>
-        </div>
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
 
-        <div class="col-md-7 text-right">
-            <div class="btn-group">
-                <a href="{{ route('allPersonnel') }}" class="cl-white theme-bg btn btn-rounded"
-                    title="Liste des personnels">
-                    <i class="fa fa-navicon"></i>
-                    Liste du personnels
-                </a>
+        <!-- Bloc gauche : icône + titre -->
+        <div class="d-flex align-items-center mb-2 mb-md-0">
+            <div class="icon-wrapper theme-bg">
+                <i class="fa fa-user-plus"></i>
+            </div>
+            <div class="ms-2">
+                <h4 class="page-title mb-1">
+                    RH
+                    <span class="page-subtitle text-muted">› Nouveau</span>
+                </h4>
+                <small class="page-description text-secondary">
+                    Ajouter un nouveau personnel dans le système.
+                </small>
             </div>
         </div>
+
+        <!-- Bloc droit : bouton d’action -->
+        <div class="d-flex align-items-center">
+            <a href="{{ route('allPersonnel') }}" 
+            class="btn btn-gradient-custom shadow-sm"
+            title="Liste des personnels">
+                <i class="fa fa-navicon me-1"></i> Liste du personnel
+            </a>
+        </div>
+
     </div>
+
     <!-- Title & Breadcrumbs-->
 
 
@@ -205,8 +218,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <div class="text-center">
-                                    <input type="submit" class="cl-white theme-bg btn btn-rounded btn-block"
-                                        style="width:50%;" value="Enregistrer" />
+                                    <button type="submit" class="cl-white theme-bg btn btn-rounded btn-block"><i class="fa fa-save"></i> Enregistrer</button>
                                 </div>
                             </div>
                         </div>

@@ -8,7 +8,7 @@
                     <a href="{{ route('personneCard') }}">
                         <div class="row">
                             <div class="col-4 padd-r-0">
-                                <i class="icon ti-user"></i>
+                                <i class="icon fa fa-users"></i>
                             </div>
                             <div class="col-8">
                                 <div class="widget-detail">
@@ -26,15 +26,15 @@
         <div class="col-md-3 col-sm-6">
 
             <div class="contact-grid-box widget standard-widget">
-                <div class="widget-caption danger">
+                <div class="widget-caption primary">
                     <a href="{{ route('allClient') }}">
                         <div class="row">
                             <div class="col-4 padd-r-0">
-                                <i class="icon icon ti-medall"></i>
+                                <i class="icon fa fa-id-card"></i>
                             </div>
                             <div class="col-8">
                                 <div class="widget-detail">
-                                    <h3 class="cl-danger infoPrive mb-2">{{count($clients)}}</h3>
+                                    <h3 class="cl-primary infoPrive mb-2">{{count($clients)}}</h3>
                                     <h4>Clients</h4>
                                 </div>
                             </div>
@@ -131,10 +131,10 @@
         </div>
 
         <div class="col-md-4 col-sm-12" style="padding-left:0px;">
-            <div class="card" style="background-color: #0d99b5;">
+            <div class="card" >
                 <div class="card-header">
-                    <i class="fa font-20  fa-globe" style="color:white"></i>
-                    <h6 class=" text-right" style="color:white"><b>Nouveautés</b></h6>
+                    
+                    <h4 class="mb-0"><i class="fa fa-bolt icon-header"></i> Nouveautés</h4>
                 </div>
                 <div class="card-body">
 
@@ -143,19 +143,18 @@
                         <div class="social-slide">
 
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div
-                                        style="background-color: white; text-align:center;height:4em;width:4em;padding-top:5px;border-radius:50px">
-                                        <i class="ti ti-user font-40" style="color:#085b8f"></i>
+                                        style="background-color: #D7AE00; text-align:center;height:4em;width:4em;padding:5px;border-radius:15px">
+                                        <i class="fa fa-user-plus font-40" style="color:#085b8f"></i>
                                     </div>
 
                                 </div>
-                                <div class="col-md-9" style="height: 50px;">
-                                    <h5 style="color:white"><b>Nouveau Client</b></h5>
+                                <div class="col-md-10" style="height: 50px;">
+                                    <h6><b>Nouveau Client</b></h6>
                                     @if(!empty($lastClient))
                                     <a class="load"
-                                        href="{{route('clientInfos',[$lastClient[0]->idClient,$lastClient[0]->slug])}}"
-                                        style="color:white">
+                                        href="{{route('clientInfos',[$lastClient[0]->idClient,$lastClient[0]->slug])}}">
                                         <p>{{$lastClient[0]->prenom}} {{$lastClient[0]->nom}}
                                             {{$lastClient[0]->denomination}}<br>
 
@@ -173,19 +172,18 @@
                         <div class="social-slide">
 
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div
-                                        style="background-color: white; text-align:center;height:4em;width:4em;padding-top:5px;border-radius:50px">
+                                        style="background-color: #D7AE00; text-align:center;height:4em;width:4em;padding-top:5px;border-radius:15px">
                                         <i class="fa fa-suitcase font-40" style="color:#085b8f"></i>
                                     </div>
 
                                 </div>
-                                <div class="col-md-9" style="height: 50px;">
-                                    <h5 style="color:white"><b>Nouvelle Affaire</b></h5>
+                                <div class="col-md-10" style="height: 50px;">
+                                    <h6><b>Nouvelle Affaire</b></h6>
                                     @if(!empty($lastAffaire))
                                     <a class="load"
-                                        href="{{route('showAffaire',[$lastAffaire[0]->idAffaire,$lastAffaire[0]->slug])}}"
-                                        style="color:white">
+                                        href="{{route('showAffaire',[$lastAffaire[0]->idAffaire,$lastAffaire[0]->slug])}}">
                                         <p>{{$lastAffaire[0]->nomAffaire}}</p>
                                     </a>
                                     @else
@@ -201,18 +199,17 @@
                         <div class="social-slide">
 
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div
-                                        style="background-color: white; text-align:center;height:4em;width:4em;padding-top:5px;border-radius:50px">
+                                        style="background-color: #D7AE00; text-align:center;height:4em;width:4em;padding-top:5px;border-radius:15px">
                                         <i class="ti ti-pencil-alt font-40" style="color:#085b8f"></i>
                                     </div>
 
                                 </div>
-                                <div class="col-md-9" style="height: 50px;">
-                                    <h5 style="color:white"><b>Nouvelle tâche</b></h5>
+                                <div class="col-md-10" style="height: 50px;">
+                                    <h6><b>Nouvelle tâche</b></h6>
                                     @if(!empty($lastTache))
-                                    <a class="load" href="{{route('infosTask',[$lastTache[0]->slug])}}"
-                                        style="color:white">
+                                    <a class="load" href="{{route('infosTask',[$lastTache[0]->slug])}}">
                                         <p>{{$lastTache[0]->titre}}</p>
                                     </a>
                                     @else
@@ -228,19 +225,19 @@
                         <div class="social-slide">
 
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div
-                                        style="background-color: white; text-align:center;height:4em;width:4em;padding-top:5px;border-radius:50px">
+                                        style="background-color: #D7AE00; text-align:center;height:4em;width:4em;padding-top:5px;border-radius:15px">
                                         <i class="fa fa-balance-scale font-40" style="color:#085b8f"></i>
                                     </div>
 
                                 </div>
-                                <div class="col-md-9" style="height: 50px;">
-                                    <h5 style="color:white"><b>Nouvelle Audience</b></h5>
+                                <div class="col-md-10" style="height: 50px;">
+                                    <h6><b>Nouvelle Audience</b></h6>
                                     @if(!empty($lastAudience))
                                     <a class="load"
                                         href="{{route('detailAudience',[$lastAudience[0]->idAudience,$lastAudience[0]->slug,$lastAudience[0]->niveauProcedural])}}"
-                                        style="color:white">
+                                        >
                                         <p>{{$lastAudience[0]->objet}}</p>
                                     </a>
                                     @else
@@ -320,7 +317,7 @@
                                                     @endphp
 
                                                     @foreach($entreprise_adverses as $e)
-                                                        @if($w->idAudience === $e->idAudience && in_array($e->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi','Prevenu / Accusé']))
+                                                        @if($w->idAudience === $e->idAudience && in_array($e->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi','Prévenu(e) / Accusé(e)']))
                                                             @php
                                                                 $denominations[] = $e->denomination;
                                                             @endphp
@@ -336,7 +333,7 @@
                                                     @endphp
 
                                                     @foreach($personne_adverses as $p)
-                                                        @if($w->idAudience === $p->idAudience && in_array($p->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi','Prevenu / Accusé']))
+                                                        @if($w->idAudience === $p->idAudience && in_array($p->role, ['Defendeur', 'Intimé(e)', 'Defendeur au pourvoi','Prévenu(e) / Accusé(e)']))
                                                             @php
                                                                 $personnes[] = $p->prenom . ' ' . $p->nom;
                                                             @endphp
@@ -397,7 +394,7 @@
                                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
                                                                     @break 
                                                                 @endif
-                                                                @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
+                                                                @if($w->idAudience === $c->idAudience && $c->role=='Prévenu(e) / Accusé(e)')
                                                                     <span>{{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
                                                                     @break 
                                                                 @endif
@@ -414,7 +411,7 @@
                                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
                                                                     @break 
                                                                 @endif
-                                                                @if($w->idAudience === $c->idAudience && $c->role=='Prevenu / Accusé')
+                                                                @if($w->idAudience === $c->idAudience && $c->role=='Prévenu(e) / Accusé(e)')
                                                                     <span>c/ {{ $c->prenom }} {{ $c->nom }} {{ $c->denomination }}</span>
                                                                     @break 
                                                                 @endif
@@ -816,7 +813,7 @@ am5.ready(function() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <script>
 new Chart(document.getElementById("pie-chart"), {
-    type: 'pie',
+    type: 'doughnut',
     data: {
         labels: ["Validée", "En Cours", "Suspendu", "Hors Délais"],
         datasets: [{
@@ -827,6 +824,7 @@ new Chart(document.getElementById("pie-chart"), {
         }]
     },
     options: {
+        cutout: '60%',
         title: {
             display: true,
             text: 'Nombre de tâche dans chaque categorie',

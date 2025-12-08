@@ -2,32 +2,42 @@
 @section('title','Nouvelle facture')
 @section('content')
 <div class="container-fluid">
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"><i class="fa fa-money"></i> Facturation > <span class="label bg-info"><b>Création</b></span></h4>
-        </div>
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
 
-        <div class="col-md-7 text-right">
-            <div class="btn-group">
-                <a type="button" href="{{route('histoFacture')}}" class="cl-white theme-bg btn btn-rounded"
-                    title="Liste des factures">
-                    <i class="fa fa-navicon"></i>
-                    Historique des factures
-                </a>
+        <!-- Bloc gauche : icône + titre -->
+        <div class="d-flex align-items-center mb-2 mb-md-0">
+            <div class="icon-wrapper theme-bg">
+                <i class="fa fa-money"></i>
             </div>
-
+            <div class="ms-2">
+                <h4 class="page-title mb-1">
+                    Facturation
+                    <span class="page-subtitle text-muted">› Création</span>
+                </h4>
+                <small class="page-description text-secondary">
+                    Enregistrez une nouvelle facture dans le système.
+                </small>
+            </div>
         </div>
+
+        <!-- Bloc droit : bouton d’action -->
+        <div class="d-flex align-items-center">
+            <a href="{{ route('histoFacture') }}" 
+            class="btn btn-gradient-custom shadow-sm"
+            title="Historique des factures">
+                <i class="fa fa-navicon me-1"></i> Historique des factures
+            </a>
+        </div>
+
     </div>
-    @if($plan=='standard')
-    <div class="card text-center" style="padding:30px">
+
+    <!-- <div class="card text-center" style="padding:30px">
         <h2 class="bg-warning"><i class="fa fa-exclamation-triangle"></i> Module Premium</h2>
         <p style="font-size:18px">Chèr(e) utilisateur ce module ne figure pas sur le plan <b>standard</b> auquel vous avez souscri. Veuillez contacter notre équipe pour passer au <b>premium</b> si vous voulez obtenir ce module. <br>
         visitez notre site web pour voir les différents plans  <a href="https://www.smartylex.com#prix" target="_blank" style="color:blue"><i class="fa fa-arrow-right"></i> www.smartylex.com</a>
         </p>
        
-    </div>
-    @else
+    </div> -->
     <div class="row">
         <div class="col-md-12 col-sm-12">
             <div class="card">
@@ -39,6 +49,22 @@
                         <h2>Nouvelle Facture</h2>
                         <br>
                        
+                    </div>
+
+                    <div class="row mrg-0">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Type de facture :</label>
+                                <select class="form-control select2" style="width: 100%;" name="typeFacture"
+                                    id="typeFacture" required>
+                                    <option value="" selected disabled>-- Choisissez --</option>
+                                    <option value="Pro forma" >Pro forma</option>
+                                    <option value="Finale" >Finale / Définitive</option>
+
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mrg-0">
@@ -207,8 +233,8 @@
                         <div class="col-12 mt-5">
                             <div class="theme-cl form-group">
                                 <div class="text-center">
-                                    <button type="submit" class="theme-bg btn btn-rounded" style="width:50%;">
-                                        Enregistrer</button>
+                                    <button type="submit" class="theme-bg btn btn-rounded">
+                                        <i class="fa fa-save"></i> Enregistrer</button>
                                 </div>
                             </div>
                         </div>
@@ -218,7 +244,6 @@
             </div>
         </div>
     </div>
-    @endif
 </div>
 <script>
 document.getElementById('fact').classList.add('active');

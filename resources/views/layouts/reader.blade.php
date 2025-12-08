@@ -2,24 +2,31 @@
 @section('title','Lecteur du document')
 @section('content')
 <div class="container-fluid"="alert('bien')">
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-9 align-self-center">
-            <h4 class="theme-cl text-center"><i class="fa fa-mouse-pointer"></i> Cliquer sur l'icône pour ouvrir
-                le
-                document
-            </h4>
-        </div>
-        <div class="col-md-3 text-right">
-            <input type="text" name="readerMessage" value="back" hidden>
-            <div class="btn-group">
-                <a href="javascript:history.back()" class="cl-white theme-bg btn btn-rounded"
-                    title="Cliquer pour fermer le fichier">
-                    <i class="fa fa-long-arrow-left"></i> Retour
-                </a>
+  <!-- Title & Breadcrumbs -->
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+        <!-- Bloc gauche : icône + titre -->
+        <div class="d-flex align-items-center mb-2 mb-md-0">
+            <div class="icon-wrapper me-3 theme-bg">
+                <i class="fa fa-mouse-pointer text-white"></i>
+            </div>
+            <div>
+                <h4 class="page-title mb-1">
+                    Cliquer sur l'icône pour ouvrir le document
+                </h4>
             </div>
         </div>
+
+        <!-- Bloc droit : bouton retour -->
+        <div class="d-flex align-items-center mt-2 mt-md-0">
+            <input type="text" name="readerMessage" value="back" hidden>
+            <a href="javascript:history.back()" title="Cliquer pour fermer le fichier" class="btn btn-gradient-custom">
+                <i class="fa fa-long-arrow-left me-1"></i> Retour
+            </a>
+        </div>
+
     </div>
+
     <div class="row">
 
         <div class="col-md-12">

@@ -2,7 +2,7 @@
     <div class="container">
         <div class="text-center">
             <small class="font-15"> &nbsp;&nbsp; <img src="{{URL::to('/')}}/assets/img/3.png" style="height:40px;width:40px" alt=""
-                    class="factureImage" /> &nbsp;&nbsp; Copyright © Smartylex - Version Beta 1.5 &nbsp;🚀&nbsp;&nbsp;</small>
+                    class="factureImage" /> &nbsp;&nbsp; Copyright © Smartylex - Version 2.0 &nbsp;🚀&nbsp;&nbsp;</small>
         </div>
     </div>
 </footer>

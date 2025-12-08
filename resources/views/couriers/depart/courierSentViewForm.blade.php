@@ -2,11 +2,33 @@
 @section('title','Ajout des données')
 @section('content')
 <div class="container-fluid">
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"><i class="fa fa-envelope"></i> Courriers - Départ</h4>
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+        <!-- Bloc gauche : icône + titre -->
+        <div class="d-flex align-items-center mb-2 mb-md-0">
+            <div class="icon-wrapper theme-bg">
+                <i class="fa fa-envelope"></i>
+            </div>
+            <div class="ms-2">
+                <h4 class="page-title mb-1">
+                    Courriers - Départ
+                    <span class="page-subtitle text-muted">› DETAILS</span>
+                </h4>
+                <small class="page-description text-secondary">
+                    Courrier encours de création.
+                </small>
+            </div>
         </div>
+
+        <!-- Bloc droit : bouton d’action -->
+        <div class="d-flex align-items-center">
+            <a href="{{ route('createCourierDepart') }}" 
+            class="btn btn-gradient-custom" 
+            title="Créer un courrier départ">
+            <i class="ti ti-plus me-1"></i> Créer un Courrier - Départ
+            </a>
+        </div>
+
     </div>
 
     <div class="row">

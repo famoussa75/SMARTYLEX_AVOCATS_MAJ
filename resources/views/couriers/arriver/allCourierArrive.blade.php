@@ -5,21 +5,30 @@
 @php
 setlocale(LC_TIME, 'fr_FR');
 @endphp
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"><i class="fa fa-envelope"></i> Courriers - Arrivée > <span class="label bg-info"><b>Liste</b></span></h4>
+<!-- Page Header -->
+<div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+    <div class="d-flex align-items-center mb-2 mb-md-0">
+        <div class="icon-wrapper me-2">
+            <i class="fa fa-envelope fs-4"></i>
         </div>
-
-        <div class="col-md-7 text-right">
-
-            <div class="btn-group">
-                <a  href="{{ route('createCourierArriver') }}" class="cl-white theme-bg btn  btn-rounded" title="Ajouter un personnel">
-                    <i class="ti-wand"></i> Créer un Courrier - Arrivée
-                </a>
-            </div>
+        <div>
+            <h4 class="page-title mb-0">
+                Courriers - Arrivée
+                <span class="page-subtitle text-muted">› Liste </span>
+            </h4>
+            <small class="text-muted">Consultez et gérez l’ensemble des courriers entrants.</small>
         </div>
     </div>
+
+
+      <!-- Bloc droit : boutons -->
+      <div class="d-flex align-items-center">
+            <a href="{{ route('createCourierArriver') }}" class="btn btn-gradient-custom" title="Liste des courriers">
+                <i class="ti ti-plus me-1"></i>  Nouveau courrier - Arrivée
+            </a>
+        </div>
+</div>
+
     <!-- Title & Breadcrumbs-->
 
     <div class="card col-md-12" style="margin-top:30px;padding:10px;display:grid;min-height:70vh">
@@ -73,12 +82,8 @@ setlocale(LC_TIME, 'fr_FR');
                                             {{ $row->expediteur }}
                                     </td>
                                     <td>
-                                        @if(empty($row->dateCourier))
-                                            <small>N/A</small>
-                                        @else
-                                            {{ date('d-m-Y', strtotime($row->dateCourier))}}
-                                        @endif
-                                        <!-- {{ date('d-m-Y', strtotime($row->dateCourier))}} -->
+                                        {{ $row->dateCourier ? date('d-m-Y', strtotime($row->dateCourier)) : 'N/A' }}
+
                                     </td>
 
                                     <td><a  href="{{ route('detailCourierArriver', [$row->slug]) }}">{{ $row->objet }}</a></td>

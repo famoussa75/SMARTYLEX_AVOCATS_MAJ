@@ -137,7 +137,7 @@
                                     <label for="affaire" class="control-label">Affaire du client
                                         concerné*
                                         :</label>
-                                    <select data-placeholder="Affaire du client concerné"
+                                    <select data-placeholder="Affaire du client concerné" class="form-select select2"
                                         style="width: 100%;height:28px"
                                         name="formsetCabinet[{{ $loop->iteration }}][idAffaire]" id="affaireClient-0">
                                         <option value="{{$c->idAffaire}}">

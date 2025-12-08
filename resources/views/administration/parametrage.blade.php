@@ -1,17 +1,10 @@
 @extends('layouts.base')
 @section('title','Paramètre avancé')
 @section('content')
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
-
-
-
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 <style>
-    
 
 
 .file::-webkit-file-upload-button {
@@ -42,12 +35,25 @@ input[type='file'] {}
 
 
 <div class="container-fluid">
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"><i class="fa fa-wrench"></i> Paramètre avancé</h4>
+<div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+    <!-- Bloc gauche : icône + titre -->
+    <div class="d-flex align-items-center mb-2 mb-md-0">
+        <div class="icon-wrapper theme-bg">
+            <i class="fa fa-wrench text-white"></i>
+        </div>
+        <div class="ms-3">
+            <h4 class="page-title mb-0 fw-bold">
+                Paramètre avancé
+            </h4>
+            <small class="page-description text-secondary">
+                Gérer les configurations avancées et les options personnalisées de votre système.
+            </small>
         </div>
     </div>
+
+</div>
+
 
     <div class="row">
         <div class="col-md-12">
@@ -56,7 +62,7 @@ input[type='file'] {}
                     <form class="padd-20" id="" method="post" action="{{ route('updateCabinet') }}"
                         enctype="multipart/form-data">
                         @csrf
-                        <h2 class="cl-white theme-bg text-center"><i class="fa fa-info-circle"></i> Informations du
+                        <h2 class="cl-white theme-bg text-center"><i class="fa fa-info-circle"></i> Information du
                             cabinet</h2>
                         @foreach($cabinet as $c)
                         <div class="row mrg-0">
@@ -89,7 +95,7 @@ input[type='file'] {}
                                 <div class="form-group">
                                     <label for="inputM" class="control-label">Mot de passe</label><br>
 
-                                        <div class="password-container">
+                                        <div class="password-container" style="width:100%">
                                             <input type="password" class="form-control" name="cleContact" value="{{$c->cleContact}}" id="passwordField3" style="width:100%">
                                             <i class="pass-view fa fa-eye" id="togglePasswordField3"></i>
                                         </div>
@@ -112,7 +118,7 @@ input[type='file'] {}
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label for="inputM" class="control-label">Mot de passe</label><br>
-                                                <div class="password-container">
+                                                <div class="password-container" style="width:100%">
                                                     <input type="password" class="form-control" name="cleAudience" value="{{$c->cleAudience}}" id="passwordField" >
                                                     <i class="pass-view fa fa-eye" id="togglePasswordField"></i>
                                                 </div>
@@ -135,7 +141,7 @@ input[type='file'] {}
                                             <div class="form-group">
                                                 <label for="inputM" class="control-label">Mot de passe</label><br>
                                             
-                                                <div class="password-container">
+                                                <div class="password-container" style="width:100%">
                                                     <input type="password" class="form-control" name="cleFinance" value="{{$c->cleFinance}}" id="passwordField2" >
                                                     <i class="pass-view fa fa-eye" id="togglePasswordField2"></i>
                                                 </div>
@@ -173,8 +179,8 @@ input[type='file'] {}
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="inputM" class="control-label">Telephone 1</label><br>
-                                    <input type="text" class="form-control  phone-input" name="tel1" 
+                                    <label for="inputM" class="control-label">Telephone 1</label>
+                                    <input type="text" class="form-control" name="tel1" 
                                         value="{{$c->tel1}}">
                                     <div class="help-block with-errors"></div>
                                 </div>
@@ -182,8 +188,8 @@ input[type='file'] {}
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="inputM" class="control-label">Telephone 2</label> <br>
-                                    <input type="text" class="form-control phone-input" name="tel2"  
+                                    <label for="inputM" class="control-label">Telephone 2</label>
+                                    <input type="text" class="form-control" name="tel2" 
                                         value="{{$c->tel2}}">
                                     <div class="help-block with-errors"></div>
                                 </div>
@@ -339,7 +345,6 @@ input[type='file'] {}
                                 <tr>
 
                                     <th>Nom de la banque</th>
-                                    <th>Device</th>
                                     <th>Code Banque</th>
                                     <th>Code Guichet</th>
                                     <th>Numero de compte</th>
@@ -355,9 +360,6 @@ input[type='file'] {}
                                         <input type="text" name="formset[{{$cb->idCompteBank}}][nomBank]" placeholder=""
                                             class="form-control" value="{{$cb->nomBank}}" required />
                                     </td>
-                                    <td><input type="text" name="formset[{{$cb->idCompteBank}}][devise]" placeholder=""
-                                            class="form-control" value="{{$cb->devise}}" required />
-                                    </td>
                                     <td><input type="text" name="formset[{{$cb->idCompteBank}}][codeBank]"
                                             placeholder="" class="form-control" value="{{$cb->codeBank}}" /></td>
                                     <td><input type="text" name="formset[{{$cb->idCompteBank}}][codeGuichet]"
@@ -372,18 +374,15 @@ input[type='file'] {}
                                     <td><input type="text" name="formset[{{$cb->idCompteBank}}][codeBic]" placeholder=""
                                             class="form-control" value="{{$cb->codeBic}}" /></td>
 
-                                    <td>
-                                    <button type="button" class="btn btn-outline-danger remove-input-field-RIB"><i class="fa fa-trash"></i></button></td>
-                                   
+                                    <td><button type="button" class="btn btn-outline-danger remove-input-field-RIB"><i class="fa fa-trash"></i></button></td>
                                 </tr>
                                 @endforeach
                                 <tr>
                                     <td><input type="hidden" name="formset[{{count($compteBancaires)+1}}][idCompteBank]"
                                             value="{{count($compteBancaires)+1}}">
                                         <input type="text" name="formset[{{count($compteBancaires)+1}}][nomBank]"
-                                            placeholder="" class="form-control" value="" /> </td>
-                                    <td><input type="text" name="formset[{{count($compteBancaires)+1}}][devise]"
-                                            placeholder="" class="form-control"/></td>
+                                            placeholder="" class="form-control" value="" />
+                                    </td>
                                     <td><input type="text" name="formset[{{count($compteBancaires)+1}}][codeBank]"
                                             placeholder="" class="form-control" /></td>
                                     <td><input type="text" name="formset[{{count($compteBancaires)+1}}][codeGuichet]"
@@ -503,8 +502,8 @@ input[type='file'] {}
                         <div class="col-12">
                             <div class="form-group">
                                 <div class="text-center">
-                                    <button type="submit" class="theme-bg btn btn-rounded btn-block" style="width:50%;">
-                                        Enregistrer les modifications</button>
+                                    <button type="submit" class="theme-bg btn btn-rounded btn-block">
+                                        <i class="fa fa-save"></i> Enregistrer les modifications</button>
                                 </div>
                             </div>
                         </div>
@@ -565,107 +564,4 @@ $('#summernote').summernote({
       });
 </script>
 <!-- /.row -->
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/google-libphonenumber/3.2.24/google-libphonenumber.min.js"></script>
-
-<script>
-    document.querySelectorAll('.phone-input').forEach(input => {
-        const iti = window.intlTelInput(input, {
-            initialCountry: "gn",
-            separateDialCode: true,
-            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
-            formatOnDisplay: true,
-            autoHideDialCode: false,
-            nationalMode: false
-        });
-
-        const phoneUtil = libphonenumber.PhoneNumberUtil.getInstance();
-        const PNT = libphonenumber.PhoneNumberType;
-
-        const feedback = input.parentElement.querySelector('.help-block.with-errors');
-        function setFeedback(msg, isError) {
-            if (feedback) {
-                feedback.textContent = msg || '';
-                feedback.style.color = isError ? 'crimson' : 'green';
-            }
-        }
-
-        let maxNational = null;
-        let lastValidValue = ''; // pour revenir en arrière si dépasse
-
-        function updateMaxNationalLength() {
-            const countryData = iti.getSelectedCountryData();
-            const iso2 = countryData.iso2 ? countryData.iso2.toUpperCase() : null;
-            maxNational = null;
-
-            if (iso2) {
-                try {
-                    let exampleNumber = phoneUtil.getExampleNumberForType(iso2, PNT.MOBILE);
-                    if (!exampleNumber) {
-                        exampleNumber = phoneUtil.getExampleNumberForType(iso2, PNT.FIXED_LINE);
-                    }
-                    if (exampleNumber) {
-                        const nationalExample = phoneUtil.format(exampleNumber, libphonenumber.PhoneNumberFormat.NATIONAL);
-                        maxNational = nationalExample.replace(/\D/g, '').length;
-                    }
-                } catch (e) {
-                    console.warn('Impossible d\'obtenir la longueur nationale pour', iso2, e);
-                }
-            }
-        }
-
-        function validateAndProvideFeedback() {
-            if (!iti.isValidNumber()) {
-                setFeedback('Numéro invalide ou incomplet.', true);
-            } else {
-                setFeedback('Numéro valide.', false);
-            }
-        }
-
-        // initialisation
-        updateMaxNationalLength();
-        validateAndProvideFeedback();
-        lastValidValue = input.value;
-
-        input.addEventListener('countrychange', () => {
-            updateMaxNationalLength();
-            validateAndProvideFeedback();
-            lastValidValue = input.value;
-        });
-
-        input.addEventListener('input', () => {
-            // Extrait uniquement les chiffres de la partie nationale affichée
-            const digitsOnly = input.value.replace(/\D/g, '');
-            if (maxNational && digitsOnly.length > maxNational) {
-                // dépassement : on revient à la dernière valeur valide
-                input.value = lastValidValue;
-            } else {
-                // pas de dépassement : on met à jour le "dernier bon"
-                lastValidValue = input.value;
-            }
-            validateAndProvideFeedback();
-        });
-
-        // soumission : mettre le numéro complet international
-        const form = input.closest('form');
-        if (form) {
-            form.addEventListener('submit', () => {
-                input.value = iti.getNumber();
-            });
-        }
-
-        // valeur par défaut si présente
-        const defaultVal = input.dataset.default;
-        if (defaultVal) {
-            iti.setNumber(defaultVal);
-            updateMaxNationalLength();
-            validateAndProvideFeedback();
-            lastValidValue = input.value;
-        }
-    });
-</script>
-
-
-
-
 @endsection

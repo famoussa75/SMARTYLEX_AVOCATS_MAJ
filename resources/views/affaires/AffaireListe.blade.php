@@ -1,32 +1,46 @@
 @extends('layouts.base')
 @section('title','Liste des affaires')
 @section('content')
+
+
 <div class="container-fluid">
 
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"><i class="ti-bag"></i> Affaires > <span class="label bg-info"><b>Liste des affaires</b></span></h4>
+    <!-- Title & Breadcrumbs -->
+    <div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+        <!-- Bloc gauche : icône + titre -->
+        <div class="d-flex align-items-center mb-2 mb-md-0">
+            <div class="icon-wrapper theme-bg">
+                <i class="ti-bag"></i>
+            </div>
+            <div class="ms-2">
+                <h4 class="page-title mb-1">
+                    Affaires
+                    <span class="page-subtitle">
+                      › Liste des affaires
+                    </span>
+                </h4>
+                <small class="page-description text-secondary">
+                    Consultez, créez et gérez l’ensemble des affaires enregistrées dans le système.
+                </small>
+            </div>
         </div>
 
-        <div class="col-md-7 text-right">
+        <!-- Bloc droit : boutons d’action -->
+        <div class="d-flex align-items-center flex-wrap gap-2">
+            <a href="javascript:history.back()" class="btn btn-outline-primary-custom me-2" title="Retour">
+                <i class="ti-flix ti-layout-grid2"></i>
+            </a>
 
-            <div class="btn-group mr-lg-2">
-                <a href="javascript:history.back()" class="cl-white theme-bg btn  tooltips">
-                    <i class="ti-flix ti-layout-grid2"></i>
-                </a>
-            </div>
-             @if (sizeof($affaire) == 0 && Auth::user()->role!='Client')
-            <div class="btn-group">
-                <a  href="{{ route('createAffaire') }}" class="cl-white theme-bg btn  btn-rounded" title="Creer une Affaire">
-                    <i class="ti-wand"></i>
-                    Creer une affaire
-                </a>
-            </div>
+            @if (sizeof($affaire) == 0 && Auth::user()->role!='Client')
+            <a href="{{ route('createAffaire') }}" class="btn btn-gradient-custom shadow-sm btn-rounded" title="Créer une affaire">
+                <i class="ti-wand me-1"></i> Créer une affaire
+            </a>
             @endif
         </div>
 
     </div>
+
     <!-- Title & Breadcrumbs-->
 
     <div class="card col-md-12" style="margin-top:30px;padding:10px;display:grid;min-height:70vh">
@@ -47,27 +61,22 @@
                                 <th>Client</th>
                                 <th>Type d'affaire</th>
                                 <th >Date de creation</th>
-                                <th style="width: 100px">Action</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             @foreach($affaire as $row)
-                            <tr>
+                            <tr onclick="window.location='{{ route('showAffaire', [$row->idAffaire, $row->slug]) }}'" style="cursor:pointer;">
                                 <td>
                                     {{ $row->idAffaire }}
                                 </td>
                                 <td>
-                                    <a class="load" href="{{ route('showAffaire', [$row->idAffaire,$row->slug]) }}">
-                                        {{ $row->nomAffaire }}
-                                    </a>
+                                    {{ $row->nomAffaire }}
                                 </td>
                                 <td>
-                                    <a class="load" href="{{ route('showAffaire', [$row->idAffaire,$row->slug]) }}">
                                         {{ $row->prenom }}
                                         {{ $row->nom }}
                                         {{ $row->denomination }}
-                                    </a>
                                 </td>
                                 <td>
                                     {{ $row->type }}
@@ -75,12 +84,7 @@
                                 <td>
                                     {{ $row->created_at }}
                                 </td>
-
-
-                                <td>
-                                    <a href="{{ route('showAffaire', [$row->idAffaire,$row->slug]) }}" class="settings" title="Information" ><i class="fa fa-arrow-right"></i></a>
-                                </td>
-
+                        
 
                             </tr>
                             @endforeach
@@ -92,7 +96,7 @@
     </div>
 </div>
 <!-- /.row -->
-
+ 
 
 <script>
     document.getElementById('aff').classList.add('active');

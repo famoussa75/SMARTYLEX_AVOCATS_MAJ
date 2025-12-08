@@ -151,7 +151,7 @@
             <div class="nav-tabs-custom bg-white">
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#timeline" data-toggle="tab">
-                            <h4><i class="fa fa-globe"></i> Fils d'actualités</h4>
+                            <h4><i class="fa fa-globe"></i> Fils d'Nouveautés</h4>
                         </a></li>
                 </ul>
                 <div class="tab-content">

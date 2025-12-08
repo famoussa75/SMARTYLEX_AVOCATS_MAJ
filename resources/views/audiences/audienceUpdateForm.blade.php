@@ -3,28 +3,45 @@
 @section('content')
 <div class="container-fluid">
 
-    <!-- Title & Breadcrumbs-->
-    <div class="row page-breadcrumbs">
-        <div class="col-md-5 align-self-center">
-            <h4 class="theme-cl"><i class="fa fa-pencil"></i> Modification de l'audience</h4>
+<!-- Page Header: Modification de l’audience -->
+<div class="page-header-custom d-flex flex-wrap align-items-center justify-content-between mb-4 p-3 shadow-sm bg-white rounded-3">
+
+    <!-- Partie gauche : titre et icône -->
+    <div class="d-flex align-items-center flex-wrap mb-2 mb-md-0">
+        <div class="icon-wrapper theme-bg">
+            <i class="fa fa-pencil"></i>
         </div>
-
-        <div class="col-md-7 text-right">
-
-            <div class="btn-group">
-                <a href="{{ route('listAudience', 'generale') }}" class="cl-white theme-bg btn btn-default btn-rounded" title="Voir la liste des audiences">
-                    <i class="fa fa-navicon"></i> Liste des audiences
-                </a>
-            </div>
+        <div class="ms-3">
+            <h4 class="page-title">
+                Audience
+                <span class="page-subtitle">› Modification de l’audience</span>
+            </h4>
+            <small class="page-description text-secondary">
+                Mettre à jour les informations d’une audience existante.
+            </small>
         </div>
     </div>
+
+    <!-- Partie droite : bouton d’action -->
+    <div class="text-end">
+        <a href="{{ route('listAudience', 'generale') }}"
+           class="btn btn-gradient-custom btn-rounded shadow-sm"
+           title="Voir la liste des audiences">
+            <i class="fa fa-navicon me-2"></i> Liste des audiences
+        </a>
+    </div>
+</div>
+
     <!-- Title & Breadcrumbs-->
 
 
     <div class="row">
         <div class="col-md-12 col-sm-12">
-            <form  method="post" action="{{route('updateAudience',[$juriductionsAud[0]->slug,$juriductionsAud[0]->idAudience])}}" enctype="multipart/form-data">
-            @csrf
+            <form  method="post" action="{{route('updateAudience')}}" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="slug" value="{{ $juriductionsAud[0]->slug ?? '' }}">
+                <input type="hidden" name="idAudience" value="{{ $juriductionsAud[0]->idAudience ?? '' }}">
+
                 <div class="card padd-10">
                     <div class="panel-group accordion-stylist" id="accordion" role="tablist" aria-multiselectable="true">
                    
@@ -333,7 +350,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <label for="affaire" class="control-label">Affaire du client
                                 concerné*
                                 :</label>
-                            <select class="" data-placeholder="Affaire du client concerné"
+                            <select class="form-select select2" data-placeholder="Affaire du client concerné"
                                 style="width: 100%;height:28px" name="formset[` + i + `][idAffaire]"
                                 id="affaireClient-` + i + `" >
 
@@ -601,9 +618,9 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <label class="custom-control custom-radio">
                                     <input id="roleASKa-` + i + `" name="formset[` + i + `][role]"
                                         type="radio" class="custom-control-input" onclick="var id=` + i + `; roleASKa(id)"
-                                        value="Prevenu / Accusé" required>
+                                        value="Prévenu(e) / Accusé(e)" required>
                                     <span class="custom-control-indicator"></span>
-                                    <span class="custom-control-description">Prevenu / Accusé</span>
+                                    <span class="custom-control-description">Prévenu(e) / Accusé(e)</span>
                                 </label>
                             </div>
                         </div>
@@ -696,7 +713,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <label for="affaire" class="control-label">Affaire du client
                                     concerné*
                                     :</label>
-                                <select class="" data-placeholder="Affaire du client concerné"
+                                <select class="form-select select2" data-placeholder="Affaire du client concerné"
                                     style="width: 100%;height:28px" name="formset[` + i + `][idAffaire]"
                                     id="affaireClient-` + i + `" >
 
@@ -1057,7 +1074,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                     <label for="affaire" class="control-label">Affaire du client
                                         concerné*
                                         :</label>
-                                    <select class="" data-placeholder="Affaire du client concerné"
+                                    <select class="form-select select2" data-placeholder="Affaire du client concerné"
                                         style="width: 100%;height:28px" name="formset[` + i + `][idAffaire]"
                                         id="affaireClient-` + i + `" >
 
@@ -1419,7 +1436,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <label for="affaire" class="control-label">Affaire du client
                                 concerné*
                                 :</label>
-                            <select class="" data-placeholder="Affaire du client concerné"
+                            <select class="form-select select2" data-placeholder="Affaire du client concerné"
                                 style="width: 100%;height:28px" name="formset[` + i + `][idAffaire]"
                                 id="affaireClient-` + i + `" >
 
