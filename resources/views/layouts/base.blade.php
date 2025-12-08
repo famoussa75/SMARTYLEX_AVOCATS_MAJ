@@ -1555,41 +1555,55 @@ function horloge() {
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    document.querySelectorAll('a').forEach(link => {
+    const loader = document.getElementById('pageLoader');
+
+    function showLoader() {
+        if (loader) {
+            loader.style.display = 'flex';
+            loader.classList.add('show');
+        }
+    }
+
+    document.querySelectorAll('a[href]').forEach(link => {
         link.addEventListener('click', function (e) {
-            // ignorer nouveaux onglets / anchors / javascript:
+
+            const href = link.getAttribute('href');
+
+            // ✅ EXCLUSIONS
             if (
-                link.target === '_blank' ||
-                link.href.startsWith('#') ||
-                link.href.startsWith('javascript:')
+                link.target === '_blank' ||                 // nouvel onglet
+                !href ||                                    // href vide ou null
+                href === '#' ||                             // lien #
+                href.startsWith('#') ||                     // ancres
+                href.startsWith('javascript') ||            // js uniquement
+                href.includes('history.back') ||            // retour JS
+                href.includes('window.history.back') ||     // retour JS
+                link.dataset.toggle === 'modal' ||          // Bootstrap modal
+                link.dataset.bsToggle === 'modal' ||        // Bootstrap 5
+                link.classList.contains('no-loader')         // exclusion manuelle
             ) {
                 return;
             }
 
-            const loader = document.getElementById('pageLoader');
-            if (loader) {
-                loader.classList.add('show');
-            }
+            e.preventDefault();
+            showLoader();
+
+            setTimeout(() => {
+                window.location.href = href;
+            }, 80);
         });
     });
 
-});
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-
+    // ✅ SUBMIT DES FORMULAIRES
     document.querySelectorAll('form').forEach(form => {
         form.addEventListener('submit', function () {
-            const loader = document.getElementById('pageLoader');
-            if (loader) {
-                loader.classList.add('show');
-            }
+            showLoader();
         });
     });
 
 });
 </script>
+
 
 <script>
 window.addEventListener('load', function () {
@@ -1600,6 +1614,8 @@ window.addEventListener('load', function () {
     }
 });
 </script>
+
+
 
 
 
