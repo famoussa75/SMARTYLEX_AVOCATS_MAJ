@@ -1552,19 +1552,56 @@ function horloge() {
 
     </script>
 
-    <script>
-        // Quand la page est COMPLETEMENT chargée
-        window.addEventListener('load', function () {
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function (e) {
+            // ignorer nouveaux onglets / anchors / javascript:
+            if (
+                link.target === '_blank' ||
+                link.href.startsWith('#') ||
+                link.href.startsWith('javascript:')
+            ) {
+                return;
+            }
+
             const loader = document.getElementById('pageLoader');
             if (loader) {
-                loader.classList.remove('show');
-
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 300);
+                loader.classList.add('show');
             }
         });
-    </script>
+    });
+
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function () {
+            const loader = document.getElementById('pageLoader');
+            if (loader) {
+                loader.classList.add('show');
+            }
+        });
+    });
+
+});
+</script>
+
+<script>
+window.addEventListener('load', function () {
+    const loader = document.getElementById('pageLoader');
+    if (loader) {
+        loader.classList.remove('show');
+        loader.style.display = 'none';
+    }
+});
+</script>
+
+
 
 
 </body>
