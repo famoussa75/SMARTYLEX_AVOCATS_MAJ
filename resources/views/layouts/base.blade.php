@@ -817,62 +817,60 @@ function horloge() {
 
         <!-- modal-loading -->
         <!-- GLOBAL PAGE LOADER -->
-        <div id="pageLoader" class="modal fade show" tabindex="-1"
-            style="display:block;background:rgba(7,8,7,0.65);z-index:99999;">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content loader-content">
-                    <div class="loader-wrapper text-center">
-
-                        <!-- SVG Loader -->
-                        <div class="spinner"></div>
-
-                        <h4 class="mt-4 text-white font-weight-semibold">
-                            Chargement en cours...
-                        </h4>
-                    </div>
-                </div>
+        <div id="pageLoader">
+            <div class="loader-box">
+                <div class="spinner"></div>
+                <div class="loader-text">Chargement en cours...</div>
             </div>
         </div>
-        <style>
-            /* Loader Modal */
-            #pageLoader {
-                position: fixed;
-                inset: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                backdrop-filter: blur(3px);
-                background: rgba(0, 0, 0, 0.2); /* optionnel */
-                z-index: 9999;
-            }
 
-            /* Content */
-            .loader-content {
-                background: transparent;
-                border: none;
-                box-shadow: none;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
+      <style>
+        #pageLoader {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+    background: rgba(0, 0, 0, 0.3); /* optionnel */
+    z-index: 9999;
+}
 
-            /* Spinner animé */
-            .spinner {
-                width: 80px;
-                height: 80px;
-                border: 5px solid rgba(255, 255, 255, 0.2);
-                border-top: 5px solid #28a745;
-                border-radius: 50%;
-                animation: spin 0.9s linear infinite;
-            }
+/* Conteneur central */
+.loader-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-align: center;
+}
 
-            @keyframes spin {
-                to {
-                    transform: rotate(360deg);
-                }
-            }
-        </style>
+/* Spinner */
+.spinner {
+    width: 80px;
+    height: 80px;
+    border: 5px solid rgba(255, 255, 255, 0.2);
+    border-top: 5px solid #28a745;
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+}
 
+/* Texte */
+.loader-text {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* Animation */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+      </style>
 
         <!-- End modal-loading -->
         <div hidden>
