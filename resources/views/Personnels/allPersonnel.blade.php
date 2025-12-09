@@ -40,7 +40,7 @@
     <!-- Title & Breadcrumbs-->
 
 
-    <div class="card col-md-12" style="margin-top:30px;padding:10px;display:grid;min-height:70vh">
+    <div class="card col-md-12">
                 <div class="flex-box padd-10 bb-1">
                     <h4 class="mb-0">Liste du personnel</h4>
                 </div>
