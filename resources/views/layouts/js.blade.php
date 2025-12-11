@@ -383,16 +383,7 @@ $(document).ready(function() {
     });
 
 
-    // $('.dataTableExport').DataTable({
-    //     dom: 'Bfrtip',
-    //     searching: true,
-    //     pageLength: 20,
-    //     responsive: true,
-    //     buttons: [
-    //         'copy', 'csv', 'excel', 'pdf', 'print'
-    //     ],
-    //     order: []
-    // });
+
 
     var monSwitchButton = document.getElementById("infowitch");
 
