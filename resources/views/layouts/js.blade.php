@@ -271,7 +271,7 @@ $(document).ready(function() {
         })
         .catch(err => console.error(err));
     @endif
-    alert("Logo Base64:", logoBase64);
+    alert("Logo Base64:", logoPath);
 
 
 
