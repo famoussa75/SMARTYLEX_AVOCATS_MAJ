@@ -255,7 +255,6 @@ $(document).ready(function() {
 
     @if (!empty($logoCabinet))
     let logoPath = "{{ $logoCabinet }}"; 
-    alert("{{ url('/') }}/" + logoPath);
 
     fetch("{{ url('/') }}/" + logoPath)
         .then(res => {
