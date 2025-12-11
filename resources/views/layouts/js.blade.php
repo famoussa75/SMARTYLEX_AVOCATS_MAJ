@@ -311,9 +311,9 @@ $(document).ready(function() {
                     // HEADER
                     doc.header = function (currentPage, pageCount) {
                         return {
-                            margin: [0, 0, 0, 20],
+                            margin: [15, 10, 15, 20],
                             columns: [
-                                logoBase64 ? { image: logoBase64, width: 50, margin: [20, 10, 10, 0] } : {},
+                                logoBase64 ? { image: logoBase64, width: 50, margin: [0, 10, 10, 0] } : {},
                                 { text: nomCabinet, alignment: 'left', fontSize: 12, bold: true, margin: [0, 20, 0, 0] },
                                 { text: 'Téléchargé le : ' + now, alignment: 'right', fontSize: 10, bold: true, margin: [0, 10, 20, 0] }
                             ]
