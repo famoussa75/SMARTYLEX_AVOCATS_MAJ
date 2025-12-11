@@ -50,7 +50,213 @@
         color: #fff !important; /* icône blanche pour contraste */
     }
 </style>
+<style>
+    .pub-container {
+        width: 200px;
+        height: 30vh;
+        overflow: hidden;
+        position: relative;
+        margin: 20px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
 
+    .slider {
+        display: flex;
+        flex-wrap: nowrap;
+        width: 300%;
+        height: 100%;
+        animation: slide 15s infinite ease-in-out;
+    }
+
+    .slide {
+        flex: 0 0 33.333%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        transition: transform 0.2s ease;
+    }
+
+    .slide:hover {
+        transform: scale(0.80);
+    }
+
+    .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.2s ease;
+    }
+
+    /* Animation professionnelle avec transitions douces */
+    @keyframes slide {
+        0% { 
+            transform: translateX(0);
+            animation-timing-function: ease-out;
+        }
+        26% { 
+            transform: translateX(0);
+            animation-timing-function: ease-in;
+        }
+        33% { 
+            transform: translateX(-33.333%);
+            animation-timing-function: ease-out;
+        }
+        59% { 
+            transform: translateX(-33.333%);
+            animation-timing-function: ease-in;
+        }
+        66% { 
+            transform: translateX(-66.666%);
+            animation-timing-function: ease-out;
+        }
+        92% { 
+            transform: translateX(-66.666%);
+            animation-timing-function: ease-in;
+        }
+        100% { 
+            transform: translateX(0);
+        }
+    }
+
+    /* Indicateurs de progression */
+    .pub-container::before {
+        content: '';
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+        z-index: 10;
+    }
+
+    /* Barre de progression animée */
+    .progress-bar {
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 2px;
+        z-index: 11;
+        animation: progress 25s infinite linear;
+        transform-origin: left center;
+    }
+
+    @keyframes progress {
+        0% { 
+            width: 0;
+            left: 50%;
+        }
+        33% { 
+            width: 80px;
+            left: 50%;
+        }
+        33.1% { 
+            width: 0;
+            left: 50%;
+        }
+        66% { 
+            width: 80px;
+            left: 50%;
+        }
+        66.1% { 
+            width: 0;
+            left: 50%;
+        }
+        99% { 
+            width: 80px;
+            left: 50%;
+        }
+        100% { 
+            width: 0;
+            left: 50%;
+        }
+    }
+
+    /* Overlay pour meilleure lisibilité */
+    .slide::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 30%;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+        pointer-events: none;
+    }
+
+    /* Effet de flou pendant la transition */
+    .slider {
+        backdrop-filter: blur(0px);
+        transition: backdrop-filter 0.3s ease;
+    }
+
+    .slider:active {
+        backdrop-filter: blur(2px);
+    }
+
+    
+
+</style>
+
+<style>
+
+    .close-pub-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        padding: 5px 10px;
+        z-index: 20;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .open-pub-icon {
+        position: absolute;
+        top: 600px;
+        left: 15px;
+        padding: 5px 10px;
+        z-index: 20;
+        background: white;
+        border: 1px solid #d6e84eff;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .close-pub-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 6px 12px;
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        cursor: pointer;
+        opacity: 0; 
+        transition: opacity 0.3s ease;
+        z-index: 100;
+    }
+
+    /* Apparition du bouton au survol */
+    .pub-container:hover .close-pub-btn {
+        opacity: 1;
+    }
+
+
+</style>
 
 
 <div class="navbar-side">
