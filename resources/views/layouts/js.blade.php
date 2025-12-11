@@ -2166,7 +2166,6 @@ function deleteHuissier(id) {
 $('.dropdown-toggle').dropdown()
 </script>
 
-<script type="text/javascript" src="{{ asset('assets/DataTables/js/jquery-3.5.1.js')}}"></script>
 <script type="text/javascript" src="{{ asset('assets/DataTables/js/dataTables.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/DataTables/js/dataTables.buttons.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/DataTables/js/jszip.min.js') }}"></script>
