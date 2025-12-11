@@ -254,10 +254,10 @@ $(document).ready(function() {
 
 
     @if (!empty($logoCabinet))
-    let logoPath = "{{ asset($logoCabinet) }}";
+    let logoPath = "{{ $logoCabinet }}"; 
     
 
-    fetch(logoPath)
+    fetch("{{ url('/') }}/" + logoPath)
         .then(res => {
             if (!res.ok) throw new Error("Image non trouvée !");
             return res.blob();
@@ -271,7 +271,7 @@ $(document).ready(function() {
         })
         .catch(err => console.error(err));
     @endif
-    alert("Logo Base64:", logoPath);
+    console.log("Logo Base64:", logoBase64);
 
 
 
