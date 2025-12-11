@@ -254,7 +254,8 @@ $(document).ready(function() {
 
 
     @if (!empty($logoCabinet))
-    let logoPath = "{{ $logoCabinet }}"; 
+    
+    let logoPath = "{{ asset('assets/upload/photos/' . $logoCabinet) }}";
 
 
     fetch("{{ url('/') }}/" + logoPath)
@@ -309,6 +310,7 @@ $(document).ready(function() {
                         return {
                             margin: [0, 0, 0, 20],
                             columns: [
+                                logoBase64 ? { image: logoBase64, width: 50, margin: [10, 10, 10, 0] } : {},
                                 { text: nomCabinet, alignment: 'left', fontSize: 12, bold: true, margin: [0, 20, 0, 0] },
                                 { text: 'Téléchargé le : ' + now, alignment: 'right', fontSize: 10, bold: true, margin: [0, 10, 20, 0] }
                             ]
