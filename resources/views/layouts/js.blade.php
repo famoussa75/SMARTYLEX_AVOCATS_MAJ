@@ -254,25 +254,28 @@ $(document).ready(function() {
 
 
     @if (!empty($logoCabinet))
-    let logoPath = "{{ $logoCabinet }}"; 
-    
 
-    fetch("{{ url('/') }}/" + logoPath)
-        .then(res => {
-            if (!res.ok) throw new Error("Image non trouvée !");
-            return res.blob();
-        })
-        .then(blob => {
-            let reader = new FileReader();
-            reader.onloadend = function () {
-                logoBase64 = reader.result;
-            }
-            reader.readAsDataURL(blob);
-        })
-        .catch(err => console.error(err));
+        let logoPath = "{{ $logoCabinet }}"; 
+        
+
+        fetch("{{ url('/') }}/" + logoPath)
+            .then(res => {
+                if (!res.ok) throw new Error("Image non trouvée !");
+                return res.blob();
+            })
+            .then(blob => {
+                let reader = new FileReader();
+                reader.onloadend = function () {
+                    logoBase64 = reader.result;
+                }
+                reader.readAsDataURL(blob);
+            })
+            .catch(err => console.error(err));
+
     @endif
-    alert("Logo Base64:", logoBase64);
 
+    urlimg =  "{{ url('/') }}/" + logoPath;
+    alert(urlimg);
 
 
     $('.dataTableExport').DataTable({
@@ -310,7 +313,7 @@ $(document).ready(function() {
                         return {
                             margin: [0, 0, 0, 20],
                             columns: [
-                                logoBase64 ? { image: logoBase64, width: 50, margin: [10, 10, 10, 0] } : {},
+                                urlimg ? { image: urlimg, width: 50, margin: [10, 10, 10, 0] } : {},
                                 { text: nomCabinet, alignment: 'left', fontSize: 12, bold: true, margin: [0, 20, 0, 0] },
                                 { text: 'Téléchargé le : ' + now, alignment: 'right', fontSize: 10, bold: true, margin: [0, 10, 20, 0] }
                             ]
