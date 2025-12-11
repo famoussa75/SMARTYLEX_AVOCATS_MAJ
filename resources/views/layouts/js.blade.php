@@ -274,8 +274,6 @@ $(document).ready(function() {
 
     @endif
 
-    urlimg =  "{{ url('/') }}/" + logoPath;
-    alert(urlimg);
 
 
     $('.dataTableExport').DataTable({
