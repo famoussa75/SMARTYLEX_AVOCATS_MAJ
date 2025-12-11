@@ -254,9 +254,8 @@ $(document).ready(function() {
 
 
     @if (!empty($logoCabinet))
-    
-    let logoPath = "{{ asset('assets/upload/photos/' . $logoCabinet) }}";
-
+    let logoPath = "{{ $logoCabinet }}"; 
+    alert("{{ url('/') }}/" + logoPath);
 
     fetch("{{ url('/') }}/" + logoPath)
         .then(res => {
