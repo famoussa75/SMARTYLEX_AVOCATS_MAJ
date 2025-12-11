@@ -1554,69 +1554,70 @@ function horloge() {
         });
 
     </script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-
-    const loader = document.getElementById('pageLoader');
-
-    function showLoader() {
-        if (loader) {
-            loader.style.display = 'flex';
-            loader.classList.add('show');
-        }
-    }
-
-    document.querySelectorAll('a[href]').forEach(link => {
-        link.addEventListener('click', function (e) {
+    
+    <script>
+        document.addEventListener('click', function(e){
+            const link = e.target.closest('a[href]');
+            if(!link) return;
 
             const href = link.getAttribute('href');
 
-            // ✅ EXCLUSIONS
-            if (
-                link.target === '_blank' ||                 // nouvel onglet
-                !href ||                                    // href vide ou null
-                href === '#' ||                             // lien #
-                href.startsWith('#') ||                     // ancres
-                href.startsWith('javascript') ||            // js uniquement
-                href.includes('history.back') ||            // retour JS
-                href.includes('window.history.back') ||     // retour JS
-                link.dataset.toggle === 'modal' ||          // Bootstrap modal
-                link.dataset.bsToggle === 'modal' ||        // Bootstrap 5
-                link.classList.contains('no-loader')         // exclusion manuelle
-            ) {
-                return;
+            // ✅ EXCLUSIONS COMPLETES
+            const isExcluded =
+                link.target === '_blank' ||                  // nouvel onglet
+                !href ||                                     // href vide ou null
+                href === '#' ||                              // lien #
+                href.startsWith('#') ||                      // ancres
+                href.startsWith('javascript') ||             // JS uniquement
+                link.dataset.bsToggle === 'modal' ||         // Bootstrap 5 modal
+                link.dataset.toggle === 'modal' ||           // Bootstrap 4 modal
+                link.classList.contains('no-loader');        // exclusion manuelle
+
+            if(isExcluded) return;                          // ne rien faire
+
+            // Afficher le loader
+            const loader = document.getElementById('pageLoader');
+            if(loader){
+                loader.style.display = 'flex';
+                loader.classList.add('show');
             }
 
-            e.preventDefault();
-            showLoader();
-
-            setTimeout(() => {
+            // Redirection
+            setTimeout(()=>{
                 window.location.href = href;
             }, 80);
         });
-    });
 
-    // ✅ SUBMIT DES FORMULAIRES
-    document.querySelectorAll('form').forEach(form => {
-        form.addEventListener('submit', function () {
-            showLoader();
+        document.addEventListener('submit', function(e){
+            const form = e.target.closest('form');
+            if(form){
+                const loader = document.getElementById('pageLoader');
+                if(loader){
+                    loader.style.display = 'flex';
+                    loader.classList.add('show');
+                }
+            }
         });
-    });
 
-});
-</script>
+        // Masquer le loader à la fin du chargement
+        window.addEventListener('load', function(){
+            const loader = document.getElementById('pageLoader');
+            if(loader){
+                loader.classList.remove('show');
+                loader.style.display = 'none';
+            }
+        });
 
+        // Ne jamais afficher le loader sur retours arrière/avant
+        window.addEventListener('popstate', function(){
+            const loader = document.getElementById('pageLoader');
+            if(loader){
+                loader.classList.remove('show');
+                loader.style.display = 'none';
+            }
+        });
+    </script>
 
-<script>
-window.addEventListener('load', function () {
-    const loader = document.getElementById('pageLoader');
-    if (loader) {
-        loader.classList.remove('show');
-        loader.style.display = 'none';
-    }
-});
-</script>
 
 
 
