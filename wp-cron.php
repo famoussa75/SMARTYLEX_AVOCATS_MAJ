@@ -1,0 +1,1 @@
+* * * * * php /home/u370550947/public_html/plateformes/teste/artisan queue:work --stop-when-empty --sleep=0 --tries=1 --timeout=300 --quiet >> /home/u370550947/public_html/plateformes/teste/queue.log 2>&1

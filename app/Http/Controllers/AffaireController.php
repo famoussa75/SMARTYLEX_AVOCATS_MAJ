@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use App\Jobs\UploadFileJob;
+use Illuminate\Support\Facades\Log;
+
 
 class AffaireController extends Controller
 {
@@ -148,95 +151,68 @@ class AffaireController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $validate = $request->validate([
+        $request->validate([
             'nom' => 'required',
             'dateOuverture' => 'required',
             'idClient' => 'required',
             'type' => 'required',
         ]);
-        $affaire = new Affaires();
-        if ($validate) {
-            if ($request->typePost == "modalAffaire") {
+    
+        $affaire = Affaires::create([
+            'nomAffaire' => $request->nom,
+            'idClient' => $request->idClient,
+            'type' => $request->type,
+            'slug' => $request->_token . rand(1000,9999),
+            'dateOuverture' => $request->dateOuverture,
+            'etat' => 'En cours',
+        ]);
+    
 
-                $affaire->nomAffaire = $request->nom;
-                $affaire->idClient = $request->idClient;
-                $affaire->type = $request->type;
-                $affaire->slug = $request->_token . rand(5665, 9876);
-                $affaire->dateOuverture = $request->dateOuverture;
-                $affaire->etat = 'En cours';
-                
-
-                // Creation des fichiers
-                // dossiers : affaires,taches,audiences,courier-departs,courier-arrivers
-                if ($request->file('fichiers') != null) {
-
-                    $fichiers = request()->file('fichiers');
-
-
-                    foreach ($fichiers as $fichier){
-
-                        $affaireFile = new Fichiers();
-
-                        $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
-                        $affaireFile->nomOriginal = $fichier->getClientOriginalName();
-                        $affaireFile->slugSource = $affaire->slug;
-                        $affaireFile->filename =$filename;
-                        $affaireFile->slug = $request->_token . "" . rand(1234, 3458);
-                        $affaireFile->path = 'assets/upload/fichiers/affaires/' . $filename;
-                        $fichier->move(public_path('assets/upload/fichiers/affaires'), $filename);
-                        $affaireFile->save();
+        if ($request->hasFile('fichiers')) {
+        
+            foreach ($request->file('fichiers') as $fichier) {
+        
+                try {
+                    $tempPath = $fichier->store('temp', 'local');
+        
+                    if (!$tempPath) {
+                        Log::error('❌ Upload TEMP échoué', [
+                            'filename' => $fichier->getClientOriginalName()
+                        ]);
+                    } else {
+                        Log::info('✅ Upload TEMP OK', [
+                            'tempPath' => $tempPath,
+                            'filename' => $fichier->getClientOriginalName()
+                        ]);
                     }
+        
+                    UploadFileJob::dispatch(
+                        $tempPath,
+                        $affaire->slug,
+                        $fichier->getClientOriginalName(),
+                        $request->_token,
+                        'assets/upload/fichiers/affaires/',
+                        'AFF_' // préfixe
+                    );
+        
+                } catch (\Throwable $e) {
+                    Log::error('🔥 Exception upload fichier', [
+                        'message' => $e->getMessage(),
+                        'file' => $fichier->getClientOriginalName()
+                    ]);
                 }
-                // Enregistrement
-                $affaire->save();
-                return back()->with('success', 'L\'affaire de ce client a été créée avec succès !');
-
-            } else {
-                $affaire->nomAffaire = $request->nom;
-                $affaire->idClient = $request->idClient;
-                $affaire->type = $request->type;
-                $affaire->slug = $request->_token . rand(5665, 9876);
-                $affaire->dateOuverture = $request->dateOuverture;
-                $affaire->etat = 'En cours';
-               
-                
-                // Creation des fichiers
-                // dossiers : affaires,taches,audiences,courier-departs,courier-arrivers
-                if ($request->file('fichiers') != null) {
-
-                    $fichiers = request()->file('fichiers');
-
-
-                    foreach ($fichiers as $fichier){
-
-                        $affaireFile = new Fichiers();
-
-                        $filename = strtoupper(substr(str_shuffle(md5($request->_token . "" . rand(124, 345))), 0, 4)) . date('YmdHi') . '.' . $fichier->extension();
-                        $affaireFile->nomOriginal = $fichier->getClientOriginalName();
-                        $affaireFile->slugSource = $affaire->slug;
-                        $affaireFile->filename =$filename;
-                        $affaireFile->slug = $request->_token . "" . rand(1234, 3458);
-                        $affaireFile->path = 'assets/upload/fichiers/affaires/' . $filename;
-                        $fichier->move(public_path('assets/upload/fichiers/affaires'), $filename);
-                        $affaireFile->save();
-                    }
-                }
-                
-                
-                
-
-                // Enregistrement
-                $affaire->save();
-
-                $slug=$affaire->slug;
-                $dernierAffaire = DB::select('select idAffaire from affaires where slug=?',[$slug]);
-                $idAffaire=$dernierAffaire[0]->idAffaire;
-                return redirect()->route('showAffaire',['id'=>$idAffaire,'slug'=>$slug])->with('success','Affaire enregistrée avec succès !');
             }
+        
+        } else {
+            Log::warning('⚠️ Aucun fichier reçu dans la requête');
         }
+        
+    
+        return redirect()
+            ->route('showAffaire', [$affaire->idAffaire, $affaire->slug])
+            ->with('success', 'Affaire créée avec succès');
     }
-
+    
     private function getAudienceData($audiences, $cabinet, $personne_adverses, $entreprise_adverses, $autreRoles) {
         $formattedAudiences = [];
     
