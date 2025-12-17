@@ -789,12 +789,8 @@ function readFile(file) {
 
     let fileUrl;
 
-    if (file.startsWith('storage/')) {
-        fileUrl = "{{ asset('') }}" + file;
+    fileUrl = "{{ asset('') }}" + file;
 
-    } else {
-        fileUrl = "{{ asset('') }}" + file;
-    }
     console.log(fileUrl);
     PDFObject.embed(fileUrl, reader, options);
 
