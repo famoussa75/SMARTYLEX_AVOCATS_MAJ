@@ -29,7 +29,7 @@ class UploadFileJob implements ShouldQueue
         $this->originalName = $originalName;
         $this->token        = $token;
         $this->targetPath   = rtrim($targetPath, '/') . '/'; // sécurisation
-        $this->filenamePrefix = $filenamePrefix;
+        $this->filenamePrefix = $filenamePrefix; 
     }
 
     public function handle()
