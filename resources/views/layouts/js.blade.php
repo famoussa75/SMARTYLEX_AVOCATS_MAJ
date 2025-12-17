@@ -790,7 +790,8 @@ function readFile(file) {
     let fileUrl;
 
     if (file.startsWith('storage/')) {
-        fileUrl = "{{ asset('storage') }}/" + file;
+        fileUrl = "{{ asset('') }}" + file;
+
     } else {
         fileUrl = "{{ asset('') }}" + file;
     }
