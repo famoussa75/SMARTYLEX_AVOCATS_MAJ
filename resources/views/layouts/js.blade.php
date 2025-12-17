@@ -787,7 +787,12 @@ function readFile(file) {
         }
     };
 
-    PDFObject.embed(`{{URL::to('/')}}/${file}`, reader, options);
+    PDFObject.embed(
+        `{{ asset('storage') }}/${file}`, // file = "assets/upload/fichiers/affaires/AFF_xxx.pdf"
+        reader,
+        options
+    );
+
 
 
 }
