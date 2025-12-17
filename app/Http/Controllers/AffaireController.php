@@ -192,7 +192,7 @@ class AffaireController extends Controller
                         $fichier->getClientOriginalName(),
                         $request->_token,
                         'assets/upload/fichiers/affaires/',
-                        'AFF_' // préfixe
+                        'AFF_', // préfixe
                     );
         
                 } catch (\Throwable $e) {
@@ -522,6 +522,7 @@ class AffaireController extends Controller
     public function deleteAffaire($slug)
     {
         $affaire =  DB::select("select * from affaires where slug=?", [$slug]);
+
         $affaire = Affaires::find($affaire[0]->idAffaire);
         $affaire->delete();
 

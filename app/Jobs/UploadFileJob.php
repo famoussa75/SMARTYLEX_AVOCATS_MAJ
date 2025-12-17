@@ -19,6 +19,8 @@ class UploadFileJob implements ShouldQueue
     public $affaireSlug;
     public $originalName;
     public $token;
+    public $targetPath;
+    public $filenamePrefix;
 
     public function __construct($tempPath, $affaireSlug, $originalName, $token, $targetPath, $filenamePrefix)
     {
