@@ -794,6 +794,7 @@ function readFile(file) {
     } else {
         fileUrl = "{{ asset('') }}" + file;
     }
+    console.log(fileUrl);
     PDFObject.embed(fileUrl, reader, options);
 
 
