@@ -173,28 +173,19 @@ class AffaireController extends Controller
             foreach ($request->file('fichiers') as $fichier) {
         
                 try {
-                    $tempPath = $fichier->store('temp', 'local');
-        
-                    if (!$tempPath) {
-                        Log::error('❌ Upload TEMP échoué', [
-                            'filename' => $fichier->getClientOriginalName()
-                        ]);
-                    } else {
-                        Log::info('✅ Upload TEMP OK', [
-                            'tempPath' => $tempPath,
-                            'filename' => $fichier->getClientOriginalName()
-                        ]);
-                    }
-        
+                    $tempPath = $fichier->move(storage_path('app/temp'), $fichier->getClientOriginalName());
+                    $tempRelativePath = 'temp/' . $fichier->getClientOriginalName();
+
                     UploadFileJob::dispatchAfterResponse(
-                        $tempPath,
+                        $tempRelativePath,
                         $affaire->slug,
                         $fichier->getClientOriginalName(),
                         $request->_token,
                         'assets/upload/fichiers/affaires/',
-                        'AFF_', // préfixe
+                        'AFF_'
                     );
-        
+
+                            
                 } catch (\Throwable $e) {
                     Log::error('🔥 Exception upload fichier', [
                         'message' => $e->getMessage(),
