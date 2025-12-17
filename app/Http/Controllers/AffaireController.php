@@ -186,7 +186,7 @@ class AffaireController extends Controller
                         ]);
                     }
         
-                    UploadFileJob::dispatch(
+                    UploadFileJob::dispatchAfterResponse(
                         $tempPath,
                         $affaire->slug,
                         $fichier->getClientOriginalName(),
