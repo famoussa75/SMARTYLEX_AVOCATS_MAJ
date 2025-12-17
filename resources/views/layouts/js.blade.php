@@ -787,11 +787,16 @@ function readFile(file) {
         }
     };
 
-    PDFObject.embed(
-        `{{ asset('storage') }}/${file}`, // file = "assets/upload/fichiers/affaires/AFF_xxx.pdf"
-        reader,
-        options
-    );
+    let fileUrl;
+
+    if (file.startsWith('assets/')) {
+        fileUrl = "{{ asset('storage') }}/" + file;
+    } else {
+        fileUrl = "{{ asset('') }}" + file;
+    }
+
+    PDFObject.embed(fileUrl, reader, options);
+
 
 
 

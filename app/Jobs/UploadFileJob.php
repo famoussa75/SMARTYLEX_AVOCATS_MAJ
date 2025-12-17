@@ -63,7 +63,7 @@ class UploadFileJob implements ShouldQueue
             'slugSource'  => $this->affaireSlug,
             'filename'    => $filename,
             'slug'        => uniqid(),
-            'path'        => $finalPath,
+            'path'        => 'storage/' . $finalPath,
         ]);
 
         Log::info('✅ UploadFileJob SUCCESS', ['file' => $filename]);
