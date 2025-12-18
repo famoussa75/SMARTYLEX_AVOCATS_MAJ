@@ -176,7 +176,7 @@ class AffaireController extends Controller
                     $tempPath = $fichier->move(storage_path('app/temp'), $fichier->getClientOriginalName());
                     $tempRelativePath = 'temp/' . $fichier->getClientOriginalName();
 
-                    UploadFileJob::dispatchAfterResponse(
+                    UploadFileJob::dispatch(
                         $tempRelativePath,
                         $affaire->slug,
                         $fichier->getClientOriginalName(),
