@@ -19,6 +19,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Jobs\UploadFileJob;
 use Illuminate\Support\Facades\Log;
+use App\Models\UploadPending;
+
 
 
 class AffaireController extends Controller
@@ -29,6 +31,7 @@ class AffaireController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+     
     public function getAllAffaireForSearch($search)
     {
         if (Auth::user()->role == 'Administrateur' || Auth::user()->role == 'Assistant') {
@@ -149,6 +152,7 @@ class AffaireController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
         $request->validate([
@@ -162,47 +166,33 @@ class AffaireController extends Controller
             'nomAffaire' => $request->nom,
             'idClient' => $request->idClient,
             'type' => $request->type,
-            'slug' => $request->_token . rand(1000,9999),
+            'slug' => uniqid('aff_'),
             'dateOuverture' => $request->dateOuverture,
             'etat' => 'En cours',
         ]);
     
-
         if ($request->hasFile('fichiers')) {
-        
             foreach ($request->file('fichiers') as $fichier) {
-        
-                try {
-                    $tempPath = $fichier->move(storage_path('app/temp'), $fichier->getClientOriginalName());
-                    $tempRelativePath = 'temp/' . $fichier->getClientOriginalName();
-
-                    UploadFileJob::dispatch(
-                        $tempRelativePath,
-                        $affaire->slug,
-                        $fichier->getClientOriginalName(),
-                        $request->_token,
-                        'assets/upload/fichiers/affaires/',
-                        'AFF_'
-                    );
-
-                            
-                } catch (\Throwable $e) {
-                    Log::error('🔥 Exception upload fichier', [
-                        'message' => $e->getMessage(),
-                        'file' => $fichier->getClientOriginalName()
-                    ]);
-                }
+    
+                // 1️⃣ Stockage TEMP (rapide)
+                $tempName = uniqid().'_'.$fichier->getClientOriginalName();
+                $fichier->move(storage_path('app/temp'), $tempName);
+    
+                // 2️⃣ Enregistrer en BDD (PENDING)
+                UploadPending::create([
+                    'temp_path'    => 'temp/'.$tempName,
+                    'original_name'=> $fichier->getClientOriginalName(),
+                    'final_path'   => 'assets/upload/fichiers/affaires/',
+                    'affaire_slug' => $affaire->slug,
+                ]);
             }
-        
-        } else {
-            Log::warning('⚠️ Aucun fichier reçu dans la requête');
         }
-        
     
         return redirect()
             ->route('showAffaire', [$affaire->idAffaire, $affaire->slug])
-            ->with('success', 'Affaire créée avec succès');
+            ->with('success', 'Affaire créée. Les fichiers sont en cours de traitement.');
     }
+    
     
     private function getAudienceData($audiences, $cabinet, $personne_adverses, $entreprise_adverses, $autreRoles) {
         $formattedAudiences = [];
