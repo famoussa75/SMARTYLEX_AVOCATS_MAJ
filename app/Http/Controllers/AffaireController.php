@@ -156,7 +156,7 @@ class AffaireController extends Controller
     public function store(Request $request)
     {
         dd('ok');
-
+ 
         $request->validate([
             'nom' => 'required',
             'dateOuverture' => 'required',
