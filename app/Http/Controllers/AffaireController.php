@@ -153,66 +153,68 @@ class AffaireController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function store(Request $request)
-    {
-        dd('ok');
- 
-        $request->validate([
-            'nom' => 'required',
-            'dateOuverture' => 'required',
-            'idClient' => 'required',
-            'type' => 'required',
-        ]);
-    
-        $affaire = Affaires::create([
-            'nomAffaire' => $request->nom,
-            'idClient' => $request->idClient,
-            'type' => $request->type,
-            'slug' => uniqid('aff_'),
-            'dateOuverture' => $request->dateOuverture,
-            'etat' => 'En cours',
-        ]);
-    
-        if ($request->hasFile('fichiers')) {
 
-            foreach ($request->file('fichiers') as $fichier) {
-
-    
-                // 1️⃣ Stockage TEMP (rapide)
-                $tempName = uniqid().'_'.$fichier->getClientOriginalName();
-                $fichier->move(storage_path('app/temp'), $tempName);
-    
-                try {
-                    UploadPending::create([
-                        'temp_path'     => 'temp/'.$tempName,
-                        'original_name' => $fichier->getClientOriginalName(),
-                        'final_path'    => 'assets/upload/fichiers/affaires/',
-                        'affaire_slug'  => $affaire->slug,
-                    ]);
-                } catch (\Throwable $e) {
-                
-                    // Dump direct (arrête l'exécution)
-                    dd([
-                        'message' => $e->getMessage(),
-                        'file'    => $e->getFile(),
-                        'line'    => $e->getLine(),
-                    ]);
-                
-                    // OU si tu préfères juste logger sans bloquer :
-                    // \Log::error('Erreur UploadPending', [
-                    //     'message' => $e->getMessage(),
-                    //     'file'    => $e->getFile(),
-                    //     'line'    => $e->getLine(),
-                    // ]);
-                }
-                
-            }
-        }
-    
-        return redirect()
-            ->route('showAffaire', [$affaire->idAffaire, $affaire->slug])
-            ->with('success', 'Affaire créée. Les fichiers sont en cours de traitement.');
-    }
+     public function store(Request $request)
+     { 
+         $request->validate([
+             'nom' => 'required',
+             'dateOuverture' => 'required',
+             'idClient' => 'required',
+             'type' => 'required',
+         ]);
+     
+         // 🔥 Création rapide de l'affaire
+         $affaire = Affaires::create([
+             'nomAffaire'    => $request->nom,
+             'idClient'      => $request->idClient,
+             'type'          => $request->type,
+             'slug'          => uniqid('aff_'),
+             'dateOuverture' => $request->dateOuverture,
+             'etat'          => 'En cours',
+         ]);
+     
+         // 🔥 Réponse immédiate à l'utilisateur
+         $response = redirect()
+             ->route('showAffaire', [$affaire->idAffaire, $affaire->slug])
+             ->with('success', 'Affaire créée. Les fichiers sont en cours de traitement...');
+     
+         $response->send();
+     
+         // 🔥 Hostinger = PHP-FPM → on libère la connexion
+         if (function_exists('fastcgi_finish_request')) {
+             fastcgi_finish_request();
+         }
+     
+         // 🔥 PHP continue maintenant en "arrière-plan"
+         if ($request->hasFile('fichiers')) {
+     
+             foreach ($request->file('fichiers') as $fichier) {
+     
+                 $tempName = uniqid().'_'.$fichier->getClientOriginalName();
+                 $fichier->move(storage_path('app/temp'), $tempName);
+     
+                 try {
+                     UploadPending::create([
+                         'temp_path'     => 'temp/'.$tempName,
+                         'original_name' => $fichier->getClientOriginalName(),
+                         'final_path'    => 'assets/upload/fichiers/affaires/',
+                         'affaire_slug'  => $affaire->slug,
+                     ]);
+     
+                 } catch (\Throwable $e) {
+     
+                     \Log::error('Erreur UploadPending', [
+                         'message' => $e->getMessage(),
+                         'file'    => $e->getFile(),
+                         'line'    => $e->getLine(),
+                     ]);
+                 }
+             }
+         }
+     
+         exit; // sécurité Hostinger
+     }
+     
     
     
     private function getAudienceData($audiences, $cabinet, $personne_adverses, $entreprise_adverses, $autreRoles) {
