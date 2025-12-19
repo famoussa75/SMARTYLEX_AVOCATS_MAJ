@@ -173,6 +173,8 @@ class AffaireController extends Controller
     
         if ($request->hasFile('fichiers')) {
             foreach ($request->file('fichiers') as $fichier) {
+
+                dd('ok');
     
                 // 1️⃣ Stockage TEMP (rapide)
                 $tempName = uniqid().'_'.$fichier->getClientOriginalName();
