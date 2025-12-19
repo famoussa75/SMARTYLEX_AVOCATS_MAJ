@@ -155,6 +155,8 @@ class AffaireController extends Controller
 
     public function store(Request $request)
     {
+        dd('ok');
+
         $request->validate([
             'nom' => 'required',
             'dateOuverture' => 'required',
@@ -172,7 +174,6 @@ class AffaireController extends Controller
         ]);
     
         if ($request->hasFile('fichiers')) {
-            dd('ok');
 
             foreach ($request->file('fichiers') as $fichier) {
 
