@@ -179,30 +179,13 @@ class AffaireController extends Controller
                 // 1️⃣ Stockage TEMP (rapide)
                 $tempName = uniqid().'_'.$fichier->getClientOriginalName();
                 $fichier->move(storage_path('app/temp'), $tempName);
-    
-                try {
-                    UploadPending::create([
-                        'temp_path'     => 'temp/'.$tempName,
-                        'original_name' => $fichier->getClientOriginalName(),
-                        'final_path'    => 'assets/upload/fichiers/affaires/',
-                        'affaire_slug'  => $affaire->slug,
-                    ]);
-                } catch (\Throwable $e) {
-                
-                    // Dump direct (arrête l'exécution)
-                    dd([
-                        'message' => $e->getMessage(),
-                        'file'    => $e->getFile(),
-                        'line'    => $e->getLine(),
-                    ]);
-                
-                    // OU si tu préfères juste logger sans bloquer :
-                    // \Log::error('Erreur UploadPending', [
-                    //     'message' => $e->getMessage(),
-                    //     'file'    => $e->getFile(),
-                    //     'line'    => $e->getLine(),
-                    // ]);
-                }
+
+                UploadPending::create([
+                    'temp_path'     => 'temp/'.$tempName,
+                    'original_name' => $fichier->getClientOriginalName(),
+                    'final_path'    => 'assets/upload/fichiers/affaires/',
+                    'affaire_slug'  => $affaire->slug,
+                ]);
                 
             }
         }
