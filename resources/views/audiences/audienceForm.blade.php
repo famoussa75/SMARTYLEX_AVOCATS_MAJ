@@ -196,8 +196,8 @@
                                         </div>
                                         <div class="col-md-4 cacher" id="clientContent-req" hidden>
                                             <div class="form-group">
-                                                <label for="client" class="control-label">Selectionner le
-                                                    client*
+                                                <label for="client" class="control-label required">Selectionner le
+                                                    client
                                                     :</label>
                                                 <select name="" id="clientReq" onchange="var idclient=$(this).val(); clientReqFunction(idclient)" class="form-control select2" style="width:100%" data-placeholder="Selectionner le client" >
                                                     <option value="" selected disabled>-- Choisissez --</option>
@@ -216,8 +216,8 @@
                                         <div class="col-md-4 cacher" id="affaireContent-req" hidden>
 
                                             <div class="form-group">
-                                                <label for="affaire" class="control-label">Affaire du client
-                                                    concerné*
+                                                <label for="affaire" class="control-label required">Affaire du client
+                                                    concerné
                                                     :</label>
                                                 <select data-placeholder="Affaire du client concerné" style="width: 100%;height:28px" name="" id="affaireClient-req" class="form-select select2">
 
@@ -602,8 +602,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     <div class="col-md-4 cacher" id="clientContent-` + i + `" hidden>
                         <div class="form-group">
-                            <label for="client" class="control-label">Selectionner le
-                                client*
+                            <label for="client" class="control-label required">Selectionner le
+                                client
                                 :</label>
                             <select name="formset[` + i + `][idClient]" id="client-` + i + `"
                                 class="form-control select2" style="width:100%" onchange="var id=` + i + `; var idclient=$(this).val();clientAud(idclient,id)"
@@ -964,8 +964,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
                         <div class="col-md-4 cacher" id="clientContent-` + i + `" hidden>
                             <div class="form-group">
-                                <label for="client" class="control-label">Selectionner le
-                                    client*
+                                <label for="client" class="control-label required">Selectionner le
+                                    client
                                     :</label>
                                 <select name="formset[` + i + `][idClient]" id="client-` + i + `"
                                     class="form-control select2" style="width:100%" onchange="var id=` + i + `; var idclient=$(this).val();clientAud(idclient,id)"
@@ -1325,8 +1325,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
                             <div class="col-md-4 cacher" id="clientContent-` + i + `" hidden>
                                 <div class="form-group">
-                                    <label for="client" class="control-label">Selectionner le
-                                        client*
+                                    <label for="client" class="control-label required">Selectionner le
+                                        client
                                         :</label>
                                     <select name="formset[` + i + `][idClient]" id="client-` + i + `"
                                         class="form-control select2" style="width:100%" onchange="var id=` + i + `; var idclient=$(this).val();clientAud(idclient,id)"
@@ -1687,8 +1687,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     <div class="col-md-4 cacher" id="clientContent-` + i + `" hidden>
                         <div class="form-group">
-                            <label for="client" class="control-label">Selectionner le
-                                client*
+                            <label for="client" class="control-label required">Selectionner le
+                                client
                                 :</label>
                             <select name="formset[` + i + `][idClient]" id="client-` + i + `"
                                 class="form-control select2" style="width:100%" onchange="var id=` + i + `; var idclient=$(this).val();clientAud(idclient,id)"
@@ -2049,8 +2049,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     <div class="col-md-4 cacher" id="clientContent-` + i + `" hidden>
                         <div class="form-group">
-                            <label for="client" class="control-label">Selectionner le
-                                client*
+                            <label for="client" class="control-label required">Selectionner le
+                                client
                                 :</label>
                             <select name="formset[` + i + `][idClient]" id="client-` + i + `"
                                 class="form-control select2" style="width:100%" onchange="var id=` + i + `; var idclient=$(this).val();clientAud(idclient,id)"

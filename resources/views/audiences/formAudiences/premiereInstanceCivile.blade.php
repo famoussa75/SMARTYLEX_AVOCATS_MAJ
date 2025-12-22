@@ -94,8 +94,8 @@
 
                             <div class="col-md-4 cacher" id="clientContent-0" hidden>
                                 <div class="form-group">
-                                    <label for="client" class="control-label">Selectionner le
-                                        client*
+                                    <label for="client" class="control-label required">Selectionner le
+                                        client
                                         :</label>
                                     <select name="formset[0][idClient]" id="client-0" onchange="var id=0; var idclient=$(this).val();clientAud(idclient,id)" class="form-control select2" style="width:100%" data-placeholder="Selectionner le client" >
                                         <option value="" selected disabled>-- Choisissez --</option>
@@ -115,10 +115,10 @@
                                 <input type="text" id="typeContent-0" value="audience" name="formset[0][typeContent]" hidden>
 
                                 <div class="form-group">
-                                    <label for="affaire" class="control-label">Affaire du client
-                                        concerné*
+                                    <label for="affaire" class="control-label required">Affaire du client
+                                        concerné
                                         :</label>
-                                    <select data-placeholder="Affaire du client concerné" style="width: 100%;height:28px" name="formset[0][idAffaire]" id="affaireClient-0" class="form-select select2">
+                                    <select  style="width: 100%;height:28px" name="formset[0][idAffaire]" id="affaireClient-0" class="form-select select2">
 
                                     </select>
                                     <div class="help-block with-errors"></div>

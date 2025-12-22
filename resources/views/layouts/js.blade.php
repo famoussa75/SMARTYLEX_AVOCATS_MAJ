@@ -2612,7 +2612,7 @@ function clientAud(idclient, id) {
                 $(affaireClient).append(
                     `<option value=${value.idAffaire}> ${value.nomAffaire}</option>`)
             });
-
+            $(affaireClient).trigger('change');
 
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -2725,6 +2725,7 @@ function clientReqFunction(idclient) {
                         `<option value=${value.idAffaire}> ${value.nomAffaire}</option>`)
                 });
 
+                $(affaireClient).trigger('change');
 
             },
             error: function(jqXHR, textStatus, errorThrown) {

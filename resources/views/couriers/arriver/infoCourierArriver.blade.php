@@ -216,20 +216,32 @@ setlocale(LC_TIME, 'fr_FR');
                         </div>
                         @if(empty($clientAffaire))
                         @else
-                            <div class="row">
-                                <div class="col-md-3"></div>
-                                <div class="col-md-3">
-                                <form action="{{ route('soumetreCourierArrivers') }}" method="post">
-                                    @csrf
-                                    <div class="row">
-                                        <button type="submit" class="form-control bg-primary btn-rounded">Transmettre</button>
-                                        <input type="hidden" name="slugCourier" value="{{ $courier->slug }}">
-                                    </div>
-                                </form>
-                                </div>
-                                <div class="col-md-3"></div>
-                                <br><br><br><br>
+                        <div class="row mb-4">
+                            <div class="col-md-4 mb-4">
+
+                                @if($courier->statutCourierTrasmise === 'Transmis')
+
+                                    <button class="form-control btn btn-secondary btn-rounded" disabled>
+                                        <i class="fa fa-check"></i> Courrier déjà transmis au client
+                                    </button>
+
+                                @else
+
+                                    <form action="{{ route('soumetreCourierArrivers') }}" method="post">
+                                        @csrf
+                                        <div class="row">
+                                            <button type="submit" class="form-control btn btn-primary btn-rounded">
+                                                <i class="fa fa-send"></i> Transmettre au client
+                                            </button>
+                                            <input type="hidden" name="slugCourier" value="{{ $courier->slug }}">
+                                        </div>
+                                    </form>
+
+                                @endif
+
                             </div>
+                        </div>
+
                         
                         @endif
                     </div>

@@ -235,7 +235,7 @@ class CourierArriverController extends Controller
             $courierArriver->numero = $request->numero;
             $courierArriver->objet = $request->objet;
             $courierArriver->niveau = 'Transmission';
-            $courierArriver->statutCourierTrasmise = 'Non Trasmis';
+            $courierArriver->statutCourierTrasmise = 'Non Transmis';
             $courierArriver->statut = 'Reçu';
             $courierArriver->idClient = $request->idClient;
             $courierArriver->confidentialite = $request->confidentialite;
@@ -564,6 +564,8 @@ class CourierArriverController extends Controller
 
     public function soumetre(Request $request)
     {
+
+
         $slug = $request->input('slugCourier');
         
         // Récupération du courrier + client + affaire
@@ -601,12 +603,14 @@ class CourierArriverController extends Controller
         $nom    = $courierClient->nomClient;
     
         try {
+
+
             $mail = new PHPMailer(true);
             $mail->isSMTP();
             $mail->SMTPDebug = 0;
             $mail->Host       = $serveurEmail->host;
             $mail->SMTPAuth   = true;
-            $mail->Username   = $cabinet->emailFinance;
+            $mail->Username   = $cabinet->emailContact;
             $mail->Password   = $cabinet->cleFinance;
             $mail->SMTPSecure = $serveurEmail->smtpSecure;
             $mail->Port       = $serveurEmail->smtpPort;
@@ -618,7 +622,7 @@ class CourierArriverController extends Controller
                 ],
             ];
     
-            $mail->setFrom($cabinet->emailFinance, $cabinet->nomCabinet);
+            $mail->setFrom($cabinet->emailContact, $cabinet->nomCabinet);
             $mail->addAddress($email, "$prenom $nom");
             $mail->addAddress($cabinet->emailContact);
     
@@ -668,10 +672,19 @@ class CourierArriverController extends Controller
                 \Log::error("Erreur envoi mail : " . $mail->ErrorInfo);
                 return back()->with('error', "Échec de l'envoi de la notification au client.");
             }
-    
-            return back()->with('success', "Notification envoyée au client ($prenom $nom) concernant « $objet ».");
+            
+            DB::update(
+                "UPDATE courier_arrivers SET statutCourierTrasmise = ? WHERE slug = ?",
+                ['Transmis', $slug]
+            );
+                        
+
+            return back()->with('success', 'Notification envoyé !');
+
         } catch (Exception $e) {
+
             \Log::error("Exception PHPMailer : " . $e->getMessage());
+
             return back()->with('error', "Erreur interne lors de l'envoi du mail : " . $e->getMessage());
         }
     }
