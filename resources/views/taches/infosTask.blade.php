@@ -715,7 +715,7 @@
                                 <div class="card-body">
                                     <div class="row mrg-0">
                                         <div class="col-sm-12">
-                                            <label for="personne" class="control-label"> selectionner les personnes
+                                            <label for="personne" class="control-label required"> selectionner les personnes
                                                 concernés pour la tâche</label>
                                             <div class="form-group">
                                                 <select multiple="" name="idPersonnel[]" class="form-control select2"
@@ -777,11 +777,11 @@
                                     </h4>
                                 </div>
                                 <div class="card-body">
-                                    <label for="description">Description (Obligatoire)</label>
+                                    <label for="description required">Description (Obligatoire)</label>
                                     <textarea name="description" class="form-control" id="" cols="30"
                                         placeholder="Saisissez quelques mots pour plus de details..." rows="10"
                                         required></textarea>
-                                    <label for="heureDebut" class="control-label mt-3" id="labeltime">Temps
+                                    <label for="heureDebut" class="control-label required mt-3" id="labeltime">Temps
                                         d'execution</label>
                                     <div class="row">
                                         <div class="col-md-6">
@@ -870,7 +870,7 @@
                                 <div class="row mrg-0">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="iputP" class="control-label">Nom de la tâche :</label>
+                                            <label for="iputP" class="control-label required">Nom de la tâche :</label>
                                             <input type="text" class="form-control" id="iputP"
                                                 data-error=" veillez saisir le nom de la tâche" name="titre" required
                                                 placeholder="" style="color:blue;" value="{{ $tache[0]->titre }}">
@@ -918,7 +918,7 @@
                                 <div class="row mrg-0">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="inputN" class="control-label">Date début de la tâche :</label>
+                                            <label for="inputN" class="control-label required">Date début de la tâche :</label>
                                             <input type="date" class="dateDebutTa form-control" id="inputN"
                                                 name="dateDebut" data-error=" veillez saisir la date début de la tâche"
                                                 required placeholder="" style="color:blue;"
@@ -930,7 +930,7 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="datepicker" class="control-label">Date fin de la tâche :</label>
+                                            <label for="datepicker" class="control-label required">Date fin de la tâche :</label>
                                             <input type="date" class="dateFinTa form-control" id="datepicker"
                                                 name="dateFin" data-error=" veillez saisir la date de fin de la tâche"
                                                 required placeholder="" style="color:blue;"
@@ -959,7 +959,7 @@
                                     @else
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="client" class="control-label">Selectionner le client :</label>
+                                            <label for="client" class="control-label required">Selectionner le client :</label>
                                             <select class="form-control" data-placeholder="selectionner le client"
                                                 style="width: 100%;" name="idClient" id="client" required
                                                 style="color:blue">
@@ -975,7 +975,7 @@
                                     @endif
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="desc" class="control-label">Point :</label>
+                                            <label for="desc" class="control-label required">Point :</label>
                                             <input type="number" name="point" min="1" class="form-control"
                                                 style="height:30px" required placeholder="" style="color:blue;"
                                                 value="{{ $tache[0]->point }}">
@@ -989,7 +989,7 @@
                                 <div class="row mrg-0">
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label for="aff" class="control-label">Affaire :</label>
+                                            <label for="aff" class="control-label required">Affaire :</label>
                                             <select class="form-control select2"
                                                 data-placeholder="selectionner une affaire" style="width: 100%;"
                                                 name="idAffaire" id="aff" required style="color:blue;">
@@ -1005,7 +1005,7 @@
                                 <div class="row mrg-0">
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label for="desc" class="control-label">Description de la tâche :</label>
+                                            <label for="desc" class="control-label required">Description de la tâche :</label>
                                             <textarea class="form-control" id="desc" rows="3" name="description"
                                                 placeholder="" data-error=" veillez saisir une description de la tâche"
                                                 required style="color:blue;">

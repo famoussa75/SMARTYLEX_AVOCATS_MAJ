@@ -46,8 +46,7 @@
         <div class="col-md-12 col-sm-12">
             <div class="card">
                 <!-- form start -->
-                <form class="padd-20" method="post" action=" {{ route('storeCourierArriver')}}"
-                    enctype="multipart/form-data">
+                <form class="padd-20" method="post" action=" {{ route('storeCourierArriver')}}" enctype="multipart/form-data">
 
                     @csrf
 
@@ -55,11 +54,11 @@
                         <div class="col-sm-2">
                             <div class="form-group">
                                 <label for="inputPName" class="control-label">N° ordre :</label>
-                                <input type="text" class="form-control" id="inputPName" value="{{ $numero }}"
-                                    name="numero" readOnly>
+                                <input type="text" class="form-control" id="inputPName" value="{{ $numero }}" name="numero" readOnly>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
+
                         @if(Auth::user()->role=='Administrateur')
                         <div class="col-md-5">
                             <div class="form-group" style="margin-left:50px">
@@ -69,69 +68,70 @@
                                         <label class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" name="confidentialite">
                                             <span class="custom-control-indicator"></span>
-                                            <span class="custom-control-description">Activer/Désactiver la
-                                                confidentialité</span>
+                                            <span class="custom-control-description">Activer/Désactiver la confidentialité</span>
                                         </label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         @endif
+
                         <div class="col-md-5 mb-4">
                             <div class="form-group">
-                                <label for="">Lié à un ou plusieurs courriers arrivé/départ</label>
-                                <select class="form-control select2" style="width: 100%;" name="idCourierLier[]"
-                                    id="preparant" multiple required>
-
+                                <label for="" class="required">Lié à un ou plusieurs courriers arrivé/départ</label>
+                                <select class="form-control select2" style="width: 100%;" name="idCourierLier[]" id="preparant" multiple required>
                                     <option value=0>-- Ne pas lier --</option>
                                     @foreach ($courierArrivers as $row)
-                                    <option value="{{ $row->slug }}">Courrier-Arrivé N° {{ $row->numero }} - {{$row->objet}}</option>
+                                        <option value="{{ $row->slug }}">Courrier-Arrivé N° {{ $row->numero }} - {{$row->objet}}</option>
                                     @endforeach
                                     @foreach ($courierDeparts as $row2)
-                                    <option value="{{ $row2->slug }}">Courrier-Départ N° {{ $row2->numCourier }} - {{$row->objet}}
-                                    </option>
+                                        <option value="{{ $row2->slug }}">Courrier-Départ N° {{ $row2->numCourier }} - {{$row->objet}}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                     </div>
+
                     <div class="row mrg-0">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="inputPName" class="control-label">Expéditeur :</label>
+                                <label for="inputPName" class="control-label required">Expéditeur :</label>
                                 <input type="text" class="form-control" id="inputPName" placeholder="nom expéditeur "
                                     data-error=" veillez saisir le nom expéditeur" name="expediteur" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
+
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="inputEmail" class="control-label">Date du courrier :</label>
+                                <label for="inputEmail" class="control-label required">Date du courrier :</label>
                                 <input type="date" class="form-control" id="inputEmail" name="dateCourier"
                                     data-error=" veillez saisir la date du courrier" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                     </div>
+
                     <div class="row mrg-0">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="inputEmail" class="control-label">Date d'arrivée :</label>
+                                <label for="inputEmail" class="control-label required">Date d'arrivée :</label>
                                 <input type="date" class="form-control" id="inputEmail" name="dateArriver"
                                     data-error=" veillez saisir la date arriver du courrier" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
+
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="inputPName" class="control-label">Objet : </label>
+                                <label for="inputPName" class="control-label required">Objet :</label>
                                 <textarea class="form-control" id="desc" rows="1" name="objet"
-                                    data-error=" veillez saisir objet du courrier" required></textarea>
+                                        data-error=" veillez saisir objet du courrier" required></textarea>
                             </div>
                             <div class="help-block with-errors"></div>
                         </div>
-
                     </div>
+
                     <div class="row mrg-0">
                         <div class="col-sm-6">
                             <div class="row ">
@@ -143,6 +143,7 @@
                                         <span class="custom-control-description"> Courrier Cabinet </span>
                                     </label>
                                 </div>
+
                                 <div class="col-md-4">
                                     <label class="custom-control custom-radio">
                                         <input id="radioStacked2" name="categorie" type="radio"
@@ -154,35 +155,33 @@
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row mrg-0">
 
+                    <hr>
+
+                    <div class="row mrg-0">
                         <div class="col-md-6">
                             <div class="form-group" id="clientSelect">
                                 <label class="control-label">Selectionner le client :</label>
                                 <select class="form-control select2" name="idClient" style="width: 100%;" id="client">
                                     <option value="" selected disabled>-- Choisissez --</option>
                                     @foreach ($client as $data )
-                                    <option value={{ $data->idClient }}>{{ $data->prenom }} {{ $data->nom }}
-                                        {{ $data->denomination }}
-                                    </option>
+                                        <option value={{ $data->idClient }}>{{ $data->prenom }} {{ $data->nom }} {{ $data->denomination }}</option>
                                     @endforeach
                                 </select>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
+
                         <div class="col-md-6" id="affaireContent" hidden>
                             <input type="text" id="typeContent" value="courier arriver" name="typeContent" hidden>
 
                             <div class="form-group">
                                 <label for="affaire" class="control-label">Affaire du client concerné :</label>
-                                <select class="form-select select2" style="width: 100%; height:28px" name="idAffaire" id="affaireClient">
-
-                                </select>
+                                <select class="form-select select2" style="width: 100%; height:28px" name="idAffaire" id="affaireClient"></select>
                                 <div class="help-block with-errors"></div>
                             </div>
-
                         </div>
+
                         <div class="form-group">
                             <label>
                                 <input type="radio" id="signifie" name="notification" value="signifie" class="radio-sm">
@@ -195,45 +194,47 @@
                             </label>
                         </div>
 
-                    <div class="row mb-4">
-                        <div class="col-md-12">
-                            <div class="" id="huissierField" style="display: none;">
-                                <div class="form-group">
-                                    <label for="inputPr" class="control-label">Huissier :</label>
-                                    <select class="form-control select2" data-placeholder="Rechercher..." style="width: 100%;" name="idHuissier" >
-                                        <option value="" selected disabled>-- Choisissez --</option>
-                                        @foreach ($huissier as $huissiers)
-                                        <option value="{{ $huissiers->prenomHss }} {{ $huissiers->nomHss }}">
-                                            {{ $huissiers->prenomHss }} {{ $huissiers->nomHss }}
-                                        </option>
-                                    @endforeach
-                                    </select>
-                                    <div class="help-block with-errors"></div>
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div id="huissierField" style="display: none;">
+                                    <div class="form-group">
+                                        <label for="inputPr" class="control-label">Huissier :</label>
+                                        <select class="form-control select2" data-placeholder="Rechercher..." style="width: 100%;" name="idHuissier">
+                                            <option value="" selected disabled>-- Choisissez --</option>
+                                            @foreach ($huissier as $huissiers)
+                                                <option value="{{ $huissiers->prenomHss }} {{ $huissiers->nomHss }}">
+                                                    {{ $huissiers->prenomHss }} {{ $huissiers->nomHss }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
                     </div>
+
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="">Importer un fichier</label>
-                            <input type="file" class="fichiers form-control" name="fichiers[]" id="files" multiple
-                                required>
+                            <label for="" class="required">Importer un fichier</label>
+                            <input type="file" class="fichiers form-control" name="fichiers[]" id="files" multiple required>
                         </div>
                     </div>
-
 
                     <div class="row mrg-0" style="margin-top: 10px;">
                         <div class="col-12">
                             <div class="form-group">
                                 <div class="text-center">
-                                    <button type="submit" class="theme-bg btn btn-rounded btn-block"><i class="fa fa-save"></i> Enregistrer</button>
+                                    <button type="submit" class="theme-bg btn btn-rounded btn-block">
+                                        <i class="fa fa-save"></i> Enregistrer
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>

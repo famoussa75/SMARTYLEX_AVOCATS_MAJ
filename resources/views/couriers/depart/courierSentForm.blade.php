@@ -45,8 +45,8 @@
     </div>
     @endif
     <div class="col-md-12 container-fluid">
-        <!-- form start -->
-        <form class="" method="post" action=" {{ route('storeCourierDepart') }}" enctype="multipart/form-data">
+      <!-- form start -->
+        <form class="" method="post" action="{{ route('storeCourierDepart') }}" enctype="multipart/form-data">
             @csrf
             <div class="col-md-12 col-sm-12">
                 <div class="card padd-20">
@@ -54,20 +54,18 @@
                     <hr>
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label>Type de courrier</label>
+                            <label class="required">Type de courrier</label>
                             <div class="row" style="background-color: white;padding-top:5px;">
                                 <div class="col-md-4">
                                     <label class="custom-control custom-radio">
-                                        <input id="radioStacked1" val="Cabinet" name="categorie" type="radio"
-                                            class="custom-control-input">
+                                        <input id="radioStacked1" val="Cabinet" name="categorie" type="radio" class="custom-control-input" required>
                                         <span class="custom-control-indicator"></span>
                                         <span class="custom-control-description"> Courrier Cabinet </span>
                                     </label>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="custom-control custom-radio">
-                                        <input id="radioStacked2" name="categorie" type="radio"
-                                            class="custom-control-input">
+                                        <input id="radioStacked2" name="categorie" type="radio" class="custom-control-input" required>
                                         <span class="custom-control-indicator"></span>
                                         <span class="custom-control-description"> Courrier Client</span>
                                     </label>
@@ -77,8 +75,8 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>Choisir un modèle</label>
-                            <select class="form-control select2 " id="typeModel" name="typeModel" style="width: 100%;">
+                            <label class="required">Choisir un modèle</label>
+                            <select class="form-control select2" id="typeModel" name="typeModel" style="width: 100%;" required>
                                 <option value="aucun" selected="selected">Aucun</option>
                                 <option value="LT">Lettre de transmission APIP</option>
                                 <option value="LCP">Lettre de constitution ( personne physique )</option>
@@ -86,14 +84,13 @@
                                 <option value="DAP">Déclaration d'appel ( Personne physique )</option>
                                 <option value="DAS">Déclaration d'appel ( société )</option>
                                 <option value="LDC">Lettre de demande d'ouverture de compte bancaire</option>
-
                             </select>
                         </div>
                     </div>
                     @if(Auth::user()->role=='Administrateur')
                     <div class="col-md-6 mb-4">
                         <div class="form-group">
-                        <label for="">Confidentialité</label>
+                            <label for="">Confidentialité</label>
                             <div class="row" style="background-color: white;padding-top:15px;padding-left:15px;">
                                 <div class="form-group has-warning">
                                     <label class="custom-control custom-checkbox">
@@ -108,20 +105,18 @@
                     @endif
                     <div class="col-md-6 mb-4">
                         <div class="form-group">
-                            <label for="">Lié à un ou plusieurs courriers arrivé/départ</label>
+                            <label class="required">Lié à un ou plusieurs courriers arrivé/départ</label>
                             <select class="form-control select2" style="width: 100%;" name="idCourierLier[]" id="preparant" multiple required>
-                            
-                                    <option value=0>-- Ne pas lier --</option>
-                                    @foreach ($courierArrivers as $row)
-                                    <option value="{{ $row->slug }}">Courrier-Arrivé N° {{ $row->numero }} - {{ $row->objet }}</option>
-                                    @endforeach 
-                                    @foreach ($courierDeparts as $row2)
-                                    <option value="{{ $row2->slug }}">Courrier-Départ N° {{ $row2->numCourier }} - {{ $row->objet }}</option>
-                                    @endforeach
+                                <option value=0>-- Ne pas lier --</option>
+                                @foreach ($courierArrivers as $row)
+                                <option value="{{ $row->slug }}">Courrier-Arrivé N° {{ $row->numero }} - {{ $row->objet }}</option>
+                                @endforeach 
+                                @foreach ($courierDeparts as $row2)
+                                <option value="{{ $row2->slug }}">Courrier-Départ N° {{ $row2->numCourier }} - {{ $row->objet }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="card padd-20">
@@ -131,37 +126,33 @@
                     <div class="row mrg-0">
                         <div class="col-sm-2">
                             <div class="form-group">
-                                <label for="inputPName" class="control-label">N° du courrier: </label>
-                                <input type="number" name="idCourier" class="form-control" value="{{$idCourier}}"
-                                    readonly>
+                                <label class="required" for="inputPName">N° du courrier: </label>
+                                <input type="number" name="idCourier" class="form-control" value="{{$idCourier}}" readonly>
                             </div>
                         </div>
                     </div>
                     <div class="row mrg-0">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="inputPName" class="control-label">Destinataire :</label>
-                                <input type="text" class="form-control" id="destinataire" placeholder=" "
-                                    data-error=" veillez saisir le nom du destinataire" name="destinataire" required>
+                                <label class="required" for="inputPName">Destinataire :</label>
+                                <input type="text" class="form-control" id="destinataire" placeholder=" " data-error=" veillez saisir le nom du destinataire" name="destinataire" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="inputEmail" class="control-label">Date du courrier :</label>
-                                <input type="date" class="form-control" id="dateCourier" name="dateCourier"
-                                    data-error=" veillez saisir la date du courrier" required>
+                                <label class="required" for="inputEmail">Date du courrier :</label>
+                                <input type="date" class="form-control" id="dateCourier" name="dateCourier" data-error=" veillez saisir la date du courrier" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
+                    </div>
 
-                    </div>
                     <div class="row mrg-0">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">Projet préparé par :</label>
-                                <select class="form-control select2" style="width: 100%;" name="idPersonnel"
-                                    id="preparant" required>
+                                <label class="required">Projet préparé par :</label>
+                                <select class="form-control select2" style="width: 100%;" name="idPersonnel" id="preparant" required>
                                     <option value="" selected disabled>-- Choisissez --</option>
                                     @foreach ($personnels as $row)
                                     <option value={{ $row->idPersonnel }}>{{ $row->prenom }} {{ $row->nom }}</option>
@@ -171,21 +162,19 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">Signataire (Administrateurs) :</label>
-                                <select class="form-control select2" style="width: 100%;" name="idAmin" id="admin"
-                                    required>
+                                <label class="required">Signataire (Administrateurs) :</label>
+                                <select class="form-control select2" style="width: 100%;" name="idAmin" id="admin" required>
                                     <option value="" selected disabled>-- Choisissez --</option>
                                     @foreach ($admins as $row)
-                                    <option value={{ $row->id }}>{{ $row->name }}
-                                    <option>
-                                        @endforeach
+                                    <option value={{ $row->id }}>{{ $row->name }}</option>
+                                    @endforeach
                                 </select>
                                 <input type="hidden" name="signataire" id="signataire">
                             </div>
                         </div>
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="inputPName" class="control-label">Objet : </label>
+                                <label class="required" for="inputPName">Objet : </label>
                                 <input type="text" id="desc" name="objet" class="form-control" required>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -193,9 +182,8 @@
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">Est-ce une lettre d'appel ? :</label>
-                                <select class="form-control select2" style="width: 100%;" name="slugSuivitAudience"
-                                    id="preparant" required>
+                                <label class="required">Est-ce une lettre d'appel ? :</label>
+                                <select class="form-control select2" style="width: 100%;" name="slugSuivitAudience" id="preparant" required>
                                     <option value="" selected disabled>-- Selectionner la décision --</option>
                                     <option value="">-- NON --</option>
                                     @foreach ($suiviAudiences as $row)
@@ -210,13 +198,11 @@
                     <div class="row mrg-0 mb-4">
                         <div class="col-md-6">
                             <div class="form-group" id="clientSelect">
-                                <label>Selectionner le client :</label>
-                                <select class="form-control select2" name="idClient" style="width: 100%;" id="client">
+                                <label class="required">Selectionner le client :</label>
+                                <select class="form-control select2" name="idClient" style="width: 100%;" id="client" required>
                                     <option value="" selected disabled>-- Choisissez --</option>
                                     @foreach ($clients as $client)
-                                    <option value={{ $client->idClient }}>{{ $client->prenom  }}
-                                        {{ $client->nom }} {{ $client->denomination }}
-                                    </option>
+                                    <option value={{ $client->idClient }}>{{ $client->prenom }} {{ $client->nom }} {{ $client->denomination }}</option>
                                     @endforeach
                                 </select>
                                 <div class="help-block with-errors"></div>
@@ -226,69 +212,64 @@
                         <div class="col-md-6" id="affaireContent" hidden>
                             <div class="form-group">
                                 <label>Affaire du client concerné :</label>
-                                <select class="form-control select2" style="width: 100%;" name="idAffaire"
-                                    id="affaireClient">
-
-                                </select>
+                                <select class="form-control select2" style="width: 100%;" name="idAffaire" id="affaireClient"></select>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
 
                         <div class="col-md-6" id="piece">
                             <div class="form-group">
-                                <label for="">Joindre un fichier</label>
-                                <input type="file" class="fichiers form-control" name="fichiers[]" id="file" multiple
-                                    required>
+                                <label class="required" for="">Joindre un fichier</label>
+                                <input type="file" class="fichiers form-control" name="fichiers[]" id="file" multiple required>
                             </div>
                         </div>
                     </div>
                     <div class="row mrg-0 mb-4" id="partieAdverseDiv">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Assigner par :</label>
-                                <input type="text" id="partieAdverse" name="partieAdverse" class="form-control"
-                                    required>
+                                <label class="required">Assigner par :</label>
+                                <input type="text" id="partieAdverse" name="partieAdverse" class="form-control" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Motif :</label>
+                                <label class="required">Motif :</label>
                                 <input type="text" id="motif" name="motif" class="form-control" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-
                     </div>
+
                     <div class="row mrg-0 mb-4" id="appelDiv">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>jugement :</label>
+                                <label class="required">jugement :</label>
                                 <input type="text" id="jugement" name="jugement" class="form-control" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Cour d'appel de :</label>
+                                <label class="required">Cour d'appel de :</label>
                                 <input type="text" id="courAppel" name="courAppel" class="form-control" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-
                     </div>
+
                     <div class="row mrg-0 mb-4" id="dateProcesDiv">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="inputEmail" class="control-label">Date du procès-verbal :</label>
-                                <input type="date" class="form-control" id="dateProcesVerbal" name="dateProcesVerbal"
-                                    required>
+                                <label class="required" for="inputEmail">Date du procès-verbal :</label>
+                                <input type="date" class="form-control" id="dateProcesVerbal" name="dateProcesVerbal" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                     </div>
-
                 </div>
+
+                <!-- models div remains unchanged -->
                 <div id="models">
                     <div class="card" style="padding: 100px;" id="lettreTransmissionForm" hidden>
                         <div class="col-md-4">
@@ -593,8 +574,8 @@
                     </div>
                 </div>
             </div>
-
         </form>
+
     </div>
 
 </div>

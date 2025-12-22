@@ -45,7 +45,7 @@
         <div class="col-md-12 col-sm-12">
             <div class="card">
                 <!-- form start -->
-                <form   id="myForm" class="padd-20" method="post" action="{{ route('storeAffaire') }}" enctype="multipart/form-data">
+                <form  id="myForm" class="padd-20" method="post" action="{{ route('storeAffaire') }}" enctype="multipart/form-data">
                     <div class="text-center">
                         <h2>Nouvelle Affaire</h2>
                         <br>
@@ -54,45 +54,48 @@
                     <div class="row mrg-0">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="inputPName" class="control-label">Nom de l'affaire </label>
-                                <input type="text" class="form-control" id="inputPName"  data-error=" veillez saisir le nom de l'affaire" name="nom" required>
+                                <label for="inputPName" class="control-label required">Nom de l'affaire </label>
+                                <input type="text" class="form-control" id="inputPName" data-error=" veillez saisir le nom de l'affaire" name="nom" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="inputEmail" class="control-label">Date d'Ouverture</label>
+                                <label for="inputEmail" class="control-label required">Date d'Ouverture</label>
                                 <input type="date" class="form-control" id="inputEmail" name="dateOuverture" data-error=" veillez saisir la date d'ouverture" required>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                     </div>
+
                     <div class="row mrg-0">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Selectionner le client</label>
+                                <label class="required">Selectionner le client</label>
                                 <select class="form-control select2" name="idClient" style="width: 100%;" required>
-                                     <option value="" selected disabled>-- Choisissez --</option>
+                                    <option value="" selected disabled>-- Choisissez --</option>
                                     @foreach ($client as $data )
-                                    <option value={{ $data->idClient }}>
-                                           {{$data->prenom}} {{$data->nom}} {{$data->denomination}}
-                                    </option>
+                                        <option value={{ $data->idClient }}>
+                                            {{$data->prenom}} {{$data->nom}} {{$data->denomination}}
+                                        </option>
                                     @endforeach
                                 </select>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
+
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="type" class="control-label">Type affaire</label>
+                                <label for="type" class="control-label required">Type affaire</label>
                                 <select class="form-control select2" id="type" name="type" style="width: 100%;" required>
-                                     <option value="" selected disabled>-- Choisissez --</option>
+                                    <option value="" selected disabled>-- Choisissez --</option>
                                     <option value="Contentieux">Contentieux</option>
                                     <option value="Conseil">Conseil</option>
                                 </select>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
+
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="type" class="control-label">Piece(s) jointe(s) ( Facultatif )</label>
@@ -100,17 +103,21 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
+
                         @if (sizeof($client) > 0)
-                        <div class="col-12 mt-5">
-                            <div class="theme-cl form-group">
-                                <div class="text-center">
-                                    <button type="submit" class="theme-bg btn btn-rounded"><i class="fa fa-save"></i> Enregistrer</button>
+                            <div class="col-12 mt-5">
+                                <div class="theme-cl form-group">
+                                    <div class="text-center">
+                                        <button type="submit" class="theme-bg btn btn-rounded">
+                                            <i class="fa fa-save"></i> Enregistrer
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         @endif
                     </div>
                 </form>
+
             </div>
         </div>
     </div>

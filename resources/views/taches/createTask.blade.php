@@ -324,7 +324,7 @@
                         @else
                         <div role="tabpanel" class="tab-pane active" id="Section1">
                             <div class="card" style="padding: 10px;">
-                                <!-- form start -->
+                               <!-- form start -->
                                 <form method="post" action="{{ route('addTask') }}" accept-charset="utf-8" enctype="multipart/form-data">
                                     @csrf
                                     <input type="text" name="categorie" class="categorie" hidden>
@@ -336,48 +336,41 @@
                                     <input type="hidden" name="idSuivitRequete" value="{{$idSuivitRequete}}">
 
                                     <div class="row mrg-0">
-                                        
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="R" class="control-label">Type de tâche :</label><br>
+                                                <label for="R" class="control-label required">Type de tâche :</label><br>
                                                 <select class="form-select select2" style="width:100%;height:35px" name="idTypeTache" id="typeTache" required>
-                                                   
                                                     <option value="" selected disabled>-- Choisissez --</option>
                                                     @foreach($typeTaches as $t)
                                                         @if($t->idTypeTache != 0)
                                                         <option value={{$t->idTypeTache}} data-type="{{$t->descriptionType}}">{{$t->descriptionType}}</option>
                                                         @endif
                                                     @endforeach
-
                                                 </select>
                                                 <div class="help-block with-errors"></div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group" id="divNomTache">
-                                                <label for="inputP" class="control-label">Nom de la tâche :</label>
+                                                <label for="inputP" class="control-label required">Nom de la tâche :</label>
                                                 <input type="text" class="form-control" id="nomTache" placeholder="saisir le nom de la tâche" data-error=" veillez saisir le nom de la tâche" name="titre" required>
                                                 <div class="help-block with-errors"></div>
                                             </div>
                                         </div>
-
                                     </div>
 
                                     @if($tacheAff==false)
                                     <div class="row mrg-0 tacheSimpleClient">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="client" class="control-label">Selectionner le client:</label>
-
-                                                <select class="form-control  select2" data-placeholder="selectionner le client" style="width: 100%;" name="idClient" id="client" required>
-
+                                                <label for="client" class="control-label required">Selectionner le client:</label>
+                                                <select class="form-control select2" data-placeholder="selectionner le client" style="width: 100%;" name="idClient" id="client" required>
                                                     <option value="" selected disabled>-- Choisissez --</option>
                                                     @foreach ($clients as $data )
                                                     <option value={{ $data->idClient }}>
                                                         {{$data->prenom}} {{$data->nom}} {{$data->denomination}}
                                                     </option>
                                                     @endforeach
-
                                                 </select>
                                                 <div class="help-block with-errors"></div>
                                             </div>
@@ -385,26 +378,20 @@
                                         <div class="col-md-6" id="affaireContent" hidden>
                                             <input type="text" id="typeContent" value="taches" name="typeContent" hidden>
                                             <div class="form-group">
-                                                <label for="affaire" class="control-label">Affaire du client concerné
-                                                    :</label>
+                                                <label for="affaire" class="control-label required">Affaire du client concerné :</label>
                                                 <select class="form-control select2" data-placeholder="Affaire du client concerné" style="width: 100%;" name="idAffaire" id="affaireClient" required>
                                                     <option value="" selected disabled>-- Choisissez --</option>
                                                 </select>
                                                 <div class="help-block with-errors"></div>
                                             </div>
-
                                         </div>
-
                                     </div>
                                     @else
                                     <div class="row mrg-0 tacheSimpleClient">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="client" class="control-label">Selectionner le client
-                                                    :</label>
-
+                                                <label for="client" class="control-label">Selectionner le client :</label>
                                                 <select class="form-control select2" data-placeholder="selectionner le client" style="width: 100%;" name="idClient" id="client">
-
                                                     @foreach ($clients as $data )
                                                     <option value={{ $data->idClient }}>
                                                         {{$data->prenom}} {{$data->nom}} {{$data->denomination}}
@@ -417,8 +404,7 @@
                                         <div class="col-md-6" id="affaireContent">
                                             <input type="text" id="typeContent" value="taches" name="typeContent" hidden>
                                             <div class="form-group">
-                                                <label for="affaire" class="control-label">Affaire du client concerné
-                                                    :</label>
+                                                <label for="affaire" class="control-label">Affaire du client concerné :</label>
                                                 <select class="form-control select" data-placeholder="Affaire du client concerné" style="width: 98%;margin-left:-8px" name="idAffaire" >
                                                     @foreach ($affaire as $aff)
                                                     <option value="{{ $aff->idAffaire }}">{{ $aff->nomAffaire }}</option>
@@ -426,290 +412,14 @@
                                                 </select>
                                                 <div class="help-block with-errors"></div>
                                             </div>
-
                                         </div>
-
                                     </div>
                                     @endif
-
-                                    <div class="row col-md-12" id="tacheEntreprise" hidden>
-                                        <p class="col-md-12" style="text-align: center;"><i class="fa fa-info-circle"></i> La tâche <b>Creation d'entreprise</b> comporte plusieurs taches successives</p>
-                                        <div class="col-md-6 col-sm-12">
-                                            <div class="card padd-15">
-                                                <div class="panel-group accordion-stylist" id="accordion" role="tablist" aria-multiselectable="true">
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading" role="tab" id="headingOne">
-                                                            <h4 class="panel-title">
-                                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="">
-                                                                    Tache 1
-                                                                </a>
-                                                            </h4>
-                                                        </div>
-                                                        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                                                            <div class="panel-body">
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Titre</label>
-                                                                    <input type="text" class="form-control" value="Rédaction du PV et les Statuts" name="titre1">
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Description</label>
-                                                                    <textarea name="desc1"  cols="40" rows="5" class="form-control">2 exemplaires originaux du PV ; 2 exemplaires originaux des statuts ;Signature des PV et les statuts.</textarea>
-                                                                </div>
-                                                                <div class="row col-md-12">
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Délais (Jours)</label>
-                                                                        <input type="number" min="1" name="delais1" value="2" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Point</label>
-                                                                        <input type="number" min="1" value="5" name="point1" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading" role="tab" id="headingTwo">
-                                                            <h4 class="panel-title">
-                                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                                    Tache 2
-                                                                </a>
-                                                            </h4>
-                                                        </div>
-                                                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                                            <div class="panel-body">
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Titre</label>
-                                                                    <input type="text" class="form-control" name="titre2" value="Enregistrement des PV et Statuts à l’impôt">
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Description</label>
-                                                                    <textarea name="desc2"  cols="40" rows="5" class="form-control">Achat des timbres fiscaux ; Dépôt de 2 exemplaires des PV et Statuts signés et timbrés à l’impôt.</textarea>
-                                                                </div>
-                                                                <div class="row col-md-12">
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Délais (Jours)</label>
-                                                                        <input type="number" min="1" name="delais2" value="2" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Point</label>
-                                                                        <input type="number" min="1" name="point2" value="5" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading" role="tab" id="headingThree">
-                                                            <h4 class="panel-title">
-                                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                                                    Tache 3
-                                                                </a>
-                                                            </h4>
-                                                        </div>
-                                                        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                                                            <div class="panel-body">
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Titre</label>
-                                                                    <input type="text" name="titre3" value="Ouverture de compte bancaire pour la société en formation" class="form-control">
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Description</label>
-                                                                    <textarea name="desc3"  cols="40" rows="5" class="form-control">Signature des documents bancaires par le ou les gérants ;Rédaction de la lettre d’ouverture de compte ; Une copie des PV et Statuts ; 2 photos d’identité du ou des gérants ; Une copie de la carte d’identité ou passeport du ou des gérants ; Un certificat de résidence du ou des gérants ;</textarea>
-                                                                </div>
-                                                                <div class="row col-md-12">
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Délais (Jours)</label>
-                                                                        <input type="number" name="delais3" min="1" value="1" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Point</label>
-                                                                        <input type="number" name="point3" min="1" value="5" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading" role="tab" id="headingFour">
-                                                            <h4 class="panel-title">
-                                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                                                    Tache 4
-                                                                </a>
-                                                            </h4>
-                                                        </div>
-                                                        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-                                                            <div class="panel-body">
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Titre</label>
-                                                                    <input type="text" class="form-control" name="titre4" value="Libération du capital social">
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Description</label>
-                                                                    <textarea name="desc4"  cols="40" rows="5" class="form-control"></textarea>
-                                                                </div>
-                                                                <div class="row col-md-12">
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Délais (Jours)</label>
-                                                                        <input type="number" name="delais4" min="1" value="2" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Point</label>
-                                                                        <input type="number" name="point4" min="1" value="5" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-12">
-                                            <div class="card padd-15">
-                                                <div class="panel-group accordion-stylist" id="accordion" role="tablist" aria-multiselectable="true">
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading" role="tab" id="headingOne">
-                                                            <h4 class="panel-title">
-                                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive" class="">
-                                                                    Tache 5
-                                                                </a>
-                                                            </h4>
-                                                        </div>
-                                                        <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                                                            <div class="panel-body">
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Titre</label>
-                                                                    <input type="text" name="titre5" class="form-control" value="Délivrance de l’attestation du dépôt de capital social">
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Description</label>
-                                                                    <textarea name="desc5"  cols="40" rows="5" class="form-control"></textarea>
-                                                                </div>
-                                                                <div class="row col-md-12">
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Délais (Jours)</label>
-                                                                        <input type="number" min="1" name="delais5" value="4" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Point</label>
-                                                                        <input type="number" min="1" name="point5" value="5" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading" role="tab" id="headingTwo">
-                                                            <h4 class="panel-title">
-                                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-                                                                    Tache 6
-                                                                </a>
-                                                            </h4>
-                                                        </div>
-                                                        <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                                            <div class="panel-body">
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Titre</label>
-                                                                    <input type="text" class="form-control" name="titre6" value="Création de la société sur la plateforme de l’APIP (SYNERGUI)">
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Description</label>
-                                                                    <textarea name="desc6"  cols="40" rows="5" class="form-control">Scanne de tout le fond de dossier ; dépôt ; Caisse ; saisie suivie de la soumission.</textarea>
-                                                                </div>
-                                                                <div class="row col-md-12">
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Délais (Jours)</label>
-                                                                        <input type="number" name="delais6" min="1" value="1" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Point</label>
-                                                                        <input type="number" name="point6" min="1" value="5" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading" role="tab" id="headingThree">
-                                                            <h4 class="panel-title">
-                                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="false" aria-controls="collapseThree">
-                                                                    Tache 7
-                                                                </a>
-                                                            </h4>
-                                                        </div>
-                                                        <div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                                                            <div class="panel-body">
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Titre</label>
-                                                                    <input type="text" name="titre7" class="form-control" value="Rédaction de la lettre de transmission des pièces suivantes">
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Description</label>
-                                                                    <textarea name="desc7"  cols="40" rows="10" class="form-control">Une copie des Statuts de la société ; Une copie du procès-verbal de constitution ; Une copie de l’attestation du compte bancaire portant libération du capital social ; La décharge de la lettre d’ouverture de compte ; Une copie de la pièce d'identité du ou des gérants ; Deux (2) photos d'identité du ou des gérants. </textarea>
-                                                                </div>
-                                                                <div class="row col-md-12">
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Délais (Jours)</label>
-                                                                        <input type="number" name="delais7" min="1" value="2" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Point</label>
-                                                                        <input type="number" min="1" name="point7" value="5" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading" role="tab" id="headingFour">
-                                                            <h4 class="panel-title">
-                                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="false" aria-controls="collapseFour">
-                                                                    Tache 8
-                                                                </a>
-                                                            </h4>
-                                                        </div>
-                                                        <div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseEight">
-                                                            <div class="panel-body">
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Titre</label>
-                                                                    <input type="text" name="titre8" value="Récupération des documents suivants contre reçu de paiement" class="form-control">
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="" class="label-control">Description</label>
-                                                                    <textarea name="desc8"  cols="40" rows="5" class="form-control">Le RCCM de la Société ; Le numéro d’immatriculation fiscale de la société (NIF) ; 	Publication légale de la société.</textarea>
-                                                                </div>
-                                                                <div class="row col-md-12">
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Délais (Jours)</label>
-                                                                        <input name="delais8" type="number" min="1" value="3" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                    <div class="col-md-6 form-group">
-                                                                        <label for="" class="label-control">Point</label>
-                                                                        <input type="number" name="point8" min="1" value="5" class="form-control" style="width: 90px;">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
 
                                     <div class="row mrg-0 tacheSimpleDate">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="dateDebutTa" class="control-label">Date début de la tâche
-                                                    :</label>
+                                                <label for="dateDebutTa" class="control-label required">Date début de la tâche :</label>
                                                 <input type="date" class="dateDebutTa form-control" id="dateDebutTa" name="dateDebut" data-error=" veillez saisir la date début de la tâche" required><br>
                                                 <span id="m1" class="m1" style=" color:red"></span>
                                                 <div class="help-block with-errors"></div>
@@ -717,7 +427,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="dateFinTa" class="control-label">Date fin de la tâche :</label>
+                                                <label for="dateFinTa" class="control-label required">Date fin de la tâche :</label>
                                                 <input type="date" class="dateFinTa form-control" id="dateFinTa" name="dateFin" data-error=" veillez saisir la date de fin de la tâche" required><br>
                                                 <span id="m2" class="m2" style=" color:red"></span>
                                                 <div class="help-block with-errors"></div>
@@ -728,17 +438,14 @@
                                     <div class="row mrg-0 tacheConditionnelDate" hidden>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="dateDebutTa" class="control-label">Date début de la tâche
-                                                    :</label>
-                                                <p style="color:orange;font-weight:bold">La date de début correspond à
-                                                    la date de validation de la tâche principale. </p>
+                                                <label for="dateDebutTa" class="control-label">Date début de la tâche :</label>
+                                                <p style="color:orange;font-weight:bold">La date de début correspond à la date de validation de la tâche principale. </p>
                                                 <div class="help-block with-errors"></div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="dateFinTa" class="control-label">Date fin de la tâche
-                                                    :</label>
+                                                <label for="dateFinTa" class="control-label required">Date fin de la tâche :</label>
                                                 <input type="number" min="1" class="form-control" id="dateFinCond1" placeholder="Nombre de jour après validation" data-placeholder="Choisissez un délais" data-error="" name="dateFin2" required></br>
                                                 <span id="m2" class="m2" style=" color:red"></span>
                                                 <div class="help-block with-errors"></div>
@@ -746,51 +453,23 @@
                                         </div>
                                     </div>
 
-
-                                    <div class="row mrg-0 tacheConditionnelClient">
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="client" class="control-label">Le client :</label>
-
-                                                <select class="form-control select clientCond" data-placeholder="selectionner le client" style="width: 95%;margin-left:-8px" name="idClient2" id="clientConditionnel">
-
-                                                </select>
-                                                <div class="help-block with-errors"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-
-                                            <div class="form-group">
-                                                <label for="affaire" class="control-label">Affaire du client concerné
-                                                    :</label>
-                                                <select class="form-control select idAffaireCond" data-placeholder="Affaire du client concerné" style="width: 95%;margin-left:-8px" name="idAffaire2" id="affaireConditionnel">
-
-                                                </select>
-                                                <div class="help-block with-errors"></div>
-                                            </div>
-
-                                        </div>
-
-                                    </div>
                                     <div class="row mrg-0" id="descOrdinaire">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="desc" class="control-label">Description de la tâche
-                                                    :</label>
+                                                <label for="desc" class="control-label required">Description de la tâche :</label>
                                                 <textarea class="form-control" id="desc" rows="3" name="description" data-error=" veillez saisir une description de la tâche" required></textarea>
                                                 <div class="help-block with-errors"></div>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row mrg-0">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="personne" class="control-label">Responsable(s):</label>
+                                                <label for="personne" class="control-label required">Responsable(s):</label>
                                                 <select multiple="" name="idPersonnelResponsable[]" class="form-control select2" data-placeholder="Selectionner les personnes concernées pour la tâche" style="width: 100%;" id="personne" data-error="erre" required>
                                                     @foreach ($personnels as $personne)
-                                                    <option value="{{ $personne->idPersonnel }}">{{ $personne->prenom }}
-                                                        {{ $personne->nom }}
-                                                    </option>
+                                                    <option value="{{ $personne->idPersonnel }}">{{ $personne->prenom }} {{ $personne->nom }}</option>
                                                     @endforeach
                                                 </select>
                                                 <div class="help-block with-errors"></div>
@@ -801,9 +480,7 @@
                                                 <label for="personne" class="control-label">Participant(s):</label>
                                                 <select multiple="" name="idPersonnel[]" class="form-control select2" data-placeholder="Selectionner les personnes concernées pour la tâche" style="width: 100%;" id="personne" data-error="erre" >
                                                     @foreach ($personnels as $personne)
-                                                    <option value="{{ $personne->idPersonnel }}">{{ $personne->prenom }}
-                                                        {{ $personne->nom }}
-                                                    </option>
+                                                    <option value="{{ $personne->idPersonnel }}">{{ $personne->prenom }} {{ $personne->nom }}</option>
                                                     @endforeach
                                                 </select>
                                                 <div class="help-block with-errors"></div>
@@ -811,7 +488,7 @@
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group" id="divPersonnePoint">
-                                                <label for="personnePoint" class="control-label">Point :</label>
+                                                <label for="personnePoint" class="control-label required">Point :</label>
                                                 <input type="number" min="1" class="form-control" name="point" required id="personnePoint">
                                                 <div class="help-block with-errors"></div>
                                             </div>
@@ -827,6 +504,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row mrg-0">
                                         <div class="col-12">
                                             <div class="form-group">
@@ -837,13 +515,14 @@
                                         </div>
                                     </div>
                                 </form>
+
                             </div>
                         </div>
 
                         <div role="tabpanel" class="tab-pane" id="Section2">
                             <div class="card" style="padding: 10px;">
-                                <!-- form start -->
-                                <form   method="post" action="{{ route('addTask') }}" accept-charset="utf-8" enctype="multipart/form-data">
+                               <!-- form start -->
+                                <form method="post" action="{{ route('addTask') }}" accept-charset="utf-8" enctype="multipart/form-data">
                                     @csrf
 
                                     <input type="text" name="categorie" class="categorie" hidden>
@@ -856,32 +535,30 @@
                                     <div class="row mrg-0">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="inputP" class="control-label">Nom de la tâche :</label>
+                                                <label for="inputP" class="control-label required">Nom de la tâche :</label>
                                                 <input type="text" class="form-control" id="inputP" placeholder="saisir le nom de la tâche" data-error=" veillez saisir le nom de la tâche" name="titre" required>
                                                 <div class="help-block with-errors"></div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="R" class="control-label">Type de tâche :</label>
-
+                                                <label for="R" class="control-label required">Type de tâche :</label>
                                                 <select class="form-select select2" style="width: 100%;" name="idTypeTache" id="typeTache" required>
                                                     <option value="1">Tâche cabinet</option>
-
                                                 </select>
                                                 <div class="help-block with-errors"></div>
                                             </div>
                                         </div>
-
                                     </div>
+
                                     <input type="hidden" name="idClient" value="0">
                                     <input type="hidden" name="idAffaire" value="0">
                                     <input type="hidden" name="priorite" class="priorite">
+
                                     <div class="row mrg-0 tacheSimpleDate">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="dateDebutTa" class="control-label">Date début de la tâche
-                                                    :</label>
+                                                <label for="dateDebutTa" class="control-label required">Date début de la tâche :</label>
                                                 <input type="date" class="form-control dateDebutTa" id="dateDebutTa2" name="dateDebut" data-error=" veillez saisir la date début de la tâche"><br>
                                                 <span id="m1" class="m1" style=" color:red"></span>
                                                 <div class="help-block with-errors"></div>
@@ -889,8 +566,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="dateFinTa" class="control-label">Date fin de la tâche
-                                                    :</label>
+                                                <label for="dateFinTa" class="control-label required">Date fin de la tâche :</label>
                                                 <input type="date" class="form-control dateFinTa" id="dateFinTa2" name="dateFin" data-error=" veillez saisir la date de fin de la tâche" required><br>
                                                 <span id="m2" class="m2" style=" color:red"></span>
                                                 <div class="help-block with-errors"></div>
@@ -901,18 +577,14 @@
                                     <div class="row mrg-0 tacheConditionnelDate" hidden>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="dateDebutTa" class="control-label">Date début de la tâche
-                                                    :</label>
-                                                <p style="color:orange;font-weight:bold">La date de début correspond à
-                                                    la date de validation de la tâche principale. </p>
+                                                <label for="dateDebutTa" class="control-label">Date début de la tâche :</label>
+                                                <p style="color:orange;font-weight:bold">La date de début correspond à la date de validation de la tâche principale.</p>
                                                 <div class="help-block with-errors"></div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="dateFinTa" class="control-label">Date fin de la tâche
-                                                    :</label>
-
+                                                <label for="dateFinTa" class="control-label required">Date fin de la tâche :</label>
                                                 <input type="number" min="1" class="form-control" id="dateFinCond2" placeholder="Nombre de jour après validation" data-placeholder="Choisissez un délais" data-error=" veillez saisir le nom de la tâche" name="dateFin2" required>
                                                 </br>
                                                 <span id="m2" class="m2" style=" color:red"></span>
@@ -924,22 +596,20 @@
                                     <div class="row mrg-0">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="desc" class="control-label">Description de la tâche
-                                                    :</label>
+                                                <label for="desc" class="control-label required">Description de la tâche :</label>
                                                 <textarea class="form-control" id="desc" rows="3" name="description" data-error=" veillez saisir une description de la tâche" required></textarea>
                                                 <div class="help-block with-errors"></div>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row mrg-0">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="personne" class="control-label">Responsable(s):</label>
-                                                <select multiple="" name="idPersonnelResponsable[]" class="form-control select2" data-placeholder="Selectionner les personnes concernées pour la tâche" style="width: 100%;" id="personne" data-error="erre" required>
+                                                <label for="personne" class="control-label required">Responsable(s):</label>
+                                                <select multiple name="idPersonnelResponsable[]" class="form-control select2" data-placeholder="Selectionner les personnes concernées pour la tâche" style="width: 100%;" id="personne" data-error="erre" required>
                                                     @foreach ($personnels as $personne)
-                                                    <option value="{{ $personne->idPersonnel }}">{{ $personne->prenom }}
-                                                        {{ $personne->nom }}
-                                                    </option>
+                                                    <option value="{{ $personne->idPersonnel }}">{{ $personne->prenom }} {{ $personne->nom }}</option>
                                                     @endforeach
                                                 </select>
                                                 <div class="help-block with-errors"></div>
@@ -948,11 +618,9 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label for="personne" class="control-label">Participant(s):</label>
-                                                <select multiple="" name="idPersonnel[]" class="form-control select2" data-placeholder="Selectionner les personnes concernées pour la tâche" style="width: 100%;" id="personne" data-error="erre" >
+                                                <select multiple name="idPersonnel[]" class="form-control select2" data-placeholder="Selectionner les personnes concernées pour la tâche" style="width: 100%;" id="personne" data-error="erre">
                                                     @foreach ($personnels as $personne)
-                                                    <option value="{{ $personne->idPersonnel }}">{{ $personne->prenom }}
-                                                        {{ $personne->nom }}
-                                                    </option>
+                                                    <option value="{{ $personne->idPersonnel }}">{{ $personne->prenom }} {{ $personne->nom }}</option>
                                                     @endforeach
                                                 </select>
                                                 <div class="help-block with-errors"></div>
@@ -960,12 +628,13 @@
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
-                                                <label for="personnePoint" class="control-label">Point :</label>
+                                                <label for="personnePoint" class="control-label required">Point :</label>
                                                 <input type="number" min="1" class="form-control" name="point" required id="personnePoint">
                                                 <div class="help-block with-errors"></div>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row mrg-0">
                                         <div class="col-sm-4">
                                             <div class="form-group">
@@ -975,6 +644,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row mrg-0 mt-2">
                                         <div class="col-12">
                                             <div class="form-group">
@@ -985,6 +655,7 @@
                                         </div>
                                     </div>
                                 </form>
+
                             </div>
                         </div>
                         @endif

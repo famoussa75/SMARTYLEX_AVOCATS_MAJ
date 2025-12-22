@@ -302,7 +302,7 @@
                                     <i class="ti-eye i-cl-4"></i> Voir les courriers
                                 </a>
                             </div>
-                            <div class="btn-group">
+                            <!-- <div class="btn-group">
                                 <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#modal-5">
                                     <i class="ti-wand i-cl-6"></i> Créer un Courrier - Arrivé
                                 </a>
@@ -311,7 +311,7 @@
                                 <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#modal-3">
                                     <i class="ti-wand i-cl-3"></i> Créer un courrier - Départ
                                 </a>
-                            </div>
+                            </div> -->
                         </div>
                         @endif
                     </div>
@@ -1187,19 +1187,17 @@
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
                         <div class="card">
-                            <!-- form start -->
-                            <form class="padd-20" method="post" action="{{ route('storeAffaire') }}"
-                                enctype="multipart/form-data">
+                           <!-- form start -->
+                            <form class="padd-20" method="post" action="{{ route('storeAffaire') }}" enctype="multipart/form-data">
                                 <div class="text-center">
                                     @csrf
                                 </div>
                                 <div class="row mrg-0">
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label for="inputPName" class="control-label">Nom affaire </label>
+                                            <label for="inputPName" class="control-label required">Nom affaire</label>
                                             <input type="text" name="typePost" value="modalAffaire" hidden>
-                                            <input type="text" class="form-control" id="inputPName"
-                                                placeholder="nom de l'affaire "
+                                            <input type="text" class="form-control" id="inputPName" placeholder="nom de l'affaire"
                                                 data-error=" veillez saisir le nom de l'affaire" name="nom" required>
                                             <div class="help-block with-errors"></div>
                                         </div>
@@ -1208,10 +1206,9 @@
                                 <div class="row mrg-0">
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label for="inputEmail" class="control-label">Date Ouverture</label>
-                                            <input type="date" class="form-control" id="inputEmail"
-                                                placeholder="date d'ouverture" name="dateOuverture"
-                                                data-error=" veillez saisir la date d'ouverture" required>
+                                            <label for="inputEmail" class="control-label required">Date Ouverture</label>
+                                            <input type="date" class="form-control" id="inputEmail" placeholder="date d'ouverture"
+                                                name="dateOuverture" data-error=" veillez saisir la date d'ouverture" required>
                                             <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
@@ -1219,13 +1216,10 @@
                                 <div class="row mrg-0">
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label>Client</label>
-                                            <select class="form-control select2" name="idClient" required
-                                                style="width:100%">
+                                            <label class="control-label required">Client</label>
+                                            <select class="form-control select2" name="idClient" required style="width:100%">
                                                 @foreach ($infoClient as $data )
-                                                <option value={{ $data->idClient }} selected>{{ $data->prenom }}
-                                                    {{ $data->nom }} {{ $data->denomination }}
-                                                </option>
+                                                <option value={{ $data->idClient }} selected>{{ $data->prenom }} {{ $data->nom }} {{ $data->denomination }}</option>
                                                 @endforeach
                                             </select>
                                             <div class="help-block with-errors"></div>
@@ -1235,9 +1229,8 @@
                                 <div class="row mrg-0">
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label for="type" class="control-label">Type affaire</label>
-                                            <select class="form-control select2" id="type" name="type" required
-                                                style="width:100%">
+                                            <label for="type" class="control-label required">Type affaire</label>
+                                            <select class="form-control select2" id="type" name="type" required style="width:100%">
                                                 <option value="" selected disabled>-- Choisissez --</option>
                                                 <option value="Contentieux">Contentieux</option>
                                                 <option value="Conseil">Conseil</option>
@@ -1247,8 +1240,7 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="type" class="control-label">Piece(s) jointe(s) ( Facultatif
-                                                )</label>
+                                            <label for="type" class="control-label">Piece(s) jointe(s) ( Facultatif )</label>
                                             <input type="file" class="fichiers form-control" name="fichiers[]" multiple>
                                             <div class="help-block with-errors"></div>
                                         </div>
@@ -1257,8 +1249,7 @@
                                     <div class="col-12">
                                         <div class="form-group">
                                             <div class="text-center">
-                                                <button type="submit" class="theme-bg btn btn-rounded btn-block "
-                                                    style="width:50%;"> Enregistrer</button>
+                                                <button type="submit" class="theme-bg btn btn-rounded btn-block" style="width:50%;">Enregistrer</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1291,40 +1282,33 @@
                     <div class="col-md-12 col-sm-12">
                         <div class="card">
                             <!-- form start -->
-                            <form method="post" action="{{route('contact.create')}}" accept-charset="utf-8"
-                                enctype="multipart/form-data">
+                            <form method="post" action="{{route('contact.create')}}" accept-charset="utf-8" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row mrg-0">
                                     <div class="col-md-12 col-sm-12">
                                         <div class="card">
-
                                             <div class="card-body">
                                                 <div class="form-group">
                                                     <label for="description">Société/Client</label>
                                                     <input type="text" class="form-control" name="societe" value="{{ $infoClient[0]->prenom }} {{ $infoClient[0]->nom }} {{ $infoClient[0]->denomination }}">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="description">Prénom et Nom</label>
-                                                    <input type="text" class="form-control" name="prenom_et_nom"
-                                                        required>
+                                                    <label for="description" class="required">Prénom et Nom</label>
+                                                    <input type="text" class="form-control" name="prenom_et_nom" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="description">Position</label>
-                                                    <input type="text" class="form-control"
-                                                        name="poste_de_responsabilite">
+                                                    <input type="text" class="form-control" name="poste_de_responsabilite">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="description">Téléphone</label>
+                                                    <label for="description" class="required">Téléphone</label>
                                                     <input type="text" class="form-control" name="telephone" required>
                                                 </div>
-
                                                 <div class="form-group">
-                                                    <label for="description">Email</label>
+                                                    <label for="description" class="required">Email</label>
                                                     <input type="email" class="form-control" name="email" required>
                                                 </div>
-                                                <input type="hidden" name="idClient"
-                                                    value="{{$infoClient[0]->idClient}}">
-
+                                                <input type="hidden" name="idClient" value="{{$infoClient[0]->idClient}}">
                                             </div>
                                         </div>
                                     </div>
@@ -1333,13 +1317,13 @@
                                     <div class="col-12">
                                         <div class="form-group">
                                             <div class="text-center">
-                                                <button type="submit" class="theme-bg btn btn-rounded btn-block "
-                                                    style="width:50%;"> Enregistrer</button>
+                                                <button type="submit" class="theme-bg btn btn-rounded btn-block" style="width:50%;">Enregistrer</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </form>
+
 
                         </div>
                     </div>
@@ -1363,55 +1347,48 @@
                 <h4 class="modal-title"><i class="fa fa-pencil"></i> Modification du contact</h4>
             </div>
             <div class="modal-body">
-                <form method="post" action="{{route('contact.update')}}" accept-charset="utf-8"
-                    enctype="multipart/form-data">
-                    @csrf
-                    <div class="row mrg-0">
-                        <div class="col-md-12 col-sm-12">
-                            <div class="card">
-
-                                <div class="card-body">
-                                    <div class="form-group">
-                                        <label for="description">Société/Client</label>
-                                        <input type="text" class="form-control" name="societe" id="societeContact">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="description">Prénom et Nom</label>
-                                        <input type="text" class="form-control" name="prenom_et_nom"
-                                            id="prenom_et_nomContact" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="description">Position</label>
-                                        <input type="text" class="form-control" name="poste_de_responsabilite"
-                                            id="poste_de_responsabiliteContact">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="description">Téléphone(s)</label>
-                                        <input type="text" class="form-control" name="telephone" id="telephoneContact">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="description">Email</label>
-                                        <input type="email" class="form-control" name="email" id="emailContact"
-                                            required>
-                                    </div>
-                                    <input type="hidden" name="idContact" id="idContact">
-
+            <form method="post" action="{{route('contact.update')}}" accept-charset="utf-8" enctype="multipart/form-data">
+                @csrf
+                <div class="row mrg-0">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="description">Société/Client</label>
+                                    <input type="text" class="form-control" name="societe" id="societeContact">
                                 </div>
+                                <div class="form-group">
+                                    <label for="description" class="required">Prénom et Nom</label>
+                                    <input type="text" class="form-control" name="prenom_et_nom" id="prenom_et_nomContact" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Position</label>
+                                    <input type="text" class="form-control" name="poste_de_responsabilite" id="poste_de_responsabiliteContact">
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Téléphone(s)</label>
+                                    <input type="text" class="form-control" name="telephone" id="telephoneContact">
+                                </div>
+                                <div class="form-group">
+                                    <label for="description" class="required">Email</label>
+                                    <input type="email" class="form-control" name="email" id="emailContact" required>
+                                </div>
+                                <input type="hidden" name="idContact" id="idContact">
                             </div>
                         </div>
                     </div>
-                    <div class="row mrg-0">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <div class="text-center">
-                                    <button type="submit" class="theme-bg btn btn-rounded btn-block "
-                                        style="width:50%;"> Enregistrer</button>
-                                </div>
+                </div>
+                <div class="row mrg-0">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <div class="text-center">
+                                <button type="submit" class="theme-bg btn btn-rounded btn-block" style="width:50%;">Enregistrer</button>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
+            </form>
+
             </div>
         </div>
     </div>
@@ -1787,7 +1764,7 @@
                         <div class="row mrg-0">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="inputPName" class="control-label">Prénom</label>
+                                    <label for="inputPName" class="control-label required">Prénom</label>
                                     <input type="text" class="form-control" id="inputPName" placeholder="prenom"
                                         name="prenom" value="{{$client->prenom}}" placeholderrequired>
                                     <div class="help-block with-errors"></div>
@@ -1795,7 +1772,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="inputName" class="control-label">Nom</label>
+                                    <label for="inputName" class="control-label required">Nom</label>
                                     <input type="text" class="form-control" id="inputName" placeholder="nom"
                                         value="{{$client->nom}}" name="nom" required>
                                     <div class="help-block with-errors"></div>
@@ -1806,7 +1783,7 @@
                         <div class="row mrg-0">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="inputEmail" class="control-label">Email</label>
+                                    <label for="inputEmail" class="control-label required">Email</label>
                                     <input type="email" class="form-control" id="inputEmail" placeholder="email"
                                         name="email" value="{{$client->email}}"
                                         data-error="Cette saisie est invalide, veillez saisir une adresse email valide"
@@ -1816,7 +1793,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="inputTelephone" class="control-label">Email de facture</label><br>
+                                    <label for="inputTelephone" class="control-label required">Email de facture</label><br>
                                     <input type="email" class="form-control" name="emailFacture"
                                         value="{{ $client->emailFacture }}" required>
                                     <div class="help-block with-errors"></div>
@@ -1828,7 +1805,7 @@
                         <div class="row mrg-0">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="inputadresse" class="control-label">Adresse</label>
+                                    <label for="inputadresse" class="control-label required">Adresse</label>
                                     <input type="text" class="form-control" id="inputadresse" placeholder="adresse"
                                         value="{{$client->adresse}}" name="adresse" required>
                                     <div class="help-block with-errors"></div>
@@ -1836,7 +1813,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="inputTelephone" class="control-label">Téléphone</label><br>
+                                    <label for="inputTelephone" class="control-label required">Téléphone</label><br>
                                     <input type="text" class="form-control phone" id="inputTelephone"
                                         placeholder="téléphone" value="{{ $client->telephone }}" name="telephone"
                                         required>
@@ -1874,7 +1851,7 @@
                         <div class="row mrg-0">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="entreprise" class="control-label">Dénomination</label>
+                                    <label for="entreprise" class="control-label required">Dénomination</label>
                                     <input type="text" class="form-control" name="denomination"
                                         value="{{ $client->denomination }}" id="entreprise" placeholder="nom entreprise"
                                         required>
@@ -1882,7 +1859,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="inputSt" class="control-label">RCCM de l'entreprise</label>
+                                    <label for="inputSt" class="control-label required">RCCM de l'entreprise</label>
                                     <input type="text" class="form-control" id="inputSt" value="{{ $client->rccm }}"
                                         name="rccm" placeholder="RCCM de l'entreprise" required>
                                 </div>
@@ -1891,7 +1868,7 @@
                         <div class="row mrg-0">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="entreprise" class="control-label">Capital social</label>
+                                    <label for="entreprise" class="control-label required">Capital social</label>
                                     <input type="number" class="form-control" name="capitalSocial"
                                         value="{{ $client->capitalSocial }}" id="entreprise"
                                         placeholder="" required>
@@ -1899,7 +1876,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="inputs" class="control-label">Adresse de l'entreprise</label>
+                                    <label for="inputs" class="control-label required">Adresse de l'entreprise</label>
                                     <input type="text" class="form-control" value="{{ $client->adresseEntreprise }}"
                                         name="adresseEntreprise" id="inputs" placeholder="adresse entreprise" required>
                                 </div>
@@ -1908,7 +1885,7 @@
                          <div class="row mrg-0">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="inputSt" class="control-label">NIF</label>
+                                <label for="inputSt" class="control-label required">NIF</label>
                                 <input type="text" class="form-control" id="nif" name="nif" value="{{ $client->nif }}" required>
                             </div>
                         </div>
@@ -1916,7 +1893,7 @@
                        
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="inputs" class="control-label">CNSS</label>
+                                <label for="inputs" class="control-label required">CNSS</label>
                                 <input type="text" class="form-control" name="cnss" id="cnss" value="{{ $client->cnss }}" required>
                             </div>
                         </div>
@@ -1926,7 +1903,7 @@
                            
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="inputSta" class="control-label">Email de contact</label>
+                                    <label for="inputSta" class="control-label required">Email de contact</label>
                                     <input type="email" class="form-control" value="{{ $client->emailEntreprise }}"
                                         name="emailEntreprise" id="inputSta" placeholder="email entreprise"
                                         data-error="cette adresse email de l'entreprise est invalid" required>
@@ -1935,7 +1912,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="inputTelephone" class="control-label">Email de facturation</label><br>
+                                    <label for="inputTelephone" class="control-label required">Email de facturation</label><br>
                                     <input type="email" class="form-control" name="emailFacture"
                                         value="{{ $client->emailFacture }}" required>
                                     <div class="help-block with-errors"></div>
@@ -1955,7 +1932,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="inputAd" class="control-label">Téléphone entreprise</label><br>
+                                    <label for="inputAd" class="control-label required">Téléphone entreprise</label><br>
                                     <input type="text" class="form-control phone"
                                         value="{{ $client->telephoneEntreprise }}" name="telephoneEntreprise"
                                         id="inputAd" placeholder="téléphone entreprise" required>
@@ -1976,7 +1953,7 @@
                         <div class="row mrg-0">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="inputEmailR" class="control-label">Prénom</label>
+                                    <label for="inputEmailR" class="control-label required">Prénom</label>
                                     <input type="text" class="form-control" value="{{ $info->prenom }}" name="prenom"
                                         id="inputEmailR" placeholder="prénom répresentant" required>
                                 </div>
@@ -1985,7 +1962,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="inputEs" class="control-label">Nom</label>
-                                    <input type="text" class="form-control" id="inputEs" value="{{ $info->nom }}"
+                                    <input type="text" class="form-control required" id="inputEs" value="{{ $info->nom }}"
                                         name="nom" placeholder="nom répresentant" required>
                                 </div>
                             </div>
@@ -1994,7 +1971,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="inputM" class="control-label">Email</label>
-                                    <input type="email" class="form-control" name="email" value="{{ $info->email }}"
+                                    <input type="email" class="form-control required" name="email" value="{{ $info->email }}"
                                         id="inputM" placeholder="email répresentant"
                                         data-error="cette adresse email est invalid" required>
                                     <div class="help-block with-errors"></div>
@@ -2003,7 +1980,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="inputA" class="control-label">Téléphone</label>
-                                    <input type="text" class="form-control" id="inputA"
+                                    <input type="text" class="form-control required" id="inputA"
                                         placeholder="téléphone répresentant" value="{{ $info->telephone }}"
                                         name="telephone" required>
                                 </div>
@@ -2110,7 +2087,7 @@
                                         <div class="form-group">
                                             <input type="number" value="{{$infoClient[0]->idClient}}" name="idClient"
                                                 hidden>
-                                            <label for="" class="label-control"> Importer le fichier ici</label>
+                                            <label for="" class="label-control required"> Importer le fichier ici</label>
                                             <input type="file" accept=".xls,.xlsx," class="fichiers form-control"
                                                 name="fichiers" required>
 

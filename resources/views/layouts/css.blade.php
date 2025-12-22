@@ -654,6 +654,20 @@ EDIT ON
     outline: none;
 }
 
+label.required,
+.control-label.required {
+    display: inline-block; /* ou block si tu veux */
+}
+
+label.required::after,
+.control-label.required::after {
+    content: " *";
+    color: #e11d48;
+    font-weight: 700;
+}
+
+
+
 /* Placeholder */
 .form-control::placeholder {
     color: #9ca3af;

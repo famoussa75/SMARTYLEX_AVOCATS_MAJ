@@ -154,49 +154,68 @@
                                     <div class="col-md-12">
                                         <div class="card">
                                             <!-- form start -->
-                                            <form   class="padd-20" method="post" action="{{ route('completeCourier') }}">
+                                            <form  class="padd-20" method="post" action="{{ route('completeCourier') }}">
                                                 <div class="text-center">
                                                     <h3>Procédure d'envoi du courrier</h3>
                                                     <br>
                                                     @csrf
                                                 </div>
+
                                                 <div class="row mrg-0">
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
-                                                            <label for="inputEmail" class="control-label">Date d'envoi
-                                                                :</label>
-                                                            <input type="date" class="form-control" id="inputEmail" name="dateEnvoi" data-error=" veillez saisir la date d'envoi du courrier" required>
+                                                            <label for="inputEmail" class="control-label required">
+                                                                Date d'envoi :
+                                                            </label>
+                                                            <input type="date" class="form-control" id="inputEmail"
+                                                                name="dateEnvoi"
+                                                                data-error=" veillez saisir la date d'envoi du courrier"
+                                                                required>
                                                             <div class="help-block with-errors"></div>
                                                         </div>
                                                     </div>
+
                                                     <div class="col-sm-6">
                                                         <input type="text" name="courierSlug" hidden="true" value="{{ $courierSlug }}">
                                                         <div class="form-group">
-                                                            <label for="inputPName" class="control-label">Personne en
-                                                                charge :</label>
-                                                            <input type="text" class="form-control" id="inputPName" placeholder="" data-error=" veillez saisir le nom complet de la personne en charge de l'envoi du courrier" name="nomPersonne" required />
+                                                            <label for="inputPName" class="control-label required">
+                                                                Personne en charge :
+                                                            </label>
+                                                            <input type="text" class="form-control" id="inputPName"
+                                                                name="nomPersonne"
+                                                                data-error=" veillez saisir le nom complet de la personne en charge de l'envoi du courrier"
+                                                                required />
                                                             <div class="help-block with-errors"></div>
                                                         </div>
                                                     </div>
                                                 </div>
+
                                                 <div class="row mrg-0">
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
-                                                            <label for="inputEmail" class="control-label">Téléphone
-                                                                :</label><br>
-                                                            <input type="text" class="form-control" id="inputEmail" name="telephonePersonne" data-error=" veillez saisir le N° de téléphone" required>
+                                                            <label for="inputEmail" class="control-label required">
+                                                                Téléphone :
+                                                            </label><br>
+                                                            <input type="text" class="form-control" id="inputEmail"
+                                                                name="telephonePersonne"
+                                                                data-error=" veillez saisir le N° de téléphone"
+                                                                required>
                                                             <div class="help-block with-errors"></div>
                                                         </div>
                                                     </div>
+
                                                     <div class="col-12">
                                                         <div class="form-group">
                                                             <div class="text-center">
-                                                                <button type="submit" class="theme-bg btn btn-rounded btn-block " style="width:50%;"> Enregistrer</button>
+                                                                <button type="submit"
+                                                                        class="theme-bg btn btn-rounded btn-block"
+                                                                        style="width:50%;"> Enregistrer</button>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </form>
+
                                         </div>
 
                                     </div>

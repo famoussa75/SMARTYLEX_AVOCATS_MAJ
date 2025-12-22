@@ -816,7 +816,7 @@
                                                 <div class="row mrg-0">
                                                     <div class="col-sm-3">
                                                         <div class="form-group">
-                                                            <label for="inputEmail" class="control-label">Date d'envoi
+                                                            <label for="inputEmail" class="control-label required">Date d'envoi
                                                                 :</label>
                                                             <input type="date" class="form-control" id="inputEmail"
                                                                 name="dateEnvoi"
@@ -829,7 +829,7 @@
                                                         <input type="text" name="courierSlug" hidden="true"
                                                             value="{{ $slug }}">
                                                         <div class="form-group">
-                                                            <label for="inputPName" class="control-label">Personne en
+                                                            <label for="inputPName" class="control-label required">Personne en
                                                                 charge :</label>
                                                             <input type="text" class="form-control" id="inputPName"
                                                                 placeholder=""
@@ -840,7 +840,7 @@
                                                     </div>
                                                     <div class="col-sm-4">
                                                         <div class="form-group">
-                                                            <label for="inputEmail" class="control-label">Téléphone
+                                                            <label for="inputEmail" class="control-label required">Téléphone
                                                                 :</label><br>
                                                             <input type="text" class="form-control" id="inputEmail"
                                                                 name="telephonePersonne"
@@ -870,7 +870,7 @@
                                                 <div class="row mrg-0">
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
-                                                            <label for="inputPName" class="control-label">À :</label>
+                                                            <label for="inputPName" class="control-label required">À :</label>
                                                             <input type="email" class="form-control" id="phone" data-error="" name="email" required >
                                                           
                                                             <div class="help-block with-errors"></div>
@@ -986,9 +986,9 @@ Salutation cordiale
                                                 <div class="row mrg-0">
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
-                                                            <label for="inputEmail" class="control-label">Date de
+                                                            <label for="inputEmail" class="control-label required">Date de
                                                                 reception:</label>
-                                                            <input type="date" class="form-control" id="inputEmail"
+                                                            <input type="date" class="form-control required" id="inputEmail"
                                                                 name="dateReception"
                                                                 data-error=" veillez saisir la date de reception du courrier"
                                                                 required>
@@ -1001,7 +1001,7 @@ Salutation cordiale
                                                             <input type="text" name="slugCourier"
                                                                 value="{{$courierSent[0]->slug}}" hidden>
 
-                                                            <label for="inputPName" class="control-label"> N° du réçu
+                                                            <label for="inputPName" class="control-label required"> N° du réçu
                                                                 :</label>
                                                             <input type="text" class="form-control" id="inputPName"
                                                                 placeholder=""
@@ -1012,7 +1012,7 @@ Salutation cordiale
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
-                                                            <label for="inputPName" class="control-label"> Joindre le
+                                                            <label for="inputPName" class="control-label required"> Joindre le
                                                                 fichier
                                                                 :</label>
                                                             <input type="file" name="fichiers[]" id="files"

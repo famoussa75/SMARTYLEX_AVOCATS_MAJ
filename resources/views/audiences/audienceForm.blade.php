@@ -70,7 +70,7 @@
                                     <div class="row mrg-0">
                                         <div class="col-md-6 col-sm-12">
                                             <div class="form-group">
-                                                <label for="inputPName" class="control-label">Juridiction<span style="color:red">*</span> :</label>
+                                                <label for="inputPName" class="control-label required">Juridiction :</label>
                                                 <select name="juridiction" id="" class="form-select select2" style="width:100%" >
                                                     <option value="" selected disabled>-- Choisissez --</option>
                                                     @foreach($juriductions as $j)
@@ -84,7 +84,7 @@
                                         </div>
                                         <div class="col-md-12 col-sm-12">
                                             <div class="form-group">
-                                                <label for="inputPName" class="control-label">Objet<span style="color:red">*</span> :</label>
+                                                <label for="inputPName" class="control-label required">Objet :</label>
                                                 <input type="text" name="objet" class="form-control" >
                                                 @error('objet')
                                                      <div style="color:red">{{ $message }}</div>
@@ -109,7 +109,7 @@
                                     <div class="row mrg-0">
                                         <div class="col-md-6 col-sm-12">
                                             <div class="form-group">
-                                                <label for="inputPName" class="control-label">Type procédure<span style="color:red">*</span> :</label>
+                                                <label for="inputPName" class="control-label required">Type procédure :</label>
                                                 <select name="typeProcedure" id="selectTypeProcedure" class="form-select select2" style="width:100%" required>
                                                     <option value="" selected disabled>-- Choisissez --</option>
                                                     <option value="contentieux">Contentieuse / Contradictoire</option>
@@ -136,7 +136,7 @@
                                         </div>
                                         <div class="col-md-6 col-sm-12" id="divTypeRequete" hidden>
                                                 <div class="form-group">
-                                                    <label for="inputPName" class="control-label">Type de requête<span style="color:red">*</span> :</label>
+                                                    <label for="inputPName" class="control-label required">Type de requête :</label>
                                                     <select name="typeRequete" id="typeRequete" class="form-select select2" style="width:100%" >
                                                         <option value="" selected disabled>-- Choisissez --</option>
                                                         <option value="Requête aux fins d'arrêt des travaux">Requête aux fins d'arrêt des travaux</option>
@@ -185,7 +185,7 @@
                                         </div>
                                         <div class="col-md-4 col-sm-12">
                                             <div class="form-group">
-                                                <label for="inputPName" class="control-label">Cette procedure est-elle liée à une procedure sur requête ?<span style="color:red">*</span> :</label>
+                                                <label for="inputPName" class="control-label required">Cette procedure est-elle liée à une procedure sur requête ? :</label>
                                                 <select name="" id="requeteLier" class="form-select select2" style="width:100%" >
                                                     <option value="" selected disabled>-- Choisissez --</option>
                                                     <option value="oui">-- OUI --</option>
@@ -580,7 +580,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     </div>
                     <div class="col-md-3 cacher" id="avc-` + i + `" hidden>
                         <div class="form-group" id="dropSelect-` + i + `">
-                            <label for="" class="control-label">Avocat<span style="color:red">*</span> :</label>
+                            <label for="" class="control-label required">Avocat :</label>
                             <select name="formset[` + i + `][typeAvocat]" id="typeAvocat-` + i + `" onchange="var id= ` +
             i + ` ;typeAvocat(id)"
                                 class="form-select select2" style="width:100%"
@@ -942,7 +942,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         </div>
                         <div class="col-md-3 cacher" id="avc-` + i + `" hidden>
                             <div class="form-group" id="dropSelect-` + i + `">
-                                <label for="" class="control-label">Avocat<span style="color:red">*</span> :</label>
+                                <label for="" class="control-label required">Avocat :</label>
                                 <select name="formset[` + i + `][typeAvocat]" id="typeAvocat-` + i + `" onchange="var id= ` +
             i + ` ;typeAvocat(id)"
                                     class="form-select select2" style="width:100%"
@@ -1303,7 +1303,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             </div>
                             <div class="col-md-3 cacher" id="avc-` + i + `" hidden>
                                 <div class="form-group" id="dropSelect-` + i + `">
-                                    <label for="" class="control-label">Avocat<span style="color:red">*</span> :</label>
+                                    <label for="" class="control-label required">Avocat :</label>
                                     <select name="formset[` + i + `][typeAvocat]" id="typeAvocat-` + i + `" onchange="var id= ` +
                                         i + ` ;typeAvocat(id)"
                                         class="form-select select2" style="width:100%"
@@ -1665,7 +1665,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     </div>
                     <div class="col-md-3 cacher" id="avc-` + i + `" hidden>
                         <div class="form-group" id="dropSelect-` + i + `">
-                            <label for="" class="control-label">Avocat<span style="color:red">*</span> :</label>
+                            <label for="" class="control-label required">Avocat :</label>
                             <select name="formset[` + i + `][typeAvocat]" id="typeAvocat-` + i + `" onchange="var id= ` +
             i + ` ;typeAvocat(id)"
                                 class="form-select select2" style="width:100%"
@@ -2027,7 +2027,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     </div>
                     <div class="col-md-3 cacher" id="avc-` + i + `" hidden>
                         <div class="form-group" id="dropSelect-` + i + `">
-                            <label for="" class="control-label">Avocat<span style="color:red">*</span> :</label>
+                            <label for="" class="control-label required">Avocat :</label>
                             <select name="formset[` + i + `][typeAvocat]" id="typeAvocat-` + i + `" onchange="var id= ` +
             i + ` ;typeAvocat(id)"
                                 class="form-select select2" style="width:100%"

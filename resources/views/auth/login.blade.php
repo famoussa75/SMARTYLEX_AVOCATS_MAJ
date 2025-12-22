@@ -298,5 +298,49 @@
         }
     }
   </script>
+
+    <!-- Modal Bootstrap amélioré -->
+<div class="modal fade" id="waitingModal" tabindex="-1" aria-labelledby="waitingModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center p-4 border-0 shadow-lg rounded-4">
+      <div class="modal-body">
+        <!-- Spinner animé -->
+        <div class="mb-3">
+          <div class="spinner-border text-warning" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Chargement...</span>
+          </div>
+        </div>
+
+        <!-- Texte principal -->
+        <h5 class="fw-bold mb-2">Veuillez patienter</h5>
+        <p class="text-muted mb-0">Nous envoyons le code de confirmation à votre adresse e-mail.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form[action="{{ route("login") }}"]');
+        const submitButton = form.querySelector('button[type="submit"]');
+        const modal = new bootstrap.Modal(document.getElementById('waitingModal'));
+
+        form.addEventListener('submit', function (e) {
+            // Empêcher de soumettre plusieurs fois
+            if (submitButton.disabled) {
+                e.preventDefault();
+                return;
+            }
+
+            // Désactiver le bouton
+            submitButton.disabled = true;
+
+            // Afficher le modal
+            modal.show();
+        });
+    });
+    </script>
+
 </body>
 </html>

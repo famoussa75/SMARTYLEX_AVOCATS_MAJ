@@ -175,7 +175,7 @@
                             <div class="row mrg-0 adversePersonne" id="adversePersonne-0" hidden>
                                 <div class="col-sm-5">
                                     <div class="form-group">
-                                        <label for="prenom" class="control-label">Prénom
+                                        <label for="prenom" class="control-label required">Prénom
                                             :</label>
                                         <input type="text" class="form-control" id="prenom-0" data-error=" veillez saisir prénom de la personne" name="formset[0][prenom]" >
                                         <div class="help-block with-errors"></div>
@@ -183,7 +183,7 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
-                                        <label for="nom" class="control-label">Nom :</label>
+                                        <label for="nom" class="control-label required">Nom :</label>
                                         <input type="text" class="form-control" id="nom-0" data-error=" veillez saisir le nom de la personne" name="formset[0][nom]" >
                                         <div class="help-block with-errors"></div>
                                     </div>
@@ -249,7 +249,7 @@
                             <div class="row mrg-0 adverseEntreprise" id="adverseEntreprise-0" hidden>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="denomination" class="control-label">Dénomination
+                                        <label for="denomination" class="control-label required">Dénomination
                                             :</label>
                                         <input type="text" class="form-control" id="denomination-0" data-error=" veillez saisir la dénomination de l'entreprise" name="formset[0][denomination]" >
                                         <div class="help-block with-errors"></div>
@@ -265,7 +265,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="siege" class="control-label">Siège Social
+                                        <label for="siege" class="control-label required">Siège Social
                                             :</label>
                                         <input type="text" class="form-control" id="siege-0" data-error=" veillez saisir le siège social de l'entreprise" name="formset[0][siegeSocial]" >
                                         <div class="help-block with-errors"></div>

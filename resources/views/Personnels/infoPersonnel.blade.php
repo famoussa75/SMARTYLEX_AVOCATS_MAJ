@@ -595,17 +595,14 @@
                 </div>
                 <div class="modal-body">
                     <div class="card">
-                        <!-- form start -->
-                        <form method="post" action="{{ route('updatePersonnel', [$person->slug]) }}"
-                            enctype="multipart/form-data">
-
+                      <!-- form start -->
+                        <form method="post" action="{{ route('updatePersonnel', [$person->slug]) }}" enctype="multipart/form-data">
                             @csrf
-
 
                             <div class="row mrg-0">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="initP" class="control-label">Intial de la personne :</label>
+                                        <label for="initP" class="control-label required">Intial de la personne :</label>
                                         <input type="text" class="form-control" id="initP"
                                             placeholder="Initial de la personne exemple (AD)"
                                             data-error=" veillez saisir l'initial de la personne exemple (AD)"
@@ -615,7 +612,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="initP" class="control-label">SSN :</label>
+                                        <label for="initP" class="control-label required">SSN :</label>
                                         <input type="text" class="form-control" id="initP" placeholder=""
                                             data-error=" veillez saisir l'initial de la personne exemple (AD)"
                                             name="ssn" required value="{{ $person->ssn }}">
@@ -623,12 +620,13 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row mrg-0">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <input type="text" value="matricule" name="matricules" hidden>
                                         <input type="text" value="slugs" name="slug" hidden>
-                                        <label for="inputP" class="control-label">Prénom :</label>
+                                        <label for="inputP" class="control-label required">Prénom :</label>
                                         <input type="text" class="form-control" id="inputP"
                                             placeholder="prénom de la personne"
                                             data-error=" veillez saisir le prénom de la personne" name="prenom" required
@@ -638,7 +636,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="inputN" class="control-label">Nom :</label>
+                                        <label for="inputN" class="control-label required">Nom :</label>
                                         <input type="text" class="form-control" id="inputN"
                                             placeholder="nom de la personne" name="nom"
                                             data-error=" veillez saisir le nom de la personne" required
@@ -648,14 +646,12 @@
                                 </div>
                             </div>
 
-
                             <div class="row mrg-0">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="sexe" class="control-label">Sexe :</label>
+                                        <label for="sexe" class="control-label required">Sexe :</label>
                                         <select class="form-control select2" placeholder="selectionner le sexe"
-                                            style="width: 100%;" name="sexe" id="sexe" required
-                                            value="{{ $person->sexe }}">
+                                            style="width: 100%;" name="sexe" id="sexe" required value="{{ $person->sexe }}">
                                             <option>Masculin</option>
                                             <option>Feminin</option>
                                         </select>
@@ -664,7 +660,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="datepicker" class="control-label">Date de naissance :</label>
+                                        <label for="datepicker" class="control-label required">Date de naissance :</label>
                                         <input type="date" class="form-control" id="datepicker" name="dateNaissance"
                                             data-error=" veillez saisir la date de naissance" required
                                             value="{{ $person->dateNaissance }}">
@@ -673,26 +669,20 @@
                                 </div>
                             </div>
 
-
                             <div class="row mrg-0">
                                 <div class="col-sm-6">
-
                                     <div class="form-group">
-                                        <label for="inputFAV" class="control-label">Téléphone </label><br>
-
+                                        <label for="inputFAV" class="control-label required">Téléphone :</label><br>
                                         <input type="text" class="form-control phone"
                                             data-inputmask="'mask': ['+99[9] 999-99-99-99']" data-mask id="phoneP"
                                             name="telephone" data-error=" veillez saisir le téléphone" required
                                             value="{{ $person->telephone }}">
                                         <div class="help-block with-errors"></div>
                                     </div>
-
                                 </div>
                                 <div class="col-sm-6">
-
                                     <div class="form-group">
-                                        <label for="inputFAV" class="control-label">N° d'urgence : </label><br>
-
+                                        <label for="inputFAV" class="control-label required">N° d'urgence :</label><br>
                                         <input type="tel" class="form-control phone1"
                                             data-inputmask="'mask': ['+99[9] 999-99-99-99']" data-mask id="phoneUP"
                                             name="numeroUrgence" data-error=" veillez saisir le téléphone" required
@@ -702,12 +692,10 @@
                                 </div>
                             </div>
 
-
-
                             <div class="row mrg-0">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="inputA" class="control-label">Adresse :</label>
+                                        <label for="inputA" class="control-label required">Adresse :</label>
                                         <input type="text" class="form-control" id="inputA"
                                             placeholder="adresse de la personne" data-error=" veillez saisir l'adresse"
                                             name="adresse" required value="{{ $person->adresse }}">
@@ -716,7 +704,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="inputF" class="control-label">Fonction : </label>
+                                        <label for="inputF" class="control-label required">Fonction :</label>
                                         <input type="text" class="form-control" id="inputF"
                                             placeholder="fonction de la personne" name="fonction"
                                             data-error=" veillez saisir la fonction" required
@@ -729,7 +717,7 @@
                             <div class="row mrg-0">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="inputSa" class="control-label">Salaire brut:</label>
+                                        <label for="inputSa" class="control-label required">Salaire brut :</label>
                                         <input type="text" class="form-control" id="inputSa"
                                             placeholder="salaire de la personne "
                                             data-error=" veillez saisir le salaire de la personne" name="salaire"
@@ -739,7 +727,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="inputEM" class="control-label">E-mail :</label>
+                                        <label for="inputEM" class="control-label required">E-mail :</label>
                                         <input type="mail" class="form-control" id="inputEM"
                                             placeholder="e-mail de la personne" name="email"
                                             data-error="Cet adresse n'est pas valide" required
@@ -748,17 +736,18 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row mrg-0">
                                 <div class="col-md-12 col-sm-12">
-
                                     <div class="form-group">
-                                        <label for="inputF" class="control-label">Changer la photo : </label>
+                                        <label for="inputF" class="control-label">Changer la photo :</label>
                                         <input type="file" name="photo" id="files" class="fichiers form-control"
                                             accept="image/*">
                                         <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
                             </div>
+
                             <hr>
                             <div class="text-center">
                                 <h5 class="mt-2">Personne à appeler en cas d'urgence</h5>
@@ -768,33 +757,34 @@
                             <div class="row mrg-0 mb-5">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="inputSa" class="control-label">Prenom & Nom :</label>
+                                        <label for="inputSa" class="control-label required">Prenom & Nom :</label>
                                         <input type="text" class="form-control" id="" placeholder="" data-error=""
-                                            name="nomPersonneUrgence" value="{{$personnel[0]->nomPersonneUrgence}}">
+                                            name="nomPersonneUrgence" required value="{{$personnel[0]->nomPersonneUrgence}}">
                                         <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="inputEM" class="control-label">Telephone :</label>
+                                        <label for="inputEM" class="control-label required">Telephone :</label>
                                         <input type="text" class="form-control" id="" placeholder=""
-                                            name="telPersonneUrgence" value="{{$personnel[0]->telPersonneUrgence}}">
+                                            name="telPersonneUrgence" required value="{{$personnel[0]->telPersonneUrgence}}">
                                         <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
-
                             </div>
+
                             <div class="row mrg-0">
                                 <div class="col-12">
                                     <div class="form-group">
                                         <div class="text-center">
-                                            <input type="submit" class="cl-white theme-bg btn btn-rounded btn-block "
+                                            <input type="submit" class="cl-white theme-bg btn btn-rounded btn-block"
                                                 style="width:50%;" value="Enregistrer les modifications" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </form>
+
                     </div>
                 </div>
                 <div class="modal-footer">
