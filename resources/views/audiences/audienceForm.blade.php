@@ -307,7 +307,7 @@
                             <!--- elements de formulaire avec le changement de selection du niveau --->
                         </div>
 
-                        <hr>
+                        <!-- <hr>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="">Joindre des pièces</label>
@@ -334,7 +334,7 @@
                                     
                                     <tr>
                                         <td><input type="file" name="formsetPiece[0][autrePieces]" accept=".pdf"
-                                                placeholder="" class="form-control" id="piece" required/>
+                                                placeholder="" class="form-control" id="piece" />
                                 
 
                                         <td><button type="button" name="add" id="dynamic-piece" onclick="formsetPiece()"
@@ -343,7 +343,7 @@
                                     </tr>
                                 </table>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
                     <div class="form-group">
