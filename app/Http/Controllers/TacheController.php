@@ -1672,7 +1672,7 @@ class TacheController extends Controller
 
                     foreach ($admins as $a) {
                         DB::select(
-                            'INSERT INTO notifications(categorie, messages, etat, idRecepteur,slug,a_biper,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
+                            'INSERT INTO notifications(categorie, messages, etat, idRecepteur,a_biper,slug,urlName,urlParam,idAdmin) VALUES(?,?,?,?,?,?,?,?,?)',
                             [
                                 'Tâche',
                                 'Un collaborateur a ajouté un nouveau traitement.',
@@ -1681,7 +1681,8 @@ class TacheController extends Controller
                                 'non',
                                 $request->_token . "" . rand(1234, 3458),
                                 "infosTask",
-                                $slug
+                                $slug,
+                                $a->id
                             ]
                         );
                     }
