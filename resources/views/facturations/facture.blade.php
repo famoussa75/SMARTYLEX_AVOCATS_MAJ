@@ -337,8 +337,6 @@ label span {
                                         data-target="#validerProforma">✅ Valider le pro forma</a>
                                     <a class="dropdown-item " href="#" title="Rejeter la facture pro forma" data-toggle="modal"
                                         data-target="#rejeterProforma">❌ Rejeter le pro forma</a>
-                                    <a class=" dropdown-item " href="#" data-toggle="modal" data-target="#envoiFacture"
-                                        title="Envoyer la facture au client"><i class="fa fa-send mr-2"></i>Envoyer au client</a>
                                     @else
                                     <a class="dropdown-item " href="#" title="Payer la facture" data-toggle="modal"
                                         data-target="#paiement"><i class="ti-wallet mr-2"></i>Paiement</a>
