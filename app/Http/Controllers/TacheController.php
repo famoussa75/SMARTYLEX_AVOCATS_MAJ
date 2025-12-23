@@ -1681,8 +1681,7 @@ class TacheController extends Controller
                                 'non',
                                 $request->_token . "" . rand(1234, 3458),
                                 "infosTask",
-                                $slug,
-                                $a->id
+                                $slug
                             ]
                         );
                     }
