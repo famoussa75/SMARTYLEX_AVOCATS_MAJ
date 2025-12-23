@@ -199,7 +199,7 @@
                         <div class="col-md-6">
                             <div class="form-group" id="clientSelect">
                                 <label class="required">Selectionner le client :</label>
-                                <select class="form-control select2" name="idClient" style="width: 100%;" id="client" required>
+                                <select class="form-control select2" name="idClient" style="width: 100%;" id="client" >
                                     <option value="" selected disabled>-- Choisissez --</option>
                                     @foreach ($clients as $client)
                                     <option value={{ $client->idClient }}>{{ $client->prenom }} {{ $client->nom }} {{ $client->denomination }}</option>
@@ -211,7 +211,7 @@
                         <input type="text" id="typeContent" value="courierDepart" name="typeContent" hidden>
                         <div class="col-md-6" id="affaireContent" hidden>
                             <div class="form-group">
-                                <label>Affaire du client concerné :</label>
+                                <label class="required">Affaire du client concerné :</label>
                                 <select class="form-control select2" style="width: 100%;" name="idAffaire" id="affaireClient"></select>
                                 <div class="help-block with-errors"></div>
                             </div>
