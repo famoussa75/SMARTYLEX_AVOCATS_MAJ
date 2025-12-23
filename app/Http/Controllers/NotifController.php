@@ -128,13 +128,13 @@ class NotifController extends Controller
             from notifications,taches,affaires,clients where notifications.urlParam= taches.slug and notifications.etat='masquer' and clients.idClient=taches.idClient and affaires.idAffaire= taches.idAffaire and notifications.idRecepteur=? order by id DESC",[$idPerso]);
 
             $newNotifsCourierArriversCabinet = DB::select("
-            SELECT  ca.slug, n.urlParam,n.id,  n.categorie, n.messages, c.idClient, c.nom, c.denomination,c.prenom,af.idAffaire,af.nomAffaire FROM notifications n INNER JOIN Courier_Arrivers ca ON n.urlParam = ca.slug
+            SELECT  ca.slug, n.urlParam,n.id,  n.categorie, n.messages, c.idClient, c.nom, c.denomination,c.prenom,af.idAffaire,af.nomAffaire FROM notifications n INNER JOIN courier_arrivers ca ON n.urlParam = ca.slug
             LEFT JOIN clients c ON c.idClient = ca.idClient  LEFT JOIN affaires af ON af.idAffaire = ca.idAffaire  WHERE n.etat = 'masquer' AND (ca.idClient IS NULL OR ca.idAffaire IS NULL)
             AND n.idRecepteur = ? ORDER BY n.id DESC",[$idPerso]);
 
             $newNotifsCourierArriversClient = DB::select("
             SELECT  ca.slug,  n.urlParam, n.id,   n.categorie,  n.messages,  c.idClient, c.nom,c.denomination, c.prenom,af.idAffaire, af.nomAffaire FROM notifications n
-            INNER JOIN Courier_Arrivers ca ON n.urlParam = ca.slug INNER JOIN clients c ON c.idClient = ca.idClient INNER JOIN affaires af ON af.idAffaire = ca.idAffaire  WHERE n.etat = 'masquer'
+            INNER JOIN courier_arrivers ca ON n.urlParam = ca.slug INNER JOIN clients c ON c.idClient = ca.idClient INNER JOIN affaires af ON af.idAffaire = ca.idAffaire  WHERE n.etat = 'masquer'
             AND n.idRecepteur = ? ORDER BY n.id DESC",[$idPerso]);
 
 
@@ -211,13 +211,13 @@ class NotifController extends Controller
 
 
             $newNotifsCourierArriversCabinet = DB::select("
-            SELECT  ca.slug, n.urlParam,n.id,  n.categorie, n.messages, c.idClient, c.nom,c.denomination,c.prenom,af.idAffaire,af.nomAffaire FROM notifications n INNER JOIN Courier_Arrivers ca ON n.urlParam = ca.slug
+            SELECT  ca.slug, n.urlParam,n.id,  n.categorie, n.messages, c.idClient, c.nom,c.denomination,c.prenom,af.idAffaire,af.nomAffaire FROM notifications n INNER JOIN courier_arrivers ca ON n.urlParam = ca.slug
             LEFT JOIN clients c ON c.idClient = ca.idClient  LEFT JOIN affaires af ON af.idAffaire = ca.idAffaire  WHERE n.etat = 'masquer' AND (ca.idClient IS NULL OR ca.idAffaire IS NULL)
             AND n.idRecepteur = 'admin' AND n.idAdmin = ? ORDER BY n.id DESC", [Auth::user()->id]);
 
             $newNotifsCourierArriversClient = DB::select("
             SELECT  ca.slug,  n.urlParam, n.id,   n.categorie,  n.messages,  c.idClient, c.nom,c.denomination ,c.prenom,af.idAffaire, af.nomAffaire FROM notifications n
-            INNER JOIN Courier_Arrivers ca ON n.urlParam = ca.slug INNER JOIN clients c ON c.idClient = ca.idClient INNER JOIN affaires af ON af.idAffaire = ca.idAffaire  WHERE n.etat = 'masquer'
+            INNER JOIN courier_arrivers ca ON n.urlParam = ca.slug INNER JOIN clients c ON c.idClient = ca.idClient INNER JOIN affaires af ON af.idAffaire = ca.idAffaire  WHERE n.etat = 'masquer'
             AND n.idRecepteur = 'admin' AND n.idAdmin = ? ORDER BY n.id DESC", [Auth::user()->id]);
 
             $newNotifsCourierDepartsCabinet = DB::select("
