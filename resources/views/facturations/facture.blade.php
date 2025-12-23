@@ -330,7 +330,7 @@ label span {
                                     @if($facture[0]->statut=='Payée')
                                     <a class=" dropdown-item " href="#" data-toggle="modal" data-target="#rembourserFacture"
                                         title="Rembourser"><i class="fa fa-history mr-2"></i>Rembourser</a>
-                                    @elseif($facture[0]->statut=='Remboursée')
+                                    @elseif($facture[0]->statut=='Remboursée') 
 
                                     @elseif($facture[0]->typeFacture=='Pro forma')
                                     <a class="dropdown-item " href="#" title="Valider la facture pro forma" data-toggle="modal"
