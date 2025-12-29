@@ -241,24 +241,23 @@ $(document).ready(function() {
         }
         else if (diffDays <= 30) {
             alertDiv.innerHTML = `
-                <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center" role="alert" style="font-size:15px;">
-                    
-                    <div class="d-flex align-items-center mt-2 font-weight-bold">
-                        <span>
-                            Il vous reste <strong>${diffDays} jour(s)</strong> avant l’expiration de votre abonnement.
+            <div class="alert alert-warning alert-dismissible fade show d-flex justify-content-between align-items-center" role="alert" style="font-size: 15px;">
+                <div class="d-flex flex-column flex-md-row align-items-md-center">
+                    <span class="font-weight-bold">
+                        <i class="fa fa-exclamation-circle"></i> Il vous reste <strong>${diffDays} jour(s)</strong> avant l’expiration de votre abonnement.
+                    </span>
+                    <span class="ml-md-4 mt-2 mt-md-0">
+                        📞 Contactez-nous : 
+                        <span class="text-dark font-weight-bold">
+                            +224 613 87 08 92 / +224 612 73 55 77
                         </span>
-                        <span class="ml-3">
-                            📞 Contactez-nous :
-                            <span class="text-dark">
-                                +224 613 87 08 92 / +224 612 73 55 77
-                            </span>
-                        </span>
-                    </div>
-
-                    <button type="button" class="close ml-3" data-dismiss="alert">
-                        &times;
-                    </button>
+                    </span>
                 </div>
+                <button type="button" class="close ml-3" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
                 `;
         }
     }
