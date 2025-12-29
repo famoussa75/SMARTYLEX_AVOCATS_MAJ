@@ -241,12 +241,25 @@ $(document).ready(function() {
         }
         else if (diffDays <= 30) {
             alertDiv.innerHTML = `
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong><i class="fa fa-exclamation-triangle mr-2"></i> Abonnement bientôt expiré !</strong>
-                    Il vous reste <strong>${diffDays} jour(s)</strong> avant l’expiration de votre abonnement.
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center" role="alert" style="font-size:15px;">
+                    
+                    <div class="d-flex align-items-center mt-2 font-weight-bold">
+                        <span>
+                            Il vous reste <strong>${diffDays} jour(s)</strong> avant l’expiration de votre abonnement.
+                        </span>
+                        <span class="ml-3">
+                            📞 Contactez-nous :
+                            <span class="text-dark">
+                                +224 613 87 08 92 / +224 612 73 55 77
+                            </span>
+                        </span>
+                    </div>
+
+                    <button type="button" class="close ml-3" data-dismiss="alert">
+                        &times;
+                    </button>
                 </div>
-            `;
+                `;
         }
     }
 

@@ -168,11 +168,11 @@ a.load {
                         <!-- Infos -->
                         <div class="client-info">
                             @if($value->typeClient =="Client Physique")
-                                <div><i class="fa fa-map-marker-alt"></i> {{ $value->adresse }}</div>
+                                <div><i class="fa fa-map-marker"></i> {{ $value->adresse }}</div>
                                 <div><i class="fa fa-envelope"></i> {{ $value->email }}</div>
                                 <div><i class="fa fa-phone"></i> {{ $value->telephone }}</div>
                             @else
-                                <div><i class="fa fa-map-marker-alt"></i> {{ $value->adresseEntreprise }}</div>
+                                <div><i class="fa fa-map-marker"></i> {{ $value->adresseEntreprise }}</div>
                                 <div><i class="fa fa-envelope"></i> {{ $value->emailEntreprise }}</div>
                                 <div><i class="fa fa-phone"></i> {{ $value->telephoneEntreprise }}</div>
                             @endif
